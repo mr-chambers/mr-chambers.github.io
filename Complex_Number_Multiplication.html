@@ -47,9 +47,20 @@
 <body class="h-screen w-screen flex">
 
     <!-- Sidebar Controls -->
-    <div class="glass-panel w-80 h-full flex flex-col p-6 z-10 shadow-2xl relative">
+    <!-- Added overflow-y-auto to ensure buttons are reachable on small screens -->
+    <div class="glass-panel w-80 h-full flex flex-col p-6 z-10 shadow-2xl relative overflow-y-auto">
         <h1 class="text-xl font-bold text-cyan-400 mb-1">Argand Diagram</h1>
-        <p class="text-xs text-slate-400 mb-6">Complex Multiplication Geometry</p>
+        <p class="text-xs text-slate-400 mb-4">Complex Multiplication Geometry</p>
+
+        <!-- Mode Toggle -->
+        <div class="bg-slate-800 p-1 rounded-lg flex mb-6 border border-slate-700">
+            <button id="mode-rect" class="flex-1 py-1 text-xs font-bold rounded text-center transition-colors bg-slate-600 text-white shadow-sm">
+                Rectangular
+            </button>
+            <button id="mode-polar" class="flex-1 py-1 text-xs font-bold rounded text-center transition-colors text-slate-400 hover:text-white">
+                Polar
+            </button>
+        </div>
 
         <!-- Initial Z Input -->
         <div class="mb-6 border-b border-slate-700 pb-4">
@@ -58,13 +69,13 @@
             </h2>
             <div class="grid grid-cols-2 gap-2">
                 <div class="input-group">
-                    <label>Real (a)</label>
-                    <input type="number" id="z-real" value="1" step="0.1" 
+                    <label id="lbl-z1">Real (a)</label>
+                    <input type="text" id="z-real" value="1" placeholder="e.g. sqrt(3)/2"
                            class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm focus:border-cyan-400 focus:outline-none transition-colors">
                 </div>
                 <div class="input-group">
-                    <label>Imag (b)</label>
-                    <input type="number" id="z-imag" value="0.5" step="0.1" 
+                    <label id="lbl-z2">Imag (b)</label>
+                    <input type="text" id="z-imag" value="0.5" placeholder="e.g. 0.5"
                            class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm focus:border-cyan-400 focus:outline-none transition-colors">
                 </div>
             </div>
@@ -89,13 +100,13 @@
             </h2>
             <div class="grid grid-cols-2 gap-2">
                 <div class="input-group">
-                    <label>Real (a)</label>
-                    <input type="number" id="m-real" value="1.1" step="0.1" 
+                    <label id="lbl-m1">Real (a)</label>
+                    <input type="text" id="m-real" value="1.1" placeholder="e.g. 1.1"
                            class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm focus:border-pink-500 focus:outline-none transition-colors">
                 </div>
                 <div class="input-group">
-                    <label>Imag (b)</label>
-                    <input type="number" id="m-imag" value="0.2" step="0.1" 
+                    <label id="lbl-m2">Imag (b)</label>
+                    <input type="text" id="m-imag" value="0.2" placeholder="e.g. pi/4"
                            class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm focus:border-pink-500 focus:outline-none transition-colors">
                 </div>
             </div>
@@ -113,7 +124,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="mt-auto space-y-3">
+        <div class="mt-auto space-y-3 pt-4">
             <button id="btn-multiply" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 rounded shadow-lg transform transition active:scale-95 flex justify-center items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
@@ -121,16 +132,21 @@
                 Multiply
             </button>
             
-            <button id="btn-reset" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-2 rounded transition active:scale-95">
-                Reset
-            </button>
+            <div class="grid grid-cols-2 gap-2">
+                <button id="btn-clear-trace" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-2 rounded transition active:scale-95 text-xs uppercase tracking-wide">
+                    Clear Trace
+                </button>
+                <button id="btn-reset" class="bg-slate-700 hover:bg-red-900/50 text-slate-200 hover:text-red-200 font-semibold py-2 rounded transition active:scale-95 text-xs uppercase tracking-wide">
+                    Reset All
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Canvas Container -->
     <div id="canvas-container" class="flex-grow h-full relative cursor-crosshair">
         <!-- Overlay Instructions -->
-        <div class="absolute top-4 right-4 text-right pointer-events-none opacity-50 text-xs">
+        <div class="absolute top-4 right-4 text-right pointer-events-none opacity-50 text-xs text-white">
             <p>Scroll to Zoom Manually</p>
             <p>Drag to Pan</p>
         </div>
@@ -169,6 +185,7 @@
         let currentZ;
         let multiplierZ;
         let trail = []; // Array of {re, im}
+        let inputMode = 'rectangular'; // 'rectangular' or 'polar'
         let animationState = {
             active: false,
             startZ: null,
@@ -193,6 +210,12 @@
             statArg: document.getElementById('stat-arg'),
             mStatMag: document.getElementById('m-stat-mag'),
             mStatArg: document.getElementById('m-stat-arg'),
+            lblZ1: document.getElementById('lbl-z1'),
+            lblZ2: document.getElementById('lbl-z2'),
+            lblM1: document.getElementById('lbl-m1'),
+            lblM2: document.getElementById('lbl-m2'),
+            btnRect: document.getElementById('mode-rect'),
+            btnPolar: document.getElementById('mode-polar')
         };
 
         function setup() {
@@ -205,7 +228,11 @@
             // Event Listeners
             document.getElementById('btn-multiply').addEventListener('click', triggerMultiplication);
             document.getElementById('btn-reset').addEventListener('click', resetVisualization);
+            document.getElementById('btn-clear-trace').addEventListener('click', () => { trail = []; });
             
+            inputs.btnRect.addEventListener('click', () => setMode('rectangular'));
+            inputs.btnPolar.addEventListener('click', () => setMode('polar'));
+
             // Input Listeners
             ['z-real', 'z-imag', 'm-real', 'm-imag'].forEach(id => {
                 document.getElementById(id).addEventListener('input', () => {
@@ -214,28 +241,118 @@
             });
         }
 
+        function setMode(mode) {
+            if (inputMode === mode) return;
+            inputMode = mode;
+
+            // Update UI Styles
+            if (mode === 'rectangular') {
+                inputs.btnRect.className = "flex-1 py-1 text-xs font-bold rounded text-center transition-colors bg-slate-600 text-white shadow-sm";
+                inputs.btnPolar.className = "flex-1 py-1 text-xs font-bold rounded text-center transition-colors text-slate-400 hover:text-white";
+                
+                inputs.lblZ1.innerText = "Real (a)";
+                inputs.lblZ2.innerText = "Imag (b)";
+                inputs.lblM1.innerText = "Real (a)";
+                inputs.lblM2.innerText = "Imag (b)";
+
+                // Convert current values Polar -> Rect
+                // Current Z
+                inputs.zRe.value = currentZ.re.toFixed(2);
+                inputs.zIm.value = currentZ.im.toFixed(2);
+                // Multiplier
+                inputs.mRe.value = multiplierZ.re.toFixed(2);
+                inputs.mIm.value = multiplierZ.im.toFixed(2);
+
+            } else {
+                inputs.btnRect.className = "flex-1 py-1 text-xs font-bold rounded text-center transition-colors text-slate-400 hover:text-white";
+                inputs.btnPolar.className = "flex-1 py-1 text-xs font-bold rounded text-center transition-colors bg-slate-600 text-white shadow-sm";
+                
+                inputs.lblZ1.innerText = "Mag (|z|)";
+                inputs.lblZ2.innerText = "Angle (°)";
+                inputs.lblM1.innerText = "Mag (|z|)";
+                inputs.lblM2.innerText = "Angle (°)";
+
+                // Convert current values Rect -> Polar
+                // Current Z
+                inputs.zRe.value = currentZ.mag().toFixed(2);
+                inputs.zIm.value = currentZ.argDeg();
+                // Multiplier
+                inputs.mRe.value = multiplierZ.mag().toFixed(2);
+                inputs.mIm.value = multiplierZ.argDeg();
+            }
+        }
+
         function windowResized() {
             const container = document.getElementById('canvas-container');
             resizeCanvas(container.clientWidth, container.clientHeight);
         }
 
-        function updateFromInputs() {
-            // Only allow updating Z from inputs if we haven't started a multiplication chain
-            // or if we just reset.
-            if(trail.length === 0) {
-                currentZ = new Complex(inputs.zRe.value, inputs.zIm.value);
+        // Parse math expressions (e.g. "sqrt(3)/2")
+        function evaluateExpression(str) {
+            if (!str) return 0;
+            // Simple check if it's already just a number
+            if (!isNaN(str) && !isNaN(parseFloat(str))) return parseFloat(str);
+
+            try {
+                // Normalize and sanitize
+                let expr = str.toLowerCase();
+                
+                // Replace common math constants and functions
+                // Order matters for some replacements (e.g. pi)
+                expr = expr.replace(/pi/g, 'Math.PI');
+                expr = expr.replace(/sqrt/g, 'Math.sqrt');
+                expr = expr.replace(/\^/g, '**'); // Power
+                
+                ['sin', 'cos', 'tan', 'abs', 'log', 'exp', 'pow'].forEach(fn => {
+                     // Using regex with boundary to avoid replacing inside other words if we had them
+                     // but for these short ones simple replace is usually okay for this context
+                     expr = expr.replace(new RegExp(fn + '\\(', 'g'), 'Math.' + fn + '(');
+                });
+
+                // Safety: Basic evaluation
+                const func = new Function('return ' + expr);
+                const res = func();
+                return isFinite(res) ? res : null;
+            } catch (e) {
+                return null; // Return null on syntax error (incomplete typing)
             }
-            multiplierZ = new Complex(inputs.mRe.value, inputs.mIm.value);
+        }
+
+        function updateFromInputs() {
+            let v1Z = evaluateExpression(inputs.zRe.value);
+            let v2Z = evaluateExpression(inputs.zIm.value);
+            let v1M = evaluateExpression(inputs.mRe.value);
+            let v2M = evaluateExpression(inputs.mIm.value);
+
+            // Validation: Ensure inputs are numbers (not null)
+            if (v1Z === null || v2Z === null || v1M === null || v2M === null) return;
+
+            if (inputMode === 'rectangular') {
+                if(trail.length === 0) {
+                    currentZ = new Complex(v1Z, v2Z);
+                }
+                multiplierZ = new Complex(v1M, v2M);
+            } else {
+                // Polar Mode
+                // v1 is Magnitude, v2 is Angle (Degrees)
+                
+                // Convert Z
+                if(trail.length === 0) {
+                    let radZ = v2Z * (Math.PI / 180);
+                    currentZ = new Complex(v1Z * Math.cos(radZ), v1Z * Math.sin(radZ));
+                }
+
+                // Convert Multiplier
+                let radM = v2M * (Math.PI / 180);
+                multiplierZ = new Complex(v1M * Math.cos(radM), v1M * Math.sin(radM));
+            }
+            
             updateStatsUI();
         }
 
         function updateStatsUI() {
             // Current Z Stats
             let dispZ = currentZ;
-            // If animating, we might want to show the interpolated value, 
-            // but usually showing the target or static current is less confusing numerically.
-            // Let's show the 'Active' value.
-            
             inputs.statMag.innerText = dispZ.mag().toFixed(2);
             inputs.statArg.innerText = dispZ.argDeg() + "°";
 
@@ -246,24 +363,18 @@
 
         function triggerMultiplication() {
             if (animationState.active) {
-                // If already animating, fast forward to end and start next
                 finishAnimation();
             }
 
             let start = currentZ;
             let target = currentZ.mult(multiplierZ);
             
-            // Add start point to trail
             trail.push({re: start.re, im: start.im});
 
             animationState.startZ = start;
             animationState.targetZ = target;
             animationState.active = true;
             animationState.progress = 0;
-            
-            // Update input fields to reflect new reality (optional, but good for continuity)
-            // inputs.zRe.value = target.re.toFixed(2);
-            // inputs.zIm.value = target.im.toFixed(2);
         }
 
         function finishAnimation() {
@@ -275,14 +386,29 @@
 
         function resetVisualization() {
             trail = [];
-            inputs.zRe.value = 1;
-            inputs.zIm.value = 0.5;
-            currentZ = new Complex(1, 0.5);
+            
+            // Check current mode to set appropriate defaults
+            if (inputMode === 'rectangular') {
+                inputs.zRe.value = "1";
+                inputs.zIm.value = "0.5";
+                inputs.mRe.value = "1.1";
+                inputs.mIm.value = "0.2";
+            } else {
+                // Defaults in polar: 
+                // Z = 1 + 0.5i -> Mag ~1.12, Ang ~26.6
+                // M = 1.1 + 0.2i -> Mag ~1.12, Ang ~10.3
+                inputs.zRe.value = "1.12";
+                inputs.zIm.value = "26.6";
+                inputs.mRe.value = "1.12";
+                inputs.mIm.value = "10.3";
+            }
+
+            updateFromInputs(); 
+
             animationState.active = false;
             targetZoom = 100;
             offsetX = 0;
             offsetY = 0;
-            updateFromInputs();
         }
 
         function mouseDragged() {
@@ -293,28 +419,25 @@
         }
         
         function mouseWheel(event) {
-            // Zoom centered on mouse logic is complex, simpler is zoom center screen
             let zoomSensitivity = 0.05;
             if (event.delta > 0) {
                 targetZoom *= (1 - zoomSensitivity);
             } else {
                 targetZoom *= (1 + zoomSensitivity);
             }
-            return false; // prevent default scrolling
+            return false;
         }
 
         function draw() {
-            background(15, 23, 42); // Match bg-slate-900
+            background(15, 23, 42); 
 
             // 1. Handle Animation Logic
             let renderZ = currentZ;
             
             if (animationState.active) {
-                // Easing function (Ease Out Cubic)
                 let t = animationState.progress / animationState.duration;
                 t = 1 - Math.pow(1 - t, 3); 
 
-                // Interpolate Polar coordinates for geometric intuition
                 let startMag = animationState.startZ.mag();
                 let endMag = animationState.targetZ.mag();
                 let curMag = lerp(startMag, endMag, t);
@@ -322,13 +445,11 @@
                 let startArg = animationState.startZ.arg();
                 let endArg = animationState.targetZ.arg();
                 
-                // Handle angle wrapping (shortest path)
                 let diff = endArg - startArg;
                 while (diff < -PI) diff += TWO_PI;
                 while (diff > PI) diff -= TWO_PI;
                 let curArg = startArg + diff * t;
 
-                // Convert back to Rectangular for drawing
                 renderZ = new Complex(
                     curMag * Math.cos(curArg),
                     curMag * Math.sin(curArg)
@@ -341,22 +462,17 @@
             }
 
             // 2. Auto-Zoom Logic
-            // Calculate required bounds to see origin, current vector, and maybe trail
-            let maxDist = Math.max(renderZ.mag(), 2); // At least show unit circle clearly
-            // Check trail if it exists
+            let maxDist = Math.max(renderZ.mag(), 2);
             if (trail.length > 0) {
-                // Check the last few points to ensure we don't lose context
                 let lastT = trail[trail.length-1];
                 let dist = Math.sqrt(lastT.re**2 + lastT.im**2);
                 maxDist = Math.max(maxDist, dist);
             }
 
-            // Ideal zoom: fit maxDist within about 40% of screen height/width
             let minDimension = Math.min(width, height);
             let idealZoom = (minDimension * 0.35) / maxDist;
             
-            // Smoothly interpolate zoom
-            if(!mouseIsPressed) { // Don't auto-zoom while panning
+            if(!mouseIsPressed) { 
                  targetZoom = lerp(targetZoom, idealZoom, 0.05);
             }
             zoom = lerp(zoom, targetZoom, 0.1);
@@ -365,27 +481,19 @@
             push();
             translate(width / 2 + offsetX, height / 2 + offsetY);
             
-            // Standard Math Coordinate system: Y is up.
-            // p5 Y is down. We scale(1, -1) to flip Y.
-            // Note: Text will be drawn upside down if we aren't careful.
-            // I prefer calculating y = -y manually for drawing coordinates to keep text simple.
-            
             drawGrid();
             drawAxes();
             drawUnitCircle();
             drawTrail(renderZ);
             
-            // Draw Multiplier Ghost Vector (relative to 1)
-            // We want to show "This is what we are multiplying by"
-            // We draw it starting from origin, faint pink
-            drawVector(multiplierZ, color(236, 72, 153, 100), 2, false); // Pink-500
+            // Draw Multiplier Ghost Vector
+            drawVector(multiplierZ, color(236, 72, 153, 100), 2, false);
 
-            // Draw Current Vector (Bold Cyan)
-            drawVector(renderZ, color(34, 211, 238), 4, true); // Cyan-400
+            // Draw Current Vector
+            drawVector(renderZ, color(34, 211, 238), 4, true);
 
             pop();
 
-            // Update UI stats to match animation
             if(animationState.active) {
                  inputs.statMag.innerText = renderZ.mag().toFixed(2);
                  inputs.statArg.innerText = renderZ.argDeg() + "°";
@@ -397,37 +505,22 @@
         }
 
         function drawGrid() {
-            stroke(51, 65, 85); // Slate 700
+            stroke(51, 65, 85); 
             strokeWeight(1);
 
-            // Determine grid step size based on zoom
-            // We want grid lines roughly every 50-100 pixels
             let step = 1;
             let pixelStep = step * zoom;
             
             while(pixelStep < 40) { step *= 2; pixelStep = step * zoom; }
             while(pixelStep > 150) { step /= 2; pixelStep = step * zoom; }
 
-            // Calculate visible bounds
-            let left = -(width/2 + offsetX) / zoom;
-            let right = (width/2 - offsetX) / zoom;
-            let top = (height/2 - offsetY) / zoom; // Y is flipped in math logic, but top in p5 is negative relative to center if y-up
-            let bottom = -(height/2 + offsetY) / zoom;
-
-            // p5 coordinates for bounds (remember we haven't flipped Y scale yet)
-            // Left/Right is easy. Top/Bottom:
-            // Top of screen is y = -height/2 (relative to center)
-            // Bottom is y = height/2
-            
-            // Vertical Lines
             let startX = Math.floor(-(width/2 + offsetX) / zoom / step) * step;
             let endX = Math.ceil((width/2 - offsetX) / zoom / step) * step;
             
             for (let x = startX; x <= endX; x += step) {
                 let sx = x * zoom;
-                line(sx, -height*2, sx, height*2); // Draw long lines
+                line(sx, -height*2, sx, height*2);
                 
-                // Labels
                 if (x !== 0) {
                     fill(148, 163, 184);
                     noStroke();
@@ -435,15 +528,14 @@
                     textAlign(CENTER, TOP);
                     text(parseFloat(x.toFixed(2)), sx, 5);
                 }
-                stroke(51, 65, 85); // Reset stroke
+                stroke(51, 65, 85); 
             }
 
-            // Horizontal Lines
             let startY = Math.floor(-(height/2 + offsetY) / zoom / step) * step;
             let endY = Math.ceil((height/2 - offsetY) / zoom / step) * step;
 
             for (let y = startY; y <= endY; y += step) {
-                let sy = -y * zoom; // Flip Y for screen
+                let sy = -y * zoom; 
                 line(-width*2, sy, width*2, sy);
                 
                 if (y !== 0) {
@@ -458,11 +550,9 @@
         }
 
         function drawAxes() {
-            stroke(203, 213, 225); // Slate 300
+            stroke(203, 213, 225); 
             strokeWeight(2);
-            // X Axis
             line(-width, 0, width, 0);
-            // Y Axis
             line(0, -height, 0, height);
         }
 
@@ -470,9 +560,8 @@
             noFill();
             stroke(255, 255, 255, 30);
             strokeWeight(2);
-            ellipse(0, 0, zoom * 2, zoom * 2); // Diameter = 2 units
+            ellipse(0, 0, zoom * 2, zoom * 2);
             
-            // Label
             fill(255, 255, 255, 50);
             noStroke();
             text("Unit Circle (1)", zoom * 0.707 + 5, -zoom * 0.707);
@@ -482,7 +571,6 @@
             if (trail.length === 0) return;
 
             noFill();
-            // Gradient trail logic is hard in plain beginShape, simple stroke for now
             stroke(34, 211, 238, 100); 
             strokeWeight(2);
             
@@ -490,11 +578,9 @@
             trail.forEach(pt => {
                 vertex(pt.re * zoom, -pt.im * zoom);
             });
-            // Connect to current animating position
             vertex(currentPos.re * zoom, -currentPos.im * zoom);
             endShape();
 
-            // Draw points
             fill(34, 211, 238);
             noStroke();
             trail.forEach(pt => {
@@ -504,24 +590,21 @@
 
         function drawVector(z, col, weight, showLabel) {
             let x = z.re * zoom;
-            let y = -z.im * zoom; // Flip Y
+            let y = -z.im * zoom; 
 
             stroke(col);
             strokeWeight(weight);
             fill(col);
 
-            // Line
             line(0, 0, x, y);
 
-            // Arrowhead
             push();
             translate(x, y);
-            rotate(Math.atan2(y, x)); // Angle for arrowhead
+            rotate(Math.atan2(y, x)); 
             let arrowSize = 10;
             triangle(0, 0, -arrowSize, arrowSize/2, -arrowSize, -arrowSize/2);
             pop();
 
-            // Label (e.g., coordinates)
             if (showLabel) {
                 noStroke();
                 fill(255);
