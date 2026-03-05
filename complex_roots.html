@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Roots Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <!-- MathJax Configuration & Script -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #0f172a; color: white; }
+        canvas { display: block; }
+        .input-group label { font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 0.25rem; }
+        .input-field {
+            background: #1e293b; border: 1px solid #334155; color: white;
+            padding: 0.5rem; border-radius: 0.375rem; width: 100%; outline: none;
+        }
+        .input-field:focus { border-color: #38bdf8; }
+        /* Custom range slider styling */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #38bdf8; cursor: pointer; margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #334155; border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen">
+
+    <!-- Sidebar / Controls -->
+    <div class="w-full md:w-80 flex-shrink-0 bg-slate-900 border-r border-slate-800 p-6 flex flex-col gap-6 overflow-y-auto z-10 shadow-xl">
+        <div>
+            <h1 class="text-xl font-bold text-sky-400 mb-1">Root Visualizer</h1>
+            <p class="text-xs text-slate-400">Iterative multiplication of $n^{th}$ roots.</p>
+        </div>
+
+        <!-- Inputs for Z -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="input-group">
+                <label>Real Part ($a$)</label>
+                <input type="number" id="inputReal" class="input-field" value="4">
+            </div>
+            <div class="input-group">
+                <label>Imaginary Part ($b$)</label>
+                <input type="number" id="inputImag" class="input-field" value="4">
+            </div>
+        </div>
+
+        <!-- Slider for N -->
+        <div class="input-group">
+            <div class="flex justify-between">
+                <label>Root Degree ($n$)</label>
+                <span id="nValueDisplay" class="text-sky-400 font-mono text-sm">3</span>
+            </div>
+            <input type="range" id="sliderN" min="2" max="7" value="3" step="1">
+        </div>
+        
+        <!-- Root Visibility Toggles -->
+        <div class="input-group">
+            <label>Toggle Roots</label>
+            <div id="rootToggles" class="grid grid-cols-4 gap-2 mt-2">
+                <!-- Buttons injected via JS -->
+            </div>
+        </div>
+
+        <!-- Slider for Animation Speed -->
+        <div class="input-group">
+            <div class="flex justify-between">
+                <label>Animation Speed</label>
+                <span id="speedDisplay" class="text-sky-400 font-mono text-sm">1.0x</span>
+            </div>
+            <input type="range" id="sliderSpeed" min="1" max="20" value="10" step="1">
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-col gap-3">
+            <button id="btnMultiply" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2 px-4 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-sky-900/50">
+                Multiply Roots (w<sup>m</sup>)
+            </button>
+            <button id="btnReset" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-2 px-4 rounded transition-all border border-slate-600">
+                Reset
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 space-y-2">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                <span class="text-slate-400 text-sm">Power ($m$)</span>
+                <span id="powerDisplay" class="text-xl font-bold text-white">1</span>
+            </div>
+            <div class="text-xs text-slate-400 space-y-1 pt-1">
+                <p>Target $|z|$: <span id="magDisplay" class="text-slate-200 font-mono">0</span></p>
+                <p>Target Arg: <span id="argDisplay" class="text-slate-200 font-mono">0°</span></p>
+                <p>Root Radius: <span id="rootMagDisplay" class="text-slate-200 font-mono">0</span></p>
+            </div>
+        </div>
+        
+        <div class="mt-auto text-xs text-slate-500 italic">
+            Multiply $n$ times to return to $z$.
+        </div>
+    </div>
+
+    <!-- P5 Canvas Container -->
+    <div id="canvas-container" class="flex-grow relative bg-slate-950 overflow-hidden cursor-crosshair">
+        <!-- Legend Overlay -->
+        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur border border-slate-700 p-3 rounded text-xs pointer-events-none select-none">
+            <div class="flex items-center gap-2 mb-1">
+                <div class="w-3 h-3 rounded-full bg-rose-500"></div> <span class="text-slate-300">Target ($z$)</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-cyan-400"></div> <span class="text-slate-300">Roots ($w$)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const inputReal = document.getElementById('inputReal');
+        const inputImag = document.getElementById('inputImag');
+        const sliderN = document.getElementById('sliderN');
+        const sliderSpeed = document.getElementById('sliderSpeed');
+        const nValueDisplay = document.getElementById('nValueDisplay');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const btnMultiply = document.getElementById('btnMultiply');
+        const btnReset = document.getElementById('btnReset');
+        const powerDisplay = document.getElementById('powerDisplay');
+        const magDisplay = document.getElementById('magDisplay');
+        const argDisplay = document.getElementById('argDisplay');
+        const rootMagDisplay = document.getElementById('rootMagDisplay');
+        const rootTogglesContainer = document.getElementById('rootToggles');
+
+        // State
+        let state = {
+            a: 4,
+            b: 4,
+            n: 3,
+            currentPower: 1,      // The animated float value
+            targetPower: 1,       // The integer value we are moving towards
+            zRadius: 0,
+            zAngle: 0,
+            zoom: 5.0,
+            // Initialize visibility for max possible roots (7)
+            rootVisibility: new Array(8).fill(true) 
+        };
+
+        // P5.js Sketch
+        const sketch = (p) => {
+            let font;
+            
+            p.setup = () => {
+                const container = document.getElementById('canvas-container');
+                const canvas = p.createCanvas(container.clientWidth, container.clientHeight);
+                canvas.parent('canvas-container');
+                p.textFont('monospace');
+                updateCalculations();
+            };
+
+            p.windowResized = () => {
+                const container = document.getElementById('canvas-container');
+                p.resizeCanvas(container.clientWidth, container.clientHeight);
+            };
+
+            p.mouseWheel = (event) => {
+                // Zoom direction
+                if (event.delta > 0) {
+                    state.zoom *= 0.9; // Zoom out
+                } else {
+                    state.zoom *= 1.1; // Zoom in
+                }
+                // Constrain zoom to reasonable limits
+                state.zoom = p.constrain(state.zoom, 0.1, 50.0);
+                
+                // Prevent default page scroll
+                return false;
+            };
+
+            p.draw = () => {
+                // Smooth animation for power
+                // Slider value 1-20 maps to 0.01-0.2 lerp speed. 10 is default (0.1).
+                const lerpSpeed = parseInt(sliderSpeed.value) * 0.01;
+                state.currentPower = p.lerp(state.currentPower, state.targetPower, lerpSpeed);
+                
+                // Visual feedback updates
+                if (Math.abs(state.currentPower - state.targetPower) < 0.001) {
+                    state.currentPower = state.targetPower;
+                    if(state.targetPower === state.n) {
+                         btnMultiply.disabled = true;
+                         btnMultiply.innerText = "Converged on Z";
+                         btnMultiply.classList.add('opacity-50');
+                    }
+                }
+
+                p.background(15, 23, 42); // Slate-950
+
+                // Coordinate System Setup
+                p.push();
+                p.translate(p.width / 2, p.height / 2);
+
+                // --- Auto-Scaling Logic ---
+                // We need to see the Target (radius r) and the Current Roots.
+                // Current Root radius grows from r^(1/n) to r.
+                // We'll scale based on the larger of the two to prevent clipping.
+                let maxDist = Math.max(state.zRadius, Math.pow(state.zRadius, 1/state.n));
+                // Add padding
+                let viewRadius = maxDist * 1.5; 
+                // Prevent zoom to infinity if z is 0
+                if (viewRadius < 10) viewRadius = 100;
+
+                let scaleFactor = ((Math.min(p.width, p.height) / 2) / viewRadius) * state.zoom;
+                p.scale(scaleFactor, -scaleFactor); // Flip Y to make math coords standard
+
+                // Draw Grid
+                drawGrid(p);
+
+                // 1. Draw Target Vector (Z)
+                p.stroke(244, 63, 94); // Rose-500
+                p.strokeWeight(3 / scaleFactor);
+                drawVector(p, state.a, state.b);
+                
+                // Label Z
+                p.push();
+                p.scale(1, -1); // Unflip text
+                p.fill(244, 63, 94);
+                p.noStroke();
+                p.textSize(14 / scaleFactor);
+                p.textAlign(p.LEFT, p.BOTTOM);
+                p.text("z", state.a, -state.b - (5/scaleFactor));
+                p.pop();
+
+                // 2. Draw Root Circle (Fixed at radius r^(1/n))
+                // This is the circle the roots start on.
+                let rootRadiusBase = Math.pow(state.zRadius, 1/state.n);
+                p.noFill();
+                p.stroke(255, 255, 255, 50);
+                p.strokeWeight(1 / scaleFactor);
+                p.drawingContext.setLineDash([5, 5]); // Dashed
+                p.ellipse(0, 0, rootRadiusBase * 2);
+                p.drawingContext.setLineDash([]); // Reset dash
+
+                // 3. Draw Current Trajectory Circle
+                // The circle the roots are CURRENTLY on based on animation power
+                let currentRadius = Math.pow(rootRadiusBase, state.currentPower);
+                
+                // Only draw this ring if we have multiplied at least once or are animating
+                if (state.currentPower > 1.01) {
+                    p.stroke(56, 189, 248, 30); // Sky blue faint
+                    p.ellipse(0, 0, currentRadius * 2);
+                }
+
+                // 4. Calculate and Draw Roots
+                // Roots of unity logic: w_k = r^(1/n) * e^(i * (theta + 2pi*k)/n)
+                // Raised to power m: w_k^m = r^(m/n) * e^(i * m * (theta + 2pi*k)/n)
+                
+                for (let k = 0; k < state.n; k++) {
+                    // Check toggle state
+                    if (!state.rootVisibility[k]) continue;
+
+                    let theta = state.zAngle;
+                    // The base angle for the k-th root
+                    let rootAngle = (theta + p.TWO_PI * k) / state.n;
+                    
+                    // Apply current power m
+                    let currentAngle = rootAngle * state.currentPower;
+                    let cx = currentRadius * Math.cos(currentAngle);
+                    let cy = currentRadius * Math.sin(currentAngle);
+
+                    // Draw Vector
+                    p.stroke(56, 189, 248); // Sky-400
+                    p.strokeWeight(2 / scaleFactor);
+                    // Add glow
+                    p.drawingContext.shadowBlur = 10;
+                    p.drawingContext.shadowColor = "rgba(56, 189, 248, 0.5)";
+                    
+                    drawVector(p, cx, cy);
+
+                    p.drawingContext.shadowBlur = 0; // Reset glow
+
+                    // Label Root
+                    if (scaleFactor > 0.5) { // Only show text if not zoomed out too far
+                        p.push();
+                        p.scale(1, -1);
+                        p.fill(56, 189, 248);
+                        p.noStroke();
+                        p.textSize(12 / scaleFactor);
+                        p.textAlign(p.CENTER, p.TOP);
+                        // Offset text slightly away from center
+                        let textDist = currentRadius + (15/scaleFactor);
+                        let tx = textDist * Math.cos(currentAngle);
+                        let ty = -textDist * Math.sin(currentAngle);
+                        p.text(`w${k}`, tx, ty);
+                        p.pop();
+                    }
+                }
+
+                p.pop();
+            };
+
+            function drawGrid(p) {
+                let s = p.getScale();
+                // Determine the visible range in logical coordinates based on current zoom
+                let visibleRadius = (Math.min(p.width, p.height) / 2) / s; 
+                
+                p.stroke(71, 85, 105, 100); 
+                p.strokeWeight(1 / s);
+
+                // Axes
+                p.line(-visibleRadius*2, 0, visibleRadius*2, 0);
+                p.line(0, -visibleRadius*2, 0, visibleRadius*2);
+
+                // Calculate adaptive step size for grid
+                let step = Math.pow(10, Math.floor(Math.log10(visibleRadius)));
+                if (visibleRadius / step < 2) step /= 5;
+                else if (visibleRadius / step < 5) step /= 2;
+                
+                // Text settings for labels
+                p.textSize(10 / s);
+                p.textAlign(p.CENTER, p.TOP);
+                p.noStroke();
+
+                // Draw circles and labels
+                for (let r = step; r < visibleRadius * 1.5; r += step) {
+                    let labelVal = +r.toFixed(4); // Clean up float precision
+
+                    // Circle
+                    p.noFill();
+                    p.stroke(71, 85, 105, 50);
+                    p.strokeWeight(1 / s);
+                    p.ellipse(0, 0, r * 2);
+
+                    // Labels
+                    p.fill(148, 163, 184); // Slate-400
+                    p.noStroke();
+
+                    // X-axis Positive
+                    p.push();
+                    p.translate(r, 0);
+                    p.scale(1, -1); // Unflip text
+                    p.text(labelVal, 0, 4/s); 
+                    p.pop();
+
+                    // X-axis Negative
+                    p.push();
+                    p.translate(-r, 0);
+                    p.scale(1, -1);
+                    p.text(-labelVal, 0, 4/s);
+                    p.pop();
+
+                    // Y-axis Positive
+                    p.push();
+                    p.translate(0, r);
+                    p.scale(1, -1);
+                    p.textAlign(p.LEFT, p.MIDDLE);
+                    p.text(labelVal, 4/s, 0);
+                    p.pop();
+
+                    // Y-axis Negative
+                    p.push();
+                    p.translate(0, -r);
+                    p.scale(1, -1);
+                    p.textAlign(p.LEFT, p.MIDDLE);
+                    p.text(-labelVal, 4/s, 0);
+                    p.pop();
+                }
+            }
+
+            function drawVector(p, x, y) {
+                p.line(0, 0, x, y);
+                
+                // Arrowhead
+                p.push();
+                p.translate(x, y);
+                p.rotate(Math.atan2(y, x));
+                let arrowSize = 6 / p.getScale(); // Scale invariant arrow size
+                p.triangle(0, 0, -arrowSize, arrowSize/2, -arrowSize, -arrowSize/2);
+                p.pop();
+            }
+            
+            // Helper to get current scale transform
+            p.getScale = function() {
+                // We set scale(s, -s) earlier. 
+                // We just need the magnitude to calculate linewidths.
+                // We can approximate or recalculate based on logic in draw.
+                // Recalculating efficiently:
+                let maxDist = Math.max(state.zRadius, Math.pow(state.zRadius, 1/state.n));
+                let viewRadius = maxDist * 1.5; 
+                if (viewRadius < 10) viewRadius = 100;
+                return ((Math.min(p.width, p.height) / 2) / viewRadius) * state.zoom;
+            }
+        };
+
+        const myp5 = new p5(sketch);
+
+        // --- Logic & Event Handlers ---
+
+        function updateRootToggles() {
+            rootTogglesContainer.innerHTML = '';
+            for (let k = 0; k < state.n; k++) {
+                const btn = document.createElement('button');
+                const isVisible = state.rootVisibility[k];
+                
+                btn.className = `text-xs font-mono py-1 rounded border transition-all select-none ${
+                    isVisible 
+                    ? 'bg-cyan-600 border-cyan-500 text-white shadow-lg shadow-cyan-900/50' 
+                    : 'bg-slate-800 border-slate-700 text-slate-500 hover:bg-slate-700'
+                }`;
+                btn.innerHTML = `w<sub>${k}</sub>`;
+                
+                btn.onclick = () => {
+                    state.rootVisibility[k] = !state.rootVisibility[k];
+                    updateRootToggles();
+                };
+                
+                rootTogglesContainer.appendChild(btn);
+            }
+        }
+
+        function updateCalculations() {
+            state.a = parseFloat(inputReal.value) || 0;
+            state.b = parseFloat(inputImag.value) || 0;
+            state.n = parseInt(sliderN.value);
+            
+            // Calc Polar
+            state.zRadius = Math.sqrt(state.a*state.a + state.b*state.b);
+            state.zAngle = Math.atan2(state.b, state.a);
+
+            // UI Updates
+            nValueDisplay.textContent = state.n;
+            magDisplay.textContent = state.zRadius.toFixed(2);
+            let deg = (state.zAngle * 180 / Math.PI).toFixed(1);
+            argDisplay.textContent = `${deg}°`;
+            rootMagDisplay.textContent = Math.pow(state.zRadius, 1/state.n).toFixed(2);
+            
+            updateRootToggles();
+
+            // Reset Animation if inputs change essentially
+            // But we don't want to reset purely on slider drag unless needed
+        }
+
+        function resetSimulation() {
+            state.currentPower = 1;
+            state.targetPower = 1;
+            btnMultiply.disabled = false;
+            btnMultiply.innerHTML = "Multiply Roots (w<sup>m</sup>)";
+            btnMultiply.classList.remove('opacity-50');
+            powerDisplay.textContent = "1";
+        }
+
+        // Event Listeners
+        inputReal.addEventListener('input', () => { updateCalculations(); resetSimulation(); });
+        inputImag.addEventListener('input', () => { updateCalculations(); resetSimulation(); });
+        
+        sliderN.addEventListener('input', () => { 
+            updateCalculations(); 
+            resetSimulation(); 
+        });
+
+        sliderSpeed.addEventListener('input', () => {
+            speedDisplay.textContent = (sliderSpeed.value / 10).toFixed(1) + 'x';
+        });
+
+        btnMultiply.addEventListener('click', () => {
+            if (state.targetPower < state.n) {
+                state.targetPower++;
+                powerDisplay.textContent = state.targetPower;
+            }
+        });
+
+        btnReset.addEventListener('click', () => {
+            resetSimulation();
+        });
+
+        // Initialize
+        updateCalculations();
+
+    </script>
+</body>
+</html>
