@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Vector Projection Visualization</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    <style>
+        /* Prevent scrolling on the canvas for touch devices */
+        #canvas-container {
+            touch-action: none; 
+        }
+        
+        /* Custom scrollbar for the sidebar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        
+        .katex-display {
+            margin: 0.5em 0 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 h-screen w-screen overflow-hidden flex flex-col md:flex-row font-sans selection:bg-sky-500/30">
+
+    <!-- Canvas Container (Left/Main) -->
+    <div id="canvas-container" class="relative flex-1 h-1/2 md:h-full w-full border-b md:border-b-0 md:border-r border-slate-700 bg-slate-800 shadow-inner overflow-hidden cursor-crosshair">
+        <canvas id="gridCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+        
+        <!-- UI Overlay Hints -->
+        <div class="absolute top-4 left-4 pointer-events-none bg-slate-900/80 backdrop-blur px-3 py-2 rounded-lg border border-slate-700 shadow-lg flex flex-col gap-2">
+            <div>
+                <h1 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    Vector Projection
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">Drag the circular tips of vectors A and B.</p>
+            </div>
+            <label class="pointer-events-auto flex items-center gap-2 cursor-pointer w-max pt-1 border-t border-slate-700/50">
+                <input type="checkbox" id="toggle-proj" checked class="w-4 h-4 rounded border-slate-600 accent-sky-500 cursor-pointer">
+                <span class="text-xs text-slate-300 font-medium select-none">Show Projection</span>
+            </label>
+        </div>
+        
+        <!-- Legend Overlay -->
+        <div class="absolute bottom-4 left-4 pointer-events-none bg-slate-900/80 backdrop-blur px-3 py-2 rounded-lg border border-slate-700 shadow-lg text-xs flex flex-col gap-1.5">
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-sky-400"></div> Vector A (Projected)</div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-pink-400"></div> Vector B (Base)</div>
+            <div id="legend-proj" class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-400"></div> Projection (Proj<sub>B</sub> A)</div>
+        </div>
+    </div>
+
+    <!-- Calculations Sidebar (Right) -->
+    <div class="w-full md:w-[400px] lg:w-[450px] h-1/2 md:h-full bg-slate-900 overflow-y-auto flex flex-col">
+        <div class="p-5 flex-1 space-y-6">
+            
+            <!-- Section: Formula -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Core Formula</h2>
+                <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 text-center text-sm">
+                    <div id="math-formula"></div>
+                </div>
+            </div>
+
+            <!-- Section: Current Vectors -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Edit Vectors</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 flex flex-col justify-center">
+                        <span class="text-sky-400 font-medium mb-2 text-sm text-center">Vector a</span>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <label class="text-slate-400 text-xs w-3">x:</label>
+                                <input type="number" id="input-ax" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm w-full text-slate-200 focus:outline-none focus:border-sky-500" step="0.1">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-slate-400 text-xs w-3">y:</label>
+                                <input type="number" id="input-ay" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm w-full text-slate-200 focus:outline-none focus:border-sky-500" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 flex flex-col justify-center">
+                        <span class="text-pink-400 font-medium mb-2 text-sm text-center">Vector b</span>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <label class="text-slate-400 text-xs w-3">x:</label>
+                                <input type="number" id="input-bx" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm w-full text-slate-200 focus:outline-none focus:border-pink-500" step="0.1">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-slate-400 text-xs w-3">y:</label>
+                                <input type="number" id="input-by" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm w-full text-slate-200 focus:outline-none focus:border-pink-500" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Calculations -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Step-by-Step</h2>
+                <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50 space-y-4 text-sm">
+                    <div>
+                        <div class="text-slate-400 mb-1">1. Dot Product (<span class="text-sky-400">a</span> · <span class="text-pink-400">b</span>)</div>
+                        <div id="math-dot"></div>
+                    </div>
+                    <hr class="border-slate-700/50">
+                    <div>
+                        <div class="text-slate-400 mb-1">2. Magnitude Squared of <span class="text-pink-400">b</span> (|b|²)</div>
+                        <div id="math-mag"></div>
+                    </div>
+                    <hr class="border-slate-700/50">
+                    <div>
+                        <div class="text-slate-400 mb-1">3. Scalar Multiplier</div>
+                        <div id="math-scalar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Result -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-green-400 mb-2">Final Projection Vector</h2>
+                <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/20 text-center text-lg min-h-[100px] flex items-center justify-center">
+                    <div id="math-result"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- State and Config ---
+        const state = {
+            a: { x: 3, y: 4 },   // Logical coords for Vector A
+            b: { x: 5, y: 1 },   // Logical coords for Vector B
+            proj: { x: 0, y: 0 },// Projection vector
+            scale: 50,           // Pixels per unit
+            dragging: null,      // 'a' or 'b'
+            showProjection: true // Controls projection visualization
+        };
+
+        const config = {
+            colors: {
+                bg: '#1e293b',
+                grid: '#334155',
+                axis: '#475569',
+                a: '#38bdf8',    // sky-400
+                b: '#f472b6',    // pink-400
+                proj: '#4ade80', // green-400
+                dash: '#94a3b8', // slate-400
+                text: '#f8fafc'
+            },
+            handleRadius: 4
+        };
+
+        // --- DOM Elements ---
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvas-container');
+
+        // --- Initialization ---
+        function init() {
+            // Render static formula
+            renderMath('math-formula', `Proj_{\\vec{b}}\\vec{a} = \\left( \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|^2} \\right) \\vec{b}`, true);
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Mouse Events
+            canvas.addEventListener('mousedown', handlePointerDown);
+            window.addEventListener('mousemove', handlePointerMove);
+            window.addEventListener('mouseup', handlePointerUp);
+            
+            // Touch Events
+            canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+            window.addEventListener('touchmove', handlePointerMove, { passive: false });
+            window.addEventListener('touchend', handlePointerUp);
+            window.addEventListener('touchcancel', handlePointerUp);
+
+            // Input Events
+            const inputs = ['ax', 'ay', 'bx', 'by'];
+            inputs.forEach(id => {
+                document.getElementById(`input-${id}`).addEventListener('input', handleManualInput);
+            });
+
+            // Toggle Event
+            document.getElementById('toggle-proj').addEventListener('change', (e) => {
+                state.showProjection = e.target.checked;
+                draw();
+            });
+
+            updateCalculations();
+            draw();
+        }
+
+        // Add the missing handleManualInput function
+        function handleManualInput(e) {
+            let val = parseFloat(e.target.value);
+            if (isNaN(val)) return; // Wait until valid number is typed
+
+            const id = e.target.id;
+            if (id === 'input-ax') state.a.x = val;
+            if (id === 'input-ay') state.a.y = val;
+            if (id === 'input-bx') state.b.x = val;
+            if (id === 'input-by') state.b.y = val;
+
+            updateCalculations();
+            draw();
+        }
+
+        // --- Math and Coordinate System ---
+        function updateCalculations() {
+            // Prevent B from being exactly 0 to avoid division by zero
+            if (state.b.x === 0 && state.b.y === 0) {
+                state.b.x = 0.1;
+            }
+
+            const dot = (state.a.x * state.b.x) + (state.a.y * state.b.y);
+            const magSq = (state.b.x * state.b.x) + (state.b.y * state.b.y);
+            const scalar = dot / magSq;
+
+            state.proj.x = scalar * state.b.x;
+            state.proj.y = scalar * state.b.y;
+
+            updateSidebarMath(dot, magSq, scalar);
+        }
+
+        function logicalToScreen(lx, ly) {
+            const dpr = window.devicePixelRatio || 1;
+            const cx = (canvas.width / dpr) / 2;
+            const cy = (canvas.height / dpr) / 2;
+            return {
+                x: cx + (lx * state.scale),
+                y: cy - (ly * state.scale) // Y is inverted in screen coords
+            };
+        }
+
+        function screenToLogical(sx, sy) {
+            const dpr = window.devicePixelRatio || 1;
+            const cx = (canvas.width / dpr) / 2;
+            const cy = (canvas.height / dpr) / 2;
+            return {
+                x: (sx - cx) / state.scale,
+                y: (cy - sy) / state.scale
+            };
+        }
+
+        // --- Drawing ---
+        function resizeCanvas() {
+            const rect = container.getBoundingClientRect();
+            // Use device pixel ratio for sharp rendering on retina displays
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = `${rect.width}px`;
+            canvas.style.height = `${rect.height}px`;
+            
+            // Dynamically adjust scale based on screen size so vectors don't overflow on small screens initially
+            const minDimension = Math.min(rect.width, rect.height);
+            state.scale = Math.max(30, minDimension / 16); 
+
+            draw();
+        }
+
+        function draw() {
+            const width = canvas.width / (window.devicePixelRatio || 1);
+            const height = canvas.height / (window.devicePixelRatio || 1);
+            const cx = width / 2;
+            const cy = height / 2;
+
+            // Clear
+            ctx.clearRect(0, 0, width, height);
+
+            // Toggle Legend display
+            const legendProj = document.getElementById('legend-proj');
+            if (legendProj) {
+                legendProj.style.display = state.showProjection ? 'flex' : 'none';
+            }
+
+            // Draw Grid
+            ctx.lineWidth = 1;
+            
+            // Minor grid lines
+            ctx.strokeStyle = config.colors.grid;
+            ctx.beginPath();
+            for (let x = cx % state.scale; x < width; x += state.scale) {
+                ctx.moveTo(x, 0); ctx.lineTo(x, height);
+            }
+            for (let y = cy % state.scale; y < height; y += state.scale) {
+                ctx.moveTo(0, y); ctx.lineTo(width, y);
+            }
+            ctx.stroke();
+
+            // Axes
+            ctx.strokeStyle = config.colors.axis;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy); ctx.lineTo(width, cy);
+            ctx.stroke();
+
+            // Convert logical to screen coords
+            const origin = logicalToScreen(0, 0);
+            const screenA = logicalToScreen(state.a.x, state.a.y);
+            const screenB = logicalToScreen(state.b.x, state.b.y);
+            const screenProj = logicalToScreen(state.proj.x, state.proj.y);
+
+            if (state.showProjection) {
+                // Draw Extended Line for B (Infinite line B resides on)
+                drawExtendedLine(origin, screenB, config.colors.grid);
+
+                // Draw Drop Dash Line (Orthogonal line from A to projection)
+                ctx.beginPath();
+                ctx.setLineDash([5, 5]);
+                ctx.moveTo(screenA.x, screenA.y);
+                ctx.lineTo(screenProj.x, screenProj.y);
+                ctx.strokeStyle = config.colors.dash;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.setLineDash([]); // Reset dash
+            }
+
+            // Draw Vectors
+            drawArrow(origin.x, origin.y, screenB.x, screenB.y, config.colors.b, 3, "B");
+            drawArrow(origin.x, origin.y, screenA.x, screenA.y, config.colors.a, 3, "A");
+            
+            if (state.showProjection) {
+                // Draw Projection Vector on top (slightly thicker)
+                drawArrow(origin.x, origin.y, screenProj.x, screenProj.y, config.colors.proj, 4, "Proj", true);
+            }
+
+            // Draw draggable handles
+            drawHandle(screenA.x, screenA.y, config.colors.a, state.dragging === 'a');
+            drawHandle(screenB.x, screenB.y, config.colors.b, state.dragging === 'b');
+        }
+
+        function drawExtendedLine(p1, p2, color) {
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            
+            // If B is essentially zero, don't draw line
+            if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) return;
+
+            const len = Math.sqrt(dx*dx + dy*dy);
+            const ux = dx / len;
+            const uy = dy / len;
+            
+            const maxDist = 3000; // Far enough off screen
+            
+            ctx.beginPath();
+            ctx.setLineDash([4, 4]);
+            ctx.moveTo(p1.x - ux * maxDist, p1.y - uy * maxDist);
+            ctx.lineTo(p1.x + ux * maxDist, p1.y + uy * maxDist);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawArrow(fromX, fromY, toX, toY, color, width, label, isProj = false) {
+            const headlen = isProj ? 16 : 18; // Larger arrowheads
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const angle = Math.atan2(dy, dx);
+            
+            // Draw arrow all the way to the end coordinates
+            const endX = toX;
+            const endY = toY;
+            
+            // Don't draw if length is practically zero
+            if (Math.sqrt(dx*dx + dy*dy) < 1) return;
+
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // Draw Arrowhead
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - headlen * Math.cos(angle - Math.PI / 6), endY - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(endX - headlen * Math.cos(angle + Math.PI / 6), endY - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.lineTo(endX, endY);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            // Label
+            if (label) {
+                const labelOffset = isProj ? 20 : 25; // Push label out further
+                const labelX = toX + labelOffset * Math.cos(angle);
+                const labelY = toY + labelOffset * Math.sin(angle);
+                
+                // Add a slight dark backdrop to text for readability
+                ctx.shadowColor = '#0f172a';
+                ctx.shadowBlur = 4;
+                ctx.fillText(label, labelX, labelY);
+                ctx.shadowBlur = 0; // reset
+            }
+        }
+
+        function drawHandle(x, y, color, isDragging) {
+            ctx.beginPath();
+            ctx.arc(x, y, config.handleRadius + (isDragging ? 4 : 0), 0, 2 * Math.PI);
+            ctx.fillStyle = isDragging ? '#ffffff' : color;
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+        }
+
+        // --- Interaction Logic ---
+        function getEventPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function handlePointerDown(e) {
+            const pos = getEventPos(e);
+            const screenA = logicalToScreen(state.a.x, state.a.y);
+            const screenB = logicalToScreen(state.b.x, state.b.y);
+
+            const distA = Math.hypot(pos.x - screenA.x, pos.y - screenA.y);
+            const distB = Math.hypot(pos.x - screenB.x, pos.y - screenB.y);
+
+            const hitRadius = config.handleRadius + 15; // Generous hit area for touch
+
+            if (distA < hitRadius) {
+                state.dragging = 'a';
+            } else if (distB < hitRadius) {
+                state.dragging = 'b';
+            }
+
+            if (state.dragging && e.cancelable) {
+                e.preventDefault(); // Prevent scrolling while dragging on touch
+                document.body.style.cursor = 'grabbing';
+                draw();
+            }
+        }
+
+        function handlePointerMove(e) {
+            if (!state.dragging) return;
+            if (e.cancelable) e.preventDefault();
+
+            const pos = getEventPos(e);
+            const logicalPos = screenToLogical(pos.x, pos.y);
+
+            // Snap to grid if close enough (optional nice feel)
+            const snap = 0.1;
+            logicalPos.x = Math.round(logicalPos.x / snap) * snap;
+            logicalPos.y = Math.round(logicalPos.y / snap) * snap;
+
+            if (state.dragging === 'a') {
+                state.a.x = logicalPos.x;
+                state.a.y = logicalPos.y;
+            } else if (state.dragging === 'b') {
+                // Prevent B from snapping to 0,0
+                if (Math.abs(logicalPos.x) < 0.1 && Math.abs(logicalPos.y) < 0.1) {
+                    logicalPos.x = 0.1;
+                }
+                state.b.x = logicalPos.x;
+                state.b.y = logicalPos.y;
+            }
+
+            updateCalculations();
+            draw();
+        }
+
+        function handlePointerUp() {
+            if (state.dragging) {
+                state.dragging = null;
+                document.body.style.cursor = 'default';
+                draw();
+            }
+        }
+
+        // --- Sidebar Math Updating ---
+        function renderMath(elementId, mathString, isDisplay = false) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            try {
+                katex.render(mathString, el, {
+                    displayMode: isDisplay,
+                    throwOnError: false,
+                    strict: false
+                });
+            } catch (e) {
+                console.error("KaTeX Error: ", e);
+            }
+        }
+
+        function formatNum(num) {
+            // Round to 2 decimal places and remove trailing zeros
+            return parseFloat(num.toFixed(2));
+        }
+
+        function updateSidebarMath(dot, magSq, scalar) {
+            const ax = formatNum(state.a.x);
+            const ay = formatNum(state.a.y);
+            const bx = formatNum(state.b.x);
+            const by = formatNum(state.b.y);
+            const px = formatNum(state.proj.x);
+            const py = formatNum(state.proj.y);
+            
+            // Sync Input Fields (skip if actively typing to prevent cursor jump or decimal erasure)
+            if (document.activeElement.id !== 'input-ax') document.getElementById('input-ax').value = ax;
+            if (document.activeElement.id !== 'input-ay') document.getElementById('input-ay').value = ay;
+            if (document.activeElement.id !== 'input-bx') document.getElementById('input-bx').value = bx;
+            if (document.activeElement.id !== 'input-by') document.getElementById('input-by').value = by;
+
+            const fDot = formatNum(dot);
+            const fMagSq = formatNum(magSq);
+            const fScalar = formatNum(scalar);
+
+            // 1. Dot Product
+            renderMath('math-dot', `\\vec{a} \\cdot \\vec{b} = (${ax})(${bx}) + (${ay})(${by}) = ${fDot}`);
+
+            // 2. Magnitude Sq
+            renderMath('math-mag', `|\\vec{b}|^2 = (${bx})^2 + (${by})^2 = ${fMagSq}`);
+
+            // 3. Scalar
+            renderMath('math-scalar', `\\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|^2} = \\frac{${fDot}}{${fMagSq}} = ${fScalar}`);
+
+            // Final Result
+            renderMath('math-result', `\\begin{bmatrix} ${px} \\\\ ${py} \\end{bmatrix}`, true);
+        }
+
+        // Wait for KaTeX to load then initialize
+        window.onload = () => {
+            if (typeof katex !== 'undefined') {
+                init();
+            } else {
+                // Fallback polling if script loads slowly
+                const checkInterval = setInterval(() => {
+                    if (typeof katex !== 'undefined') {
+                        clearInterval(checkInterval);
+                        init();
+                    }
+                }, 100);
+            }
+        };
+    </script>
+</body>
+</html>
