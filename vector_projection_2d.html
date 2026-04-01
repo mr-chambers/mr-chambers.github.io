@@ -54,7 +54,7 @@
                 <p class="text-xs text-slate-400 mt-1">Drag the circular tips of vectors A and B.</p>
             </div>
             <label class="pointer-events-auto flex items-center gap-2 cursor-pointer w-max pt-1 border-t border-slate-700/50">
-                <input type="checkbox" id="toggle-proj" checked class="w-4 h-4 rounded border-slate-600 accent-sky-500 cursor-pointer">
+                <input type="checkbox" id="toggle-proj" class="w-4 h-4 rounded border-slate-600 accent-sky-500 cursor-pointer">
                 <span class="text-xs text-slate-300 font-medium select-none">Show Projection</span>
             </label>
         </div>
@@ -152,7 +152,7 @@
             proj: { x: 0, y: 0 },// Projection vector
             scale: 50,           // Pixels per unit
             dragging: null,      // 'a' or 'b'
-            showProjection: true // Controls projection visualization
+            showProjection: false // Controls projection visualization
         };
 
         const config = {
