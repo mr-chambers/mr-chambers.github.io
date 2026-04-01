@@ -1,0 +1,616 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Play, RotateCcw, MapPin, Zap, Activity, Info, RadioTower } from 'lucide-react';
+
+// --- Physics & Simulation Constants ---
+const V_SOUND = 343; // m/s
+const TARGET_DT = 6; // seconds
+const TARGET_DD = V_SOUND * TARGET_DT; // 2058 meters
+const STATION_B = { x: -2000, y: 0 };
+const STATION_A = { x: 2000, y: 0 };
+
+// Viewport mapping (Logical meters to canvas pixels)
+const VIEW_WIDTH = 8000; // -4000 to +4000
+const VIEW_HEIGHT = 6000; // -3000 to +3000
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
+const SCALE = CANVAS_WIDTH / VIEW_WIDTH;
+
+export default function App() {
+  const canvasRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  
+  // React UI State
+  const [uiState, setUiState] = useState({
+    status: 'idle', // idle, playing, frozen
+    strikePoint: null,
+    distA: 0,
+    distB: 0,
+    timeA: 0,
+    timeB: 0,
+    deltaT: 0,
+    isMatch: false,
+  });
+
+  const [showRightBranch, setShowRightBranch] = useState(false);
+  const settingsRef = useRef({ showRightBranch: false });
+
+  const toggleRightBranch = () => {
+    const newVal = !showRightBranch;
+    setShowRightBranch(newVal);
+    settingsRef.current.showRightBranch = newVal;
+  };
+
+  // High-frequency simulation state (kept in ref to avoid re-renders)
+  const sim = useRef({
+    time: 0,
+    isPlaying: false,
+    strikePoint: null,
+    lightningPath: null,
+    lightningOpacity: 0,
+    showHyperbola: false,
+    isMatch: false,
+  });
+
+  // --- Audio Synthesis ---
+  const playThunderSound = useCallback(() => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    const ctx = audioCtxRef.current;
+    if (ctx.state === 'suspended') ctx.resume();
+
+    // Create a burst of white noise
+    const bufferSize = ctx.sampleRate * 2.5; // 2.5 seconds
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    // Filter to make it sound like low, distant rumble/crack
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1000, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 1.5);
+
+    // Envelope (Attack & Release)
+    const gainNode = ctx.createGain();
+    gainNode.gain.setValueAtTime(0, ctx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.02); // quick crack attack
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 2.0);
+
+    noise.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    noise.start();
+  }, []);
+
+  // --- Procedural Generation ---
+  const generateLightning = (endX, endY) => {
+    const path = [];
+    let currentX = endX + (Math.random() - 0.5) * 2000;
+    let currentY = 3000; // Start at top of logical view
+    path.push({ x: currentX, y: currentY });
+
+    while (currentY > endY) {
+      currentY -= Math.random() * 400 + 100;
+      if (currentY < endY) currentY = endY;
+      currentX += (Math.random() - 0.5) * 500;
+      path.push({ x: currentX, y: currentY });
+    }
+    path.push({ x: endX, y: endY });
+    return path;
+  };
+
+  // --- Coordinate Mapping ---
+  const mapX = (x) => (x + VIEW_WIDTH / 2) * SCALE;
+  const mapY = (y) => (-y + VIEW_HEIGHT / 2) * SCALE; // Invert Y so positive is up
+  const unmapX = (px) => px / SCALE - VIEW_WIDTH / 2;
+  const unmapY = (py) => -(py / SCALE - VIEW_HEIGHT / 2);
+
+  // --- Simulation Loop ---
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let lastTime = performance.now();
+
+    const drawGrid = () => {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      
+      // Vertical lines
+      for (let x = -4000; x <= 4000; x += 500) {
+        ctx.beginPath();
+        ctx.moveTo(mapX(x), 0);
+        ctx.lineTo(mapX(x), CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+      // Horizontal lines
+      for (let y = -3000; y <= 3000; y += 500) {
+        ctx.beginPath();
+        ctx.moveTo(0, mapY(y));
+        ctx.lineTo(CANVAS_WIDTH, mapY(y));
+        ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.beginPath(); ctx.moveTo(mapX(0), 0); ctx.lineTo(mapX(0), CANVAS_HEIGHT); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, mapY(0)); ctx.lineTo(CANVAS_WIDTH, mapY(0)); ctx.stroke();
+    };
+
+    const drawHyperbola = () => {
+      // Equation: (x^2 / a^2) - (y^2 / b^2) = 1
+      // We know 2a = target difference = 2058 -> a = 1029
+      // c = distance to focus = 2000
+      // b^2 = c^2 - a^2
+      const a = TARGET_DD / 2;
+      const c = 2000;
+      const b2 = (c * c) - (a * a);
+      const b = Math.sqrt(b2);
+
+      ctx.beginPath();
+      // Draw left branch (where distance to B is shorter)
+      for (let y = -3500; y <= 3500; y += 50) {
+        const x = -a * Math.sqrt(1 + (y * y) / b2);
+        if (y === -3500) ctx.moveTo(mapX(x), mapY(y));
+        else ctx.lineTo(mapX(x), mapY(y));
+      }
+
+      if (settingsRef.current.showRightBranch) {
+        // Draw right branch (where distance to A is shorter)
+        for (let y = -3500; y <= 3500; y += 50) {
+          const x = a * Math.sqrt(1 + (y * y) / b2);
+          if (y === -3500) ctx.moveTo(mapX(x), mapY(y));
+          else ctx.lineTo(mapX(x), mapY(y));
+        }
+      }
+
+      ctx.strokeStyle = sim.current.isMatch ? '#22c55e' : '#0ea5e9'; // Green if hit, else cyan
+      ctx.lineWidth = 4;
+      ctx.setLineDash([10, 10]); // Dashed line for mathematical locus
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset
+      
+      // Add a glow
+      ctx.shadowColor = sim.current.isMatch ? '#22c55e' : '#0ea5e9';
+      ctx.shadowBlur = 15;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    };
+
+    const render = (currentTime) => {
+      const dt = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+
+      // Update Physics
+      if (sim.current.isPlaying) {
+        // Speed up simulation time visually (e.g., 4x real time) so we don't wait 10 seconds
+        sim.current.time += dt * 4; 
+        
+        const sp = sim.current.strikePoint;
+        if (sp) {
+          const distB = Math.hypot(sp.x - STATION_B.x, sp.y - STATION_B.y);
+          const currentRadius = sim.current.time * V_SOUND;
+
+          // Freeze logic: The moment sound reaches B
+          if (currentRadius >= distB) {
+            sim.current.time = distB / V_SOUND; // Snap to exact impact time
+            sim.current.isPlaying = false;
+            sim.current.showHyperbola = true;
+            
+            // Sync React UI State
+            setUiState(prev => ({ ...prev, status: 'frozen' }));
+          }
+        }
+      }
+
+      // Update Lightning Fade
+      if (sim.current.lightningOpacity > 0) {
+        sim.current.lightningOpacity -= dt * 2.5; // Fade out quickly
+      }
+
+      // --- Rendering ---
+      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      drawGrid();
+
+      drawHyperbola();
+
+      const sp = sim.current.strikePoint;
+      if (sp) {
+        // Draw Expanding Sound Wave
+        const radius = sim.current.time * V_SOUND * SCALE;
+        if (radius > 0) {
+          // Inner fill
+          ctx.beginPath();
+          ctx.arc(mapX(sp.x), mapY(sp.y), radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+          ctx.fill();
+          
+          // Wave front
+          ctx.beginPath();
+          ctx.arc(mapX(sp.x), mapY(sp.y), radius, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        const px = mapX(sp.x);
+        const py = mapY(sp.y);
+        const ax = mapX(STATION_A.x);
+        const ay = mapY(STATION_A.y);
+        const bx = mapX(STATION_B.x);
+        const by = mapY(STATION_B.y);
+
+        const distA = Math.hypot(sp.x - STATION_A.x, sp.y - STATION_A.y);
+        const distB = Math.hypot(sp.x - STATION_B.x, sp.y - STATION_B.y);
+        const minDist = Math.min(distA, distB);
+        const maxDist = Math.max(distA, distB);
+        const diff = maxDist - minDist;
+
+        // Dashed lines to stations
+        ctx.beginPath();
+        ctx.moveTo(px, py); ctx.lineTo(ax, ay);
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)'; // Amber (Station A)
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(px, py); ctx.lineTo(bx, by);
+        ctx.strokeStyle = 'rgba(96, 165, 250, 0.5)'; // Blue (Station B)
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset
+
+        // Distance Difference Highlight Visualization
+        if (diff > 5) {
+          const c_targetX = distA > distB ? ax : bx;
+          const c_targetY = distA > distB ? ay : by;
+          const angle = Math.atan2(c_targetY - py, c_targetX - px);
+
+          const startExtraX = px + Math.cos(angle) * (minDist * SCALE);
+          const startExtraY = py + Math.sin(angle) * (minDist * SCALE);
+
+          // Faint boundary circle to show the arc of equal distance
+          ctx.beginPath();
+          ctx.arc(px, py, minDist * SCALE, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+          ctx.setLineDash([4, 8]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Tick mark at the separation boundary
+          ctx.beginPath();
+          ctx.moveTo(startExtraX - Math.cos(angle + Math.PI/2)*8, startExtraY - Math.sin(angle + Math.PI/2)*8);
+          ctx.lineTo(startExtraX + Math.cos(angle + Math.PI/2)*8, startExtraY + Math.sin(angle + Math.PI/2)*8);
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Highlight segment (the actual difference)
+          ctx.beginPath();
+          ctx.moveTo(startExtraX, startExtraY);
+          ctx.lineTo(c_targetX, c_targetY);
+          ctx.strokeStyle = sim.current.isMatch ? '#22c55e' : '#ec4899'; // Green if match, else pink
+          ctx.lineWidth = 4;
+          ctx.stroke();
+
+          // Text label for the difference
+          const midX = (startExtraX + c_targetX) / 2;
+          const midY = (startExtraY + c_targetY) / 2;
+          const text = `Δd = ${diff.toFixed(0)}m`;
+          
+          ctx.font = "bold 13px monospace";
+          const textWidth = ctx.measureText(text).width;
+          
+          // Background for text readability
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+          ctx.fillRect(midX - textWidth/2 - 4, midY - 20, textWidth + 8, 18);
+          
+          ctx.fillStyle = sim.current.isMatch ? '#4ade80' : '#f472b6';
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(text, midX, midY - 4);
+        }
+
+        // Draw Lightning
+        if (sim.current.lightningOpacity > 0 && sim.current.lightningPath) {
+          ctx.beginPath();
+          ctx.moveTo(mapX(sim.current.lightningPath[0].x), mapY(sim.current.lightningPath[0].y));
+          for (let i = 1; i < sim.current.lightningPath.length; i++) {
+            ctx.lineTo(mapX(sim.current.lightningPath[i].x), mapY(sim.current.lightningPath[i].y));
+          }
+          ctx.strokeStyle = `rgba(255, 255, 255, ${sim.current.lightningOpacity})`;
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#60a5fa'; // Blue glow
+          ctx.shadowBlur = 20;
+          ctx.stroke();
+          
+          // Inner bright core
+          ctx.strokeStyle = `rgba(219, 234, 254, ${sim.current.lightningOpacity})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+
+        // Draw Strike Indicator (X mark)
+        ctx.beginPath();
+        ctx.moveTo(px - 5, py - 5); ctx.lineTo(px + 5, py + 5);
+        ctx.moveTo(px + 5, py - 5); ctx.lineTo(px - 5, py + 5);
+        ctx.strokeStyle = sim.current.isMatch ? '#4ade80' : '#f87171'; // Green if match, else red
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    animationFrameId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
+
+
+  // --- Interactions ---
+  const handleCanvasClick = (e) => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    // Calculate click coordinates relative to the internal 800x600 resolution
+    const scaleX = CANVAS_WIDTH / rect.width;
+    const scaleY = CANVAS_HEIGHT / rect.height;
+    
+    const px = (e.clientX - rect.left) * scaleX;
+    const py = (e.clientY - rect.top) * scaleY;
+    
+    const x = unmapX(px);
+    const y = unmapY(py);
+
+    triggerStrike(x, y);
+  };
+
+  const triggerStrike = (x, y) => {
+    // Math logic
+    const distA = Math.hypot(x - STATION_A.x, y - STATION_A.y);
+    const distB = Math.hypot(x - STATION_B.x, y - STATION_B.y);
+    const timeA = distA / V_SOUND;
+    const timeB = distB / V_SOUND;
+    const deltaT = timeA - timeB;
+    
+    // Check if within 150m tolerance of the correct hyperbola
+    const diffDistance = distA - distB;
+    const isMatch = Math.abs(diffDistance - TARGET_DD) < 150;
+
+    // Update Simulation Ref
+    sim.current = {
+      time: 0,
+      isPlaying: true,
+      strikePoint: { x, y },
+      lightningPath: generateLightning(x, y),
+      lightningOpacity: 1,
+      showHyperbola: false,
+      isMatch
+    };
+
+    // Update UI State
+    setUiState({
+      status: 'playing',
+      strikePoint: { x, y },
+      distA,
+      distB,
+      timeA,
+      timeB,
+      deltaT,
+      isMatch
+    });
+
+    playThunderSound();
+  };
+
+  const resetSim = () => {
+    sim.current = {
+      time: 0,
+      isPlaying: false,
+      strikePoint: null,
+      lightningPath: null,
+      lightningOpacity: 0,
+      showHyperbola: false,
+      isMatch: false,
+    };
+    setUiState({
+      status: 'idle',
+      strikePoint: null,
+      distA: 0,
+      distB: 0,
+      timeA: 0,
+      timeB: 0,
+      deltaT: 0,
+      isMatch: false,
+    });
+  };
+
+  // Helper to place React overlays on the canvas perfectly
+  const getHtmlPos = (logicalX, logicalY) => {
+    const pctX = (mapX(logicalX) / CANVAS_WIDTH) * 100;
+    const pctY = (mapY(logicalY) / CANVAS_HEIGHT) * 100;
+    return { left: `${pctX}%`, top: `${pctY}%` };
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans p-6 flex flex-col items-center selection:bg-cyan-900">
+      
+      {/* Header */}
+      <div className="max-w-5xl w-full mb-6">
+        <h1 className="text-3xl font-bold text-white flex items-center gap-3 mb-2">
+          <Zap className="text-yellow-400" />
+          Lightning Localization Physics
+        </h1>
+        <div className="bg-slate-900 border border-slate-700 p-4 rounded-xl shadow-lg flex items-start gap-4">
+          <Info className="text-cyan-400 shrink-0 mt-1" />
+          <p className="text-slate-300 leading-relaxed text-sm md:text-base">
+            <strong className="text-white">The Problem:</strong> Weather station A is 4 km east of weather station B. 
+            Weather station B hears thunder exactly <span className="text-cyan-400 font-semibold">6 seconds before</span> station A. 
+            What are the possible places the lightning could have struck? <br/>
+            <span className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Assuming Speed of Sound = 343 m/s</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Main Simulation Area */}
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Canvas Container (Left 2 cols on wide screens) */}
+        <div className="lg:col-span-2 relative rounded-xl overflow-hidden border-2 border-slate-800 shadow-2xl bg-slate-900 group cursor-crosshair select-none">
+          
+          <div className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.6)_100%)]" />
+          
+          <canvas
+            ref={canvasRef}
+            width={CANVAS_WIDTH}
+            height={CANVAS_HEIGHT}
+            onClick={handleCanvasClick}
+            className="w-full h-auto block"
+          />
+
+          {/* HTML Overlays for Stations to ensure crisp Icons */}
+          <div 
+            className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none z-20"
+            style={getHtmlPos(STATION_B.x, STATION_B.y)}
+          >
+            <RadioTower className="w-8 h-8 text-blue-400 mb-1 drop-shadow-[0_0_8px_rgba(96,165,250,0.6)]" />
+            <span className="bg-slate-900/80 px-2 py-0.5 rounded text-xs font-bold border border-blue-500/50 text-blue-300 shadow flex flex-col items-center">
+              <span>Station B</span>
+              <span className="text-[10px] font-mono text-blue-400/80">(-2000, 0)</span>
+            </span>
+          </div>
+
+          <div 
+            className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none z-20"
+            style={getHtmlPos(STATION_A.x, STATION_A.y)}
+          >
+            <RadioTower className="w-8 h-8 text-amber-400 mb-1 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+            <span className="bg-slate-900/80 px-2 py-0.5 rounded text-xs font-bold border border-amber-500/50 text-amber-300 shadow flex flex-col items-center">
+              <span>Station A</span>
+              <span className="text-[10px] font-mono text-amber-400/80">(2000, 0)</span>
+            </span>
+          </div>
+          
+          {/* Overlay Status Badge */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+            {uiState.status === 'idle' && (
+              <span className="bg-slate-800/80 backdrop-blur border border-slate-600 px-4 py-2 rounded-full text-sm font-medium animate-pulse">
+                Click anywhere to trigger a strike
+              </span>
+            )}
+            {uiState.status === 'playing' && (
+              <span className="bg-indigo-900/80 backdrop-blur border border-indigo-500 px-4 py-2 rounded-full text-sm font-medium text-indigo-200">
+                Sound wave expanding...
+              </span>
+            )}
+            {uiState.status === 'frozen' && (
+              <span className="bg-cyan-900/90 backdrop-blur border border-cyan-400 px-4 py-2 rounded-full text-sm font-bold text-cyan-50 shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                Simulation Frozen (Wave Reached Station B)
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Control Panel (Right col) */}
+        <div className="flex flex-col gap-4">
+          
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg flex-1">
+            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Activity className="w-5 h-5 text-indigo-400" />
+              Telemetry Data
+            </h2>
+
+            {uiState.strikePoint ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="bg-slate-950 p-3 rounded-lg border border-slate-800/50">
+                    <span className="block text-slate-500 mb-1 text-xs uppercase tracking-widest">Dist to B</span>
+                    <span className="text-blue-400 font-mono text-lg">{uiState.distB.toFixed(0)} m</span>
+                  </div>
+                  <div className="bg-slate-950 p-3 rounded-lg border border-slate-800/50">
+                    <span className="block text-slate-500 mb-1 text-xs uppercase tracking-widest">Dist to A</span>
+                    <span className="text-amber-400 font-mono text-lg">{uiState.distA.toFixed(0)} m</span>
+                  </div>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 relative overflow-hidden">
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-end mb-2">
+                      <span className="text-slate-400 text-sm">Time Difference (<span className="text-white italic">Δt</span>)</span>
+                      <span className={`font-mono text-2xl font-bold ${uiState.isMatch ? 'text-green-400' : 'text-slate-200'}`}>
+                        {uiState.deltaT > 0 ? '+' : ''}{uiState.deltaT.toFixed(2)} s
+                      </span>
+                    </div>
+                    
+                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-3">
+                       {/* Visual slider for Delta T, centered at 0 */}
+                       <div 
+                         className="h-full bg-indigo-500 transition-all duration-300" 
+                         style={{ 
+                           width: `${Math.min(100, Math.abs(uiState.deltaT) * (100/15))}%`,
+                           marginLeft: uiState.deltaT < 0 ? `calc(50% - ${Math.min(50, Math.abs(uiState.deltaT) * (50/15))}%)` : '50%'
+                         }} 
+                       />
+                    </div>
+                    <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                      <span>-10s</span>
+                      <span>0</span>
+                      <span>+10s</span>
+                    </div>
+                  </div>
+                </div>
+
+                {uiState.status === 'frozen' && (
+                  <div className={`p-4 rounded-lg border text-sm ${uiState.isMatch ? 'bg-green-950/30 border-green-500/50 text-green-200' : 'bg-slate-800/50 border-slate-700 text-slate-300'}`}>
+                    {uiState.isMatch ? (
+                      <p className="flex gap-2">
+                        <MapPin className="text-green-400 shrink-0 w-5 h-5" />
+                        <span><strong>Perfect guess!</strong> This point lies on the <span className="text-green-400">green hyperbola</span> where the difference is exactly 6 seconds.</span>
+                      </p>
+                    ) : (
+                      <p>
+                        The lightning struck here resulting in a <span className="text-white font-mono">{uiState.deltaT.toFixed(2)}s</span> difference. The <span className="text-cyan-400 font-semibold">cyan dashed curve</span> shows all mathematical possibilities where the difference is exactly 6 seconds.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="h-48 flex flex-col items-center justify-center text-slate-500 text-center px-4 border-2 border-dashed border-slate-800 rounded-xl">
+                <MapPin className="w-8 h-8 mb-2 opacity-50" />
+                <p>Waiting for strike telemetry...</p>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-slate-200">Show Right Branch</span>
+              <span className="text-[10px] text-slate-500">Mathematical locus for Δt = -6s</span>
+            </div>
+            <button
+              onClick={toggleRightBranch}
+              className={`w-12 h-6 rounded-full transition-colors relative focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${showRightBranch ? 'bg-cyan-500' : 'bg-slate-700'}`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${showRightBranch ? 'translate-x-7' : 'translate-x-1'}`} />
+            </button>
+          </div>
+
+          <button
+            onClick={resetSim}
+            className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 border border-slate-700 hover:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+          >
+            <RotateCcw className="w-5 h-5" />
+            Clear & Reset Canvas
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
