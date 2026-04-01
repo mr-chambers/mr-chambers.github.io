@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Eigenvectors Visualization</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #111; color: #eee; font-family: sans-serif; }
+        #canvas-container { width: 100vw; height: 100vh; }
+        #ui-panel {
+            position: absolute; top: 10px; right: 10px; background: rgba(30, 30, 30, 0.8);
+            padding: 15px; border-radius: 8px; border: 1px solid #444; width: 300px;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .control-group { margin-bottom: 10px; display: flex; align-items: center; }
+        label { display: inline-block; width: 120px; font-size: 14px; }
+        input[type=range] { flex-grow: 1; vertical-align: middle; }
+        span.val { font-size: 14px; margin-left: 10px; font-family: monospace; width: 45px; text-align: right; }
+        h3 { margin-top: 15px; margin-bottom: 10px; font-size: 16px; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        h3:first-child { margin-top: 0; }
+        .legend { font-size: 12px; margin-top: 15px; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; }
+        .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+        .hint { font-size: 11px; color: #aaa; margin-top: 5px; font-style: italic; }
+        button#play-btn { background: #44aaff; color: #fff; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; margin-right: 10px; font-weight: bold; transition: background 0.2s; }
+        button#play-btn:hover { background: #66bbff; }
+    </style>
+    <!-- Load Three.js and OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div id="ui-panel">
+    <h3>System Parameters</h3>
+    <div class="control-group">
+        <label>Time (t):</label>
+        <button id="play-btn">Play</button>
+        <input type="range" id="t-slider" min="0" max="10" step="0.05" value="0">
+        <span class="val" id="t-val">0.00</span>
+    </div>
+    <div class="control-group">
+        <label>Growth (α):</label>
+        <input type="range" id="alpha-slider" min="-0.5" max="0.5" step="0.05" value="-0.1">
+        <span class="val" id="alpha-val">-0.10</span>
+    </div>
+    <div class="control-group">
+        <label>Frequency (β):</label>
+        <input type="range" id="beta-slider" min="0.5" max="5" step="0.1" value="2.0">
+        <span class="val" id="beta-val">2.0</span>
+    </div>
+    
+    <h3>Eigenvector u (Real)</h3>
+    <div class="control-group">
+        <label>u₁ (x-axis):</label>
+        <input type="range" id="u1-slider" min="-3" max="3" step="0.1" value="2">
+        <span class="val" id="u1-val">2.0</span>
+    </div>
+    <div class="control-group">
+        <label>u₂ (z-axis):</label>
+        <input type="range" id="u2-slider" min="-3" max="3" step="0.1" value="0">
+        <span class="val" id="u2-val">0.0</span>
+    </div>
+
+    <h3>Eigenvector w (Imaginary)</h3>
+    <div class="control-group">
+        <label>w₁ (x-axis):</label>
+        <input type="range" id="w1-slider" min="-3" max="3" step="0.1" value="0">
+        <span class="val" id="w1-val">0.0</span>
+    </div>
+    <div class="control-group">
+        <label>w₂ (z-axis):</label>
+        <input type="range" id="w2-slider" min="-3" max="3" step="0.1" value="1.5">
+        <span class="val" id="w2-val">1.5</span>
+    </div>
+
+    <div class="legend">
+        <div><span class="dot" style="background:#ff4444;"></span> <b>u</b> (Real Part)</div>
+        <div><span class="dot" style="background:#4444ff;"></span> <b>w</b> (Imag Part)</div>
+        <div><span class="dot" style="background:#44ff44;"></span> <b>x(t)</b> Solution Vector</div>
+        <div><span class="dot" style="background:#ffff44;"></span> <b>Ax(t)</b> Slope Vector</div>
+        <div><span class="dot" style="background:#ff88ff;"></span> <b>State in 3D</b> (Purple Coil)</div>
+        <div class="hint">Drag the canvas to rotate. Scroll to zoom. X-Z is Phase Plane. Y is Time.</div>
+    </div>
+</div>
+
+<script>
+    // --- Scene Setup ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x111111);
+    
+    // Map: X = x_1, Z = x_2, Y = t
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(8, 6, 12);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 3, 0);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Grid and Axes
+    const gridHelper = new THREE.GridHelper(10, 10, 0x444444, 0x222222);
+    scene.add(gridHelper); // Phase plane at t=0 (y=0)
+    
+    // Axes Helper: Red: X (x1), Green: Y (t), Blue: Z (x2)
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper); 
+
+    // --- Visualization Objects ---
+    const mat3D = new THREE.LineBasicMaterial({ color: 0xaa44ff, linewidth: 2 });
+    const mat2D = new THREE.LineBasicMaterial({ color: 0x44aa44, transparent: true, opacity: 0.6 });
+
+    let coil3D, shadow2D;
+    
+    // 3D Point and Connecting Line
+    const point3DGeo = new THREE.SphereGeometry(0.15, 16, 16);
+    const point3DMat = new THREE.MeshBasicMaterial({ color: 0xff88ff });
+    const point3D = new THREE.Mesh(point3DGeo, point3DMat);
+    scene.add(point3D);
+
+    const dropLineMat = new THREE.LineDashedMaterial({ color: 0xaaaaaa, dashSize: 0.2, gapSize: 0.1 });
+    const dropLineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+    const dropLine = new THREE.Line(dropLineGeo, dropLineMat);
+    scene.add(dropLine);
+    
+    // Arrows
+    const origin = new THREE.Vector3(0, 0, 0);
+    const arrowU = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), origin, 1, 0xff4444, 0.3, 0.2);
+    const arrowW = new THREE.ArrowHelper(new THREE.Vector3(0,0,1), origin, 1, 0x4444ff, 0.3, 0.2);
+    const arrowX = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), origin, 1, 0x44ff44, 0.3, 0.2); // x(t)
+    const arrowAx = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), origin, 1, 0xffff44, 0.3, 0.2); // Ax(t)
+
+    scene.add(arrowU);
+    scene.add(arrowW);
+    scene.add(arrowX);
+    scene.add(arrowAx);
+
+    // Dynamic Parameter State
+    const params = { t: 0, alpha: -0.1, beta: 2.0, u1: 2, u2: 0, w1: 0, w2: 1.5 };
+
+    function getSolutionAtTime(t, p) {
+        // x(t) = e^(at) * (cos(bt)u - sin(bt)w)
+        const eat = Math.exp(p.alpha * t);
+        const cbt = Math.cos(p.beta * t);
+        const sbt = Math.sin(p.beta * t);
+        
+        const x1 = eat * (cbt * p.u1 - sbt * p.w1);
+        const x2 = eat * (cbt * p.u2 - sbt * p.w2);
+        return { x1, x2 };
+    }
+
+    function getDerivativeAtTime(t, p) {
+        // x'(t) = a*x(t) + e^(at) * (-b*sin(bt)u - b*cos(bt)w)
+        const x = getSolutionAtTime(t, p);
+        const eat = Math.exp(p.alpha * t);
+        const cbt = Math.cos(p.beta * t);
+        const sbt = Math.sin(p.beta * t);
+
+        const dx1 = p.alpha * x.x1 + eat * (-p.beta * sbt * p.u1 - p.beta * cbt * p.w1);
+        const dx2 = p.alpha * x.x2 + eat * (-p.beta * sbt * p.u2 - p.beta * cbt * p.w2);
+        return { dx1, dx2 };
+    }
+
+    function updateGeometry() {
+        if (coil3D) scene.remove(coil3D);
+        if (shadow2D) scene.remove(shadow2D);
+
+        const points3D = [];
+        const points2D = [];
+        const tMax = 10;
+        const steps = 500; // Increased resolution for smoother curves
+
+        for (let i = 0; i <= steps; i++) {
+            const t = (i / steps) * tMax;
+            const x = getSolutionAtTime(t, params);
+            points3D.push(new THREE.Vector3(x.x1, t, x.x2)); // Y is time axis
+            points2D.push(new THREE.Vector3(x.x1, 0, x.x2)); // Shadow on X-Z phase plane
+        }
+
+        const geo3D = new THREE.BufferGeometry().setFromPoints(points3D);
+        const geo2D = new THREE.BufferGeometry().setFromPoints(points2D);
+
+        coil3D = new THREE.Line(geo3D, mat3D);
+        shadow2D = new THREE.Line(geo2D, mat2D);
+
+        scene.add(coil3D);
+        scene.add(shadow2D);
+
+        // Update u and w vectors (Real and Imaginary parts of the eigenvector)
+        const vU = new THREE.Vector3(params.u1, 0, params.u2);
+        const vW = new THREE.Vector3(params.w1, 0, params.w2);
+        
+        if (vU.lengthSq() > 0.0001) {
+            arrowU.setDirection(vU.clone().normalize());
+            arrowU.setLength(vU.length(), 0.3, 0.2);
+            arrowU.visible = true;
+        } else {
+            arrowU.visible = false;
+        }
+
+        if (vW.lengthSq() > 0.0001) {
+            arrowW.setDirection(vW.clone().normalize());
+            arrowW.setLength(vW.length(), 0.3, 0.2);
+            arrowW.visible = true;
+        } else {
+            arrowW.visible = false;
+        }
+
+        updateDynamicVectors();
+    }
+
+    function updateDynamicVectors() {
+        const t = params.t;
+        
+        // Update x(t) [Solution Vector]
+        const x = getSolutionAtTime(t, params);
+        const vX = new THREE.Vector3(x.x1, 0, x.x2);
+        if(vX.lengthSq() > 0.0001) {
+            arrowX.setDirection(vX.clone().normalize());
+            arrowX.setLength(vX.length(), 0.3, 0.2);
+            arrowX.visible = true;
+        } else {
+            arrowX.visible = false;
+        }
+
+        // Update Ax(t) [Slope/Derivative Vector] originating from the tip of x(t)
+        const dx = getDerivativeAtTime(t, params);
+        const vAx = new THREE.Vector3(dx.dx1, 0, dx.dx2);
+        
+        arrowAx.position.copy(vX); // Move origin to tip of x(t)
+        
+        if(vAx.lengthSq() > 0.0001) {
+            arrowAx.setDirection(vAx.clone().normalize());
+            // Scale length of Ax slightly for better visibility depending on magnitude
+            arrowAx.setLength(vAx.length() * 0.4, 0.2, 0.15); 
+            arrowAx.visible = true;
+        } else {
+            arrowAx.visible = false;
+        }
+
+        // Update 3D Point on Coil and Drop Line
+        point3D.position.set(x.x1, t, x.x2);
+        
+        const p1 = new THREE.Vector3(x.x1, 0, x.x2);
+        const p2 = new THREE.Vector3(x.x1, t, x.x2);
+        dropLine.geometry.setFromPoints([p1, p2]);
+        dropLine.computeLineDistances(); // Necessary for dashed lines to render correctly
+    }
+
+    // --- UI Event Listeners ---
+    function syncParamsFromUI() {
+        ['t', 'alpha', 'beta', 'u1', 'u2', 'w1', 'w2'].forEach(key => {
+            const slider = document.getElementById(key + '-slider');
+            const valDisplay = document.getElementById(key + '-val');
+            params[key] = parseFloat(slider.value);
+            // Format number to ensure consistent decimal places
+            valDisplay.innerText = params[key].toFixed(key === 't' ? 2 : 1);
+        });
+        updateGeometry();
+    }
+
+    document.querySelectorAll('input[type=range]').forEach(input => {
+        input.addEventListener('input', syncParamsFromUI);
+    });
+
+    // Play Button Logic
+    let isPlaying = false;
+    const playBtn = document.getElementById('play-btn');
+    playBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        playBtn.innerText = isPlaying ? "Pause" : "Play";
+        playBtn.style.background = isPlaying ? "#ff4444" : "#44aaff";
+    });
+
+    // Handle Window Resize
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Initialize State
+    syncParamsFromUI();
+
+    // Render Loop
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        if (isPlaying) {
+            const delta = clock.getDelta();
+            params.t += delta; // Advance time by roughly 1 unit per second
+            if (params.t > 10) params.t = 0; // Loop back
+            
+            // Update UI elements to match
+            document.getElementById('t-slider').value = params.t;
+            document.getElementById('t-val').innerText = params.t.toFixed(2);
+            
+            // Only update dynamic vectors/point to save performance (no need to rebuild coil)
+            updateDynamicVectors(); 
+        } else {
+            clock.getDelta(); // keep clock updated even when paused
+        }
+
+        controls.update(); // required if controls.enableDamping or controls.autoRotate are set
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+
+</body>
+</html>
