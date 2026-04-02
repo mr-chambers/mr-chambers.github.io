@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Moon's Journey - Interactive Phase Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        /* Main UI Container */
+        #ui-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px; /* Moved to corner */
+            width: 280px; /* Smaller fixed width */
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 1rem; /* Smaller font */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #aaddff;
+        }
+
+        /* Slider Styling */
+        input[type=range] {
+            width: 100%;
+            margin: 10px 0;
+            cursor: pointer;
+            accent-color: #4facfe;
+            height: 4px; /* Slimmer slider track */
+        }
+
+        /* Phase Label */
+        #phase-label {
+            font-size: 1.2rem; /* Smaller font */
+            font-weight: bold;
+            margin-bottom: 2px;
+            min-height: 25px;
+            color: #ffffff;
+        }
+
+        #angle-display {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* Labels for Views */
+        .view-label {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            color: #ccc;
+        }
+
+        #main-label { top: 20px; left: 20px; }
+        
+        /* The PIP Window Label is handled in JS rendering loop primarily, 
+           but we place a static label for the layout */
+        #pip-label { 
+            bottom: 230px; 
+            right: 20px; 
+            z-index: 5;
+            text-align: right;
+        }
+        
+        #pip-border {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%; /* Make the view circular for telescope feel */
+            pointer-events: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 5;
+            overflow: hidden;
+        }
+        
+        /* Instructions */
+        #instructions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: right;
+            pointer-events: none;
+        }
+
+    </style>
+    
+    <!-- Import Map: Essential for resolving 'three' inside OrbitControls -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Main 3D Canvas -->
+    <!-- Note: Three.js will append the canvas to body -->
+
+    <!-- UI Overlay -->
+    <div id="main-label" class="view-label">SPACE VIEW (Drag to Rotate)</div>
+    
+    <div id="instructions">
+        Scroll to Zoom<br>
+        Left Click to Rotate<br>
+        Right Click to Pan
+    </div>
+
+    <div id="pip-border"></div>
+    <div id="pip-label" class="view-label" style="bottom: 230px; right: 20px;">EARTH VIEW (Telescope)</div>
+
+    <div id="ui-container">
+        <h1>The Moon's Journey</h1>
+        <div id="phase-label">New Moon</div>
+        <div id="angle-display">Day 0</div>
+        <input type="range" id="orbitSlider" min="0" max="360" value="0" step="0.5">
+        
+        <!-- Added Tilt Control -->
+        <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+            <div id="tilt-display" style="font-size: 0.9rem; color: #aaa; margin-bottom: 5px;">Orbit Tilt: 0°</div>
+            <input type="range" id="tiltSlider" min="-45" max="45" value="0" step="1">
+        </div>
+    </div>
+
+    <!-- Import Three.js as a module -->
+    <script type="module">
+        // Using the import map defined in <head>
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- Configuration ---
+        const SCENE_CONFIG = {
+            earthRadius: 5,
+            moonRadius: 1.35, // Approx scale relative to Earth
+            orbitRadius: 18,
+            sunDistance: 100
+        };
+
+        // --- Scene Setup ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 30, 40);
+
+        // Secondary Camera for "Earth View"
+        const earthCamera = new THREE.PerspectiveCamera(35, 1, 0.1, 100); 
+        // Positioned slightly above Earth surface to look at moon
+        earthCamera.position.set(0, 0, 0); 
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.minDistance = 10;
+        controls.maxDistance = 100;
+
+        // --- Procedural Texture Generation (No external assets needed) ---
+        function createNoiseTexture(width, height, colorA, colorB, scale = 1) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            
+            // Fill Background
+            ctx.fillStyle = colorA;
+            ctx.fillRect(0, 0, width, height);
+
+            // Simple noise
+            for (let i = 0; i < 4000 * scale; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const radius = Math.random() * 2 * scale;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = colorB;
+                ctx.globalAlpha = Math.random() * 0.5;
+                ctx.fill();
+            }
+            
+            // Add some "craters" for moon or "clouds" for earth
+            for (let i = 0; i < 50 * scale; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const radius = Math.random() * 10 * scale;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = colorB;
+                ctx.globalAlpha = 0.1;
+                ctx.fill();
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        // --- Objects ---
+
+        // 1. Starfield Background
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 2000;
+        const starPos = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i++) {
+            starPos[i] = (Math.random() - 0.5) * 400;
+        }
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMaterial = new THREE.PointsMaterial({color: 0xffffff, size: 0.5, transparent: true, opacity: 0.8});
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+
+        // 2. Sun (Light Source + Visual Representation)
+        const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
+        sunLight.position.set(SCENE_CONFIG.sunDistance, 0, 0); // Sun is to the Right (+X)
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 500;
+        sunLight.shadow.camera.left = -50;
+        sunLight.shadow.camera.right = 50;
+        sunLight.shadow.camera.top = 50;
+        sunLight.shadow.camera.bottom = -50;
+        scene.add(sunLight);
+
+        // Ambient light (Space is dark, but not pitch black)
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+        scene.add(ambientLight);
+
+        // Sun Marker (Just a visual glowing ball far away)
+        const sunGeo = new THREE.SphereGeometry(2, 32, 32);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffffaa });
+        const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+        sunMesh.position.copy(sunLight.position);
+        scene.add(sunMesh);
+
+        // 3. Earth
+        const earthGroup = new THREE.Group();
+        scene.add(earthGroup);
+
+        const fallbackEarthTex = createNoiseTexture(512, 256, '#1a3b8e', '#2e8b57', 2); // Blue and Green fallback
+        const earthGeo = new THREE.SphereGeometry(SCENE_CONFIG.earthRadius, 64, 64);
+        const earthMat = new THREE.MeshStandardMaterial({ 
+            map: fallbackEarthTex,
+            roughness: 0.6,
+            metalness: 0.1
+        });
+
+        // Load realistic Earth texture from a reliable public URL
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load(
+            'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg',
+            function(texture) {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                earthMat.map = texture;
+                earthMat.needsUpdate = true;
+            },
+            undefined,
+            function(err) {
+                console.warn('Could not load Earth texture, using procedural fallback.');
+            }
+        );
+
+        const earth = new THREE.Mesh(earthGeo, earthMat);
+        earth.castShadow = true;
+        earth.receiveShadow = true;
+        
+        // Tilt the Earth roughly to its actual axial tilt (23.5 degrees) for realism
+        earth.rotation.z = 23.5 * Math.PI / 180;
+        
+        earthGroup.add(earth);
+
+        // Earth Atmosphere Glow
+        const atmosGeo = new THREE.SphereGeometry(SCENE_CONFIG.earthRadius + 0.2, 64, 64);
+        const atmosMat = new THREE.MeshBasicMaterial({ color: 0x4facfe, transparent: true, opacity: 0.15, side: THREE.BackSide });
+        const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
+        earthGroup.add(atmosphere);
+
+        // 4. Moon
+        const moonGroup = new THREE.Group(); // Pivot point for orbit (at 0,0,0)
+        scene.add(moonGroup);
+
+        const moonTex = createNoiseTexture(256, 128, '#888888', '#555555', 3); // Grey noise
+        const moonGeo = new THREE.SphereGeometry(SCENE_CONFIG.moonRadius, 32, 32);
+        const moonMat = new THREE.MeshStandardMaterial({ 
+            map: moonTex, 
+            roughness: 0.9,
+            metalness: 0.0
+        });
+        const moon = new THREE.Mesh(moonGeo, moonMat);
+        moon.castShadow = true;
+        moon.receiveShadow = true;
+        moon.position.set(SCENE_CONFIG.orbitRadius, 0, 0); // Initial position
+        moonGroup.add(moon);
+
+        // 5. Orbit Path (Visual Line)
+        const orbitCurve = new THREE.EllipseCurve(
+            0, 0, // ax, aY
+            SCENE_CONFIG.orbitRadius, SCENE_CONFIG.orbitRadius, // xRadius, yRadius
+            0, 2 * Math.PI, // aStartAngle, aEndAngle
+            false, // aClockwise
+            0 // aRotation
+        );
+        const points = orbitCurve.getPoints(100);
+        const orbitGeo = new THREE.BufferGeometry().setFromPoints(points);
+        const orbitMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
+        
+        // Rotate orbit to lie flat on XZ plane
+        const orbitLine = new THREE.Line(orbitGeo, orbitMat);
+        orbitLine.rotation.order = 'ZXY'; // Change rotation order to apply X first, then Z
+        orbitLine.rotation.x = -Math.PI / 2;
+        scene.add(orbitLine);
+
+        // --- Logic & Helpers ---
+
+        const slider = document.getElementById('orbitSlider');
+        const tiltSlider = document.getElementById('tiltSlider'); // Get Tilt Slider
+        const phaseLabel = document.getElementById('phase-label');
+        const angleDisplay = document.getElementById('angle-display');
+        const tiltDisplay = document.getElementById('tilt-display'); // Get Tilt Display
+
+        function getPhaseName(degrees) {
+            // Normalize to 0-360
+            let d = degrees % 360;
+            if (d < 0) d += 360;
+
+            // Define phases with a small buffer for "exact" phases
+            const buffer = 10;
+            
+            // Note: In our setup, Light is at +X.
+            // Angle 0: Moon at +X (Between Earth and Sun?? No, Moon at +X is near Sun). 
+            // Wait, if Moon is at +X and Sun is at +X (far away), Moon is between Earth and Sun -> New Moon.
+            
+            if (d >= 360 - buffer || d <= buffer) return "New Moon";
+            if (d > buffer && d < 90 - buffer) return "Waxing Crescent";
+            if (d >= 90 - buffer && d <= 90 + buffer) return "First Quarter";
+            if (d > 90 + buffer && d < 180 - buffer) return "Waxing Gibbous";
+            if (d >= 180 - buffer && d <= 180 + buffer) return "Full Moon";
+            if (d > 180 + buffer && d < 270 - buffer) return "Waning Gibbous";
+            if (d >= 270 - buffer && d <= 270 + buffer) return "Third Quarter";
+            if (d > 270 + buffer && d < 360 - buffer) return "Waning Crescent";
+            return "Unknown";
+        }
+
+        function updateMoonPosition() {
+            // The slider goes 0 -> 360.
+            // 0 degrees needs to be New Moon (Between Earth and Sun).
+            // Sun is at (100, 0, 0).
+            // So New Moon position is roughly (orbitRadius, 0, 0).
+            
+            const angleDeg = parseFloat(slider.value);
+            const angleRad = angleDeg * (Math.PI / 180);
+            
+            const tiltDeg = parseFloat(tiltSlider.value);
+            const tiltRad = tiltDeg * (Math.PI / 180);
+
+            // Update UI
+            tiltDisplay.innerText = `Orbit Tilt: ${tiltDeg}°`;
+
+            // Calculate position
+            // We want 0 deg = (Radius, 0, 0)
+            // Base flat position (before tilt)
+            const xBase = Math.cos(angleRad) * SCENE_CONFIG.orbitRadius;
+            const zBase = Math.sin(angleRad) * SCENE_CONFIG.orbitRadius;
+            
+            // Apply Tilt (Rotation around Z-axis)
+            // We rotate the orbit plane perpendicular to the Earth-Sun line (X-axis)
+            const x = xBase * Math.cos(tiltRad);
+            const y = xBase * Math.sin(tiltRad);
+            const z = zBase; // Z-axis is the line of nodes, so it stays unchanged
+
+            // In Three.js X is right, Z is depth (towards viewer).
+            // Y is up.
+            
+            moon.position.set(x, y, z);
+            moon.rotation.y = angleRad; // Tidal locking (moon keeps same face to earth)
+            
+            // Update Orbit Line Visual Rotation
+            orbitLine.rotation.z = tiltRad;
+
+            // Update Earth Camera
+            // We want the Earth camera to look at the moon.
+            earthCamera.lookAt(moon.position);
+
+            // Update Labels
+            phaseLabel.innerText = getPhaseName(angleDeg);
+            
+            // Calculate "Day" roughly (29.5 day cycle)
+            const day = ((angleDeg / 360) * 29.5).toFixed(1);
+            angleDisplay.innerText = `Day ${day} of Cycle`;
+        }
+
+        slider.addEventListener('input', updateMoonPosition);
+        tiltSlider.addEventListener('input', updateMoonPosition); // Listen for tilt changes
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            // 1. Render Main View (Space)
+            // Reset viewport to full screen
+            renderer.setScissorTest(false);
+            renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000); // Space is black
+            
+            // Hide the Earth from the Earth Camera? 
+            // Actually, if the Earth Camera is at (0,0,0) inside the sphere, 
+            // and the sphere is standard material (single sided), we see through it out to space.
+            // So we don't need to hide Earth, assuming default BackSide culling.
+            // However, the Atmosphere is 2-sided or transparent, might interfere.
+            // Let's toggle Earth visibility for safety during the PIP render.
+            
+            renderer.render(scene, camera);
+
+            // 2. Render PIP View (Earth Telescope)
+            // Enable scissor test to clip the rendering to a box
+            renderer.setScissorTest(true);
+            
+            // Define PIP box size and position (bottom right)
+            const size = 200; // px
+            const padding = 20;
+            // The HTML overlay is circular, but the scissor rect is square. 
+            // The HTML border radius hides the corners.
+            const left = window.innerWidth - size - padding;
+            const bottom = padding; // WebGL coordinates start bottom-left
+            
+            renderer.setViewport(left, bottom, size, size);
+            renderer.setScissor(left, bottom, size, size);
+            renderer.setClearColor(0x111111); // Slightly lighter background for "telescope" feel or just keep black
+            
+            // Fix: Leave earth.visible = true so it casts a shadow! 
+            // Backface culling naturally hides it from the inside camera.
+            atmosphere.visible = false; // Only hide the atmosphere (which is 2-sided)
+            orbitLine.visible = false; // Hide orbit line in telescope view
+            
+            renderer.render(scene, earthCamera);
+            
+            // Restore visibility
+            atmosphere.visible = true;
+            orbitLine.visible = true;
+        }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize
+        updateMoonPosition(); // Set initial state
+        animate();
+
+    </script>
+</body>
+</html>
