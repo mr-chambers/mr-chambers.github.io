@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Transformation Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+        }
+        canvas {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            cursor: crosshair;
+        }
+        .control-panel {
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+        input[type="range"] {
+            accent-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="flex h-screen w-screen p-4 gap-4">
+
+    <!-- Left Control Panel -->
+    <aside class="control-panel w-1/4 flex flex-col gap-6 bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 mb-1">Transformations</h1>
+            <p class="text-sm text-slate-500 mb-4">Precalculus Honors Visualization</p>
+        </div>
+
+        <!-- Section 1: Polygon Definition -->
+        <section>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Polygon Vertices (x,y)</label>
+            <textarea id="vertexInput" class="w-full p-3 border border-slate-300 rounded-md text-sm font-mono h-24 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="(1,1), (4,1), (4,4), (1,4)"></textarea>
+            <button id="plotBtn" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+                Plot Polygon
+            </button>
+        </section>
+
+        <!-- Section 2: Choose Transformation -->
+        <section>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Select Transformation</label>
+            <select id="transSelect" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-white">
+                <optgroup label="Reflections">
+                    <option value="refl-x">Across x-axis (y=0)</option>
+                    <option value="refl-y">Across y-axis (x=0)</option>
+                    <option value="refl-yx">Across y = x</option>
+                    <option value="refl-ynx">Across y = -x</option>
+                    <option value="refl-ymx">Across y = mx</option>
+                </optgroup>
+                <optgroup label="Rotations (CCW)">
+                    <option value="rot-90">90° Rotation</option>
+                    <option value="rot-180">180° Rotation</option>
+                    <option value="rot-270">270° Rotation</option>
+                    <option value="rot-custom">Custom Angle</option>
+                </optgroup>
+            </select>
+            
+            <!-- Custom Angle Input -->
+            <div id="customAngleDiv" class="mt-3 hidden">
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Custom Angle (Degrees CCW)</label>
+                <input type="number" id="customAngle" value="45" class="w-full p-2 border border-slate-300 rounded-md text-sm">
+            </div>
+
+            <!-- Slope Input for y=mx -->
+            <div id="slopeDiv" class="mt-3 hidden">
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Slope (m)</label>
+                <input type="number" id="slopeM" value="2" step="0.1" class="w-full p-2 border border-slate-300 rounded-md text-sm">
+            </div>
+
+            <div id="ruleDisplay" class="mt-3 p-3 bg-blue-50 rounded text-blue-800 text-sm font-mono text-center border border-blue-100">
+                (x, y) → (x, -y)
+            </div>
+        </section>
+
+        <!-- Section 3: Animation Control -->
+        <section class="border-t pt-4">
+            <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-semibold text-slate-700">Animate: <span id="sliderVal">0</span>%</label>
+                <button id="resetBtn" class="text-xs text-red-500 hover:underline">Reset All</button>
+            </div>
+            <input type="range" id="animSlider" min="0" max="1" step="0.01" value="0" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+            <p class="text-[10px] text-slate-400 mt-2 text-center">Slide to transform Pre-Image to Image</p>
+        </section>
+
+        <!-- Vertex Table -->
+        <section class="mt-auto">
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Vertex Table</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-200 text-slate-400">
+                            <th class="pb-1 font-medium">Vertex</th>
+                            <th class="pb-1 font-medium">Pre-Image</th>
+                            <th class="pb-1 font-medium">Image</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vertexTableBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </aside>
+
+    <!-- Main Canvas Area -->
+    <main class="flex-grow relative bg-slate-100 rounded-xl flex items-center justify-center p-4">
+        <canvas id="gridCanvas"></canvas>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+        const vertexInput = document.getElementById('vertexInput');
+        const plotBtn = document.getElementById('plotBtn');
+        const transSelect = document.getElementById('transSelect');
+        const animSlider = document.getElementById('animSlider');
+        const sliderValDisplay = document.getElementById('sliderVal');
+        const ruleDisplay = document.getElementById('ruleDisplay');
+        const customAngleDiv = document.getElementById('customAngleDiv');
+        const customAngleInput = document.getElementById('customAngle');
+        const slopeDiv = document.getElementById('slopeDiv');
+        const slopeMInput = document.getElementById('slopeM');
+        const vertexTableBody = document.getElementById('vertexTableBody');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let vertices = [
+            {x: 1, y: 1}, {x: 4, y: 1}, {x: 4, y: 4}, {x: 1, y: 4}
+        ];
+        
+        const gridSize = 20; // -10 to 10
+        let scale = 0;
+        let t = 0; // Animation progress (0 to 1)
+
+        function resize() {
+            const size = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight) - 40;
+            canvas.width = size;
+            canvas.height = size;
+            scale = canvas.width / gridSize;
+            draw();
+        }
+
+        window.addEventListener('resize', resize);
+        window.onload = () => {
+            vertexInput.value = "(1,1), (4,1), (4,4), (1,4)";
+            resize();
+        };
+
+        function getRotationAngle(type, customVal = 0) {
+            switch(type) {
+                case 'rot-90': return 90;
+                case 'rot-180': return 180;
+                case 'rot-270': return 270;
+                case 'rot-custom': return customVal;
+                default: return 0;
+            }
+        }
+
+        function getTransformedPoint(p, type, options = {}) {
+            const { angle = 0, m = 1 } = options;
+            switch(type) {
+                case 'refl-x': return { x: p.x, y: -p.y };
+                case 'refl-y': return { x: -p.x, y: p.y };
+                case 'refl-yx': return { x: p.y, y: p.x };
+                case 'refl-ynx': return { x: -p.y, y: -p.x };
+                case 'refl-ymx': 
+                    const den = 1 + m * m;
+                    return {
+                        x: ((1 - m * m) / den) * p.x + ((2 * m) / den) * p.y,
+                        y: ((2 * m) / den) * p.x + ((m * m - 1) / den) * p.y
+                    };
+                case 'rot-90': case 'rot-180': case 'rot-270': case 'rot-custom':
+                    const rotDeg = getRotationAngle(type, angle);
+                    const rad = (rotDeg * Math.PI) / 180;
+                    return {
+                        x: p.x * Math.cos(rad) - p.y * Math.sin(rad),
+                        y: p.x * Math.sin(rad) + p.y * Math.cos(rad)
+                    };
+                default: return { ...p };
+            }
+        }
+
+        function getRuleText(type) {
+            switch(type) {
+                case 'refl-x': return "(x, y) → (x, -y)";
+                case 'refl-y': return "(x, y) → (-x, y)";
+                case 'refl-yx': return "(x, y) → (y, x)";
+                case 'refl-ynx': return "(x, y) → (-y, -x)";
+                case 'refl-ymx': return "Reflecting over y = mx";
+                case 'rot-90': return "(x, y) → (-y, x)";
+                case 'rot-180': return "(x, y) → (-x, -y)";
+                case 'rot-270': return "(x, y) → (y, -x)";
+                case 'rot-custom': return "(x, y) → (xcosθ-ysinθ, xsinθ+ycosθ)";
+                default: return "";
+            }
+        }
+
+        function parseVertices() {
+            const val = vertexInput.value;
+            const matches = val.match(/-?\d*\.?\d+\s*,\s*-?\d*\.?\d+/g);
+            if (matches) {
+                vertices = matches.map(m => {
+                    const [x, y] = m.split(',').map(Number);
+                    return { x, y };
+                });
+                draw();
+                updateTable();
+            }
+        }
+
+        function toCanvasX(x) { return canvas.width / 2 + x * scale; }
+        function toCanvasY(y) { return canvas.height / 2 - y * scale; }
+
+        function drawGrid() {
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            
+            for(let i = -10; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(toCanvasX(i), 0);
+                ctx.lineTo(toCanvasX(i), canvas.height);
+                ctx.lineWidth = (i === 0) ? 3 : (i % 5 === 0) ? 1.5 : 0.5;
+                ctx.strokeStyle = (i === 0) ? '#64748b' : '#cbd5e1';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, toCanvasY(i));
+                ctx.lineTo(canvas.width, toCanvasY(i));
+                ctx.lineWidth = (i === 0) ? 3 : (i % 5 === 0) ? 1.5 : 0.5;
+                ctx.strokeStyle = (i === 0) ? '#64748b' : '#cbd5e1';
+                ctx.stroke();
+
+                if (i !== 0) {
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = '10px Inter';
+                    ctx.fillText(i, toCanvasX(i) + 2, toCanvasY(0) - 2);
+                    ctx.fillText(i, toCanvasX(0) + 2, toCanvasY(i) - 2);
+                }
+            }
+
+            if (transSelect.value === 'refl-ymx') {
+                const m = parseFloat(slopeMInput.value) || 0;
+                ctx.beginPath();
+                ctx.setLineDash([5, 5]);
+                ctx.moveTo(toCanvasX(-10), toCanvasY(-10 * m));
+                ctx.lineTo(toCanvasX(10), toCanvasY(10 * m));
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = '#b45309';
+                ctx.font = 'italic 12px Inter';
+                ctx.fillText(`y = ${m}x`, toCanvasX(3), toCanvasY(3*m) - 10);
+            }
+        }
+
+        function drawPolygon(pts, color, labelPrefix, alpha = 1) {
+            if (pts.length < 2) return;
+            
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(pts[0].x), toCanvasY(pts[0].y));
+            for(let i = 1; i < pts.length; i++) {
+                ctx.lineTo(toCanvasX(pts[i].x), toCanvasY(pts[i].y));
+            }
+            ctx.closePath();
+            
+            ctx.fillStyle = color + '33'; 
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            pts.forEach((p, idx) => {
+                ctx.beginPath();
+                ctx.arc(toCanvasX(p.x), toCanvasY(p.y), 4, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                
+                ctx.font = 'bold 12px Inter';
+                ctx.fillText(`${labelPrefix}${String.fromCharCode(65 + idx)}${labelPrefix === '' ? '' : '\''}`, toCanvasX(p.x) + 8, toCanvasY(p.y) - 8);
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function updateTable() {
+            vertexTableBody.innerHTML = '';
+            const type = transSelect.value;
+            const angle = parseFloat(customAngleInput.value) || 0;
+            const m = parseFloat(slopeMInput.value) || 0;
+
+            vertices.forEach((p, idx) => {
+                const char = String.fromCharCode(65 + idx);
+                const target = getTransformedPoint(p, type, { angle, m });
+                
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-50 last:border-0";
+                tr.innerHTML = `
+                    <td class="py-2 font-bold text-slate-600">${char}</td>
+                    <td class="py-2 text-slate-500">(${p.x.toFixed(1)}, ${p.y.toFixed(1)})</td>
+                    <td class="py-2 text-blue-600 font-medium">(${target.x.toFixed(1)}, ${target.y.toFixed(1)})</td>
+                `;
+                vertexTableBody.appendChild(tr);
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+
+            const type = transSelect.value;
+            const customDeg = parseFloat(customAngleInput.value) || 0;
+            const m = parseFloat(slopeMInput.value) || 0;
+            
+            const interpolatedPoints = vertices.map(p => {
+                // If it's a rotation, we use polar interpolation to keep size constant
+                if (type.startsWith('rot')) {
+                    const totalRotation = getRotationAngle(type, customDeg);
+                    const currentAngleRad = (totalRotation * t * Math.PI) / 180;
+                    
+                    return {
+                        x: p.x * Math.cos(currentAngleRad) - p.y * Math.sin(currentAngleRad),
+                        y: p.x * Math.sin(currentAngleRad) + p.y * Math.cos(currentAngleRad)
+                    };
+                } else {
+                    // For reflections, linear interpolation (LERP) is geometrically correct
+                    const target = getTransformedPoint(p, type, { angle: customDeg, m });
+                    return {
+                        x: p.x + (target.x - p.x) * t,
+                        y: p.y + (target.y - p.y) * t
+                    };
+                }
+            });
+
+            drawPolygon(vertices, '#3b82f6', '', 1 - (t * 0.7));
+            if (t > 0) {
+                drawPolygon(interpolatedPoints, '#ef4444', ' ', t);
+            }
+        }
+
+        plotBtn.addEventListener('click', parseVertices);
+        
+        transSelect.addEventListener('change', () => {
+            customAngleDiv.classList.toggle('hidden', transSelect.value !== 'rot-custom');
+            slopeDiv.classList.toggle('hidden', transSelect.value !== 'refl-ymx');
+            ruleDisplay.innerText = getRuleText(transSelect.value);
+            updateTable();
+            draw();
+        });
+
+        [customAngleInput, slopeMInput].forEach(el => {
+            el.addEventListener('input', () => {
+                updateTable();
+                draw();
+            });
+        });
+
+        animSlider.addEventListener('input', (e) => {
+            t = parseFloat(e.target.value);
+            sliderValDisplay.innerText = Math.round(t * 100);
+            draw();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            animSlider.value = 0;
+            t = 0;
+            sliderValDisplay.innerText = "0";
+            vertexInput.value = "(1,1), (4,1), (4,4), (1,4)";
+            parseVertices();
+            draw();
+        });
+
+        updateTable();
+        ruleDisplay.innerText = getRuleText(transSelect.value);
+    </script>
+</body>
+</html>
