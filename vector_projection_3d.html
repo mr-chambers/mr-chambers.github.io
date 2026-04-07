@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Vector & Plane Projection Visualization</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    <!-- Three.js and OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <style>
+        /* Custom scrollbar for the sidebar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        
+        .katex-display {
+            margin: 0.5em 0 !important;
+        }
+
+        /* Number input styling */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 h-screen w-screen overflow-hidden flex flex-col md:flex-row font-sans selection:bg-sky-500/30">
+
+    <!-- Canvas Container (Left/Main) -->
+    <div id="canvas-container" class="relative flex-1 h-[60%] md:h-full w-full border-b md:border-b-0 md:border-r border-slate-700 bg-slate-950 shadow-inner overflow-hidden cursor-move">
+        <div id="three-canvas" class="absolute top-0 left-0 w-full h-full"></div>
+        
+        <!-- UI Overlay Hints -->
+        <div class="absolute top-4 left-4 pointer-events-none bg-slate-900/80 backdrop-blur px-3 py-2 rounded-lg border border-slate-700 shadow-lg flex flex-col gap-2">
+            <div>
+                <h1 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    3D Projection
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">Left-click: Rotate | Right-click: Pan | Scroll: Zoom</p>
+            </div>
+            
+            <div class="pointer-events-auto mt-1 flex flex-col gap-2 border-t border-slate-700/50 pt-2">
+                <select id="mode-select" class="bg-slate-800 border border-slate-600 text-sm rounded px-2 py-1 text-slate-200 outline-none focus:border-sky-500 w-full cursor-pointer">
+                    <option value="vector">Project onto Vector</option>
+                    <option value="plane">Project onto Plane</option>
+                </select>
+                
+                <label class="flex items-center gap-2 cursor-pointer w-max">
+                    <input type="checkbox" id="toggle-proj" checked class="w-4 h-4 rounded border-slate-600 accent-sky-500 cursor-pointer">
+                    <span class="text-xs text-slate-300 font-medium select-none">Show Projection</span>
+                </label>
+                <label id="label-toggle-n" class="items-center gap-2 cursor-pointer w-max hidden">
+                    <input type="checkbox" id="toggle-n" class="w-4 h-4 rounded border-slate-600 accent-yellow-400 cursor-pointer">
+                    <span class="text-xs text-slate-300 font-medium select-none">Show Normal Vector</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Legend Overlay -->
+        <div class="absolute bottom-4 left-4 pointer-events-none bg-slate-900/80 backdrop-blur px-3 py-2 rounded-lg border border-slate-700 shadow-lg text-xs flex flex-col gap-1.5" id="legend">
+            <!-- Populated via JS based on mode -->
+        </div>
+
+        <!-- Axis Guide Overlay -->
+        <div class="absolute bottom-4 right-4 pointer-events-none bg-slate-900/80 backdrop-blur px-3 py-2 rounded-lg border border-slate-700 shadow-lg text-xs flex gap-3">
+            <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-red-500"></div> X</div>
+            <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500"></div> Y</div>
+            <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-blue-500"></div> Z</div>
+        </div>
+    </div>
+
+    <!-- Calculations Sidebar (Right) -->
+    <div class="w-full md:w-[400px] lg:w-[450px] h-[40%] md:h-full bg-slate-900 overflow-y-auto flex flex-col border-t md:border-t-0 border-slate-700">
+        <div class="p-5 flex-1 space-y-6">
+            
+            <!-- Section: Input Vectors -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Edit Vectors</h2>
+                <div class="space-y-3">
+                    
+                    <!-- Vector A -->
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                        <span class="text-sky-400 font-medium text-sm block mb-2">Vector A (Projected)</span>
+                        <div class="flex gap-3">
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                    <span class="text-red-400 text-xs px-2 border-r border-slate-700">X</span>
+                                    <input type="number" id="input-ax" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="0.1">
+                                </div>
+                                <input type="range" id="slider-ax" min="-15" max="15" step="0.1" class="w-full accent-red-500 cursor-pointer">
+                            </div>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                    <span class="text-green-400 text-xs px-2 border-r border-slate-700">Y</span>
+                                    <input type="number" id="input-ay" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="0.1">
+                                </div>
+                                <input type="range" id="slider-ay" min="-15" max="15" step="0.1" class="w-full accent-green-500 cursor-pointer">
+                            </div>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                    <span class="text-blue-400 text-xs px-2 border-r border-slate-700">Z</span>
+                                    <input type="number" id="input-az" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="0.1">
+                                </div>
+                                <input type="range" id="slider-az" min="-15" max="15" step="0.1" class="w-full accent-blue-500 cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vector B (Visible in Vector Mode) -->
+                    <div id="container-b" class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                        <span class="text-pink-400 font-medium text-sm block mb-2">Vector B (Base)</span>
+                        <div class="flex gap-2">
+                            <div class="flex-1 flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                <span class="text-red-400 text-xs px-2 border-r border-slate-700">X</span>
+                                <input type="number" id="input-bx" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="1">
+                            </div>
+                            <div class="flex-1 flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                <span class="text-green-400 text-xs px-2 border-r border-slate-700">Y</span>
+                                <input type="number" id="input-by" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="1">
+                            </div>
+                            <div class="flex-1 flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                <span class="text-blue-400 text-xs px-2 border-r border-slate-700">Z</span>
+                                <input type="number" id="input-bz" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vector N (Visible in Plane Mode) -->
+                    <div id="container-n" class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 hidden">
+                        <span class="text-yellow-400 font-medium text-sm block mb-2">Normal Vector n (Defines Plane)</span>
+                        <div class="flex gap-2">
+                            <div class="flex-1 flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                <span class="text-red-400 text-xs px-2 border-r border-slate-700">X</span>
+                                <input type="number" id="input-nx" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="1">
+                            </div>
+                            <div class="flex-1 flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                <span class="text-green-400 text-xs px-2 border-r border-slate-700">Y</span>
+                                <input type="number" id="input-ny" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="1">
+                            </div>
+                            <div class="flex-1 flex items-center bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                                <span class="text-blue-400 text-xs px-2 border-r border-slate-700">Z</span>
+                                <input type="number" id="input-nz" class="bg-transparent px-2 py-1 text-sm w-full outline-none" step="1">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Section: Core Formula -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Core Formula</h2>
+                <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 text-center text-sm overflow-x-auto">
+                    <div id="math-formula"></div>
+                </div>
+            </div>
+
+            <!-- Section: Step-by-Step -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Calculations</h2>
+                <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50 space-y-4 text-sm" id="math-steps">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Section: Result -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-green-400 mb-2">Final Projection Vector</h2>
+                <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/20 text-center text-lg min-h-[100px] flex items-center justify-center overflow-x-auto">
+                    <div id="math-result"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- Application State ---
+        const state = {
+            mode: 'vector', // 'vector' or 'plane'
+            showProjection: true,
+            showNormal: false,
+            a: new THREE.Vector3(4, 6, 2),
+            b: new THREE.Vector3(5, 0, 0),
+            n: new THREE.Vector3(1, 1, 5),
+            proj: new THREE.Vector3(0, 0, 0),    // Final projection
+            projN: new THREE.Vector3(0, 0, 0)    // Intermediate projection onto normal (for plane mode)
+        };
+
+        const config = {
+            colors: {
+                a: 0x38bdf8,     // sky-400
+                b: 0xf472b6,     // pink-400
+                n: 0xfacc15,     // yellow-400
+                proj: 0x4ade80,  // green-400
+                projPlane: 0xf97316, // orange-500
+                plane: 0x334155, // slate-700
+                dash: 0x94a3b8    // slate-400
+            }
+        };
+
+        // --- Three.js Globals ---
+        let scene, camera, renderer, controls;
+        let arrowA, arrowB, arrowN, arrowProj;
+        let dashLineA, dashLineProjN;
+        let visualPlane, planeGrid;
+
+        // --- Initialization ---
+        function init() {
+            initThreeJS();
+            initUI();
+            updateMode(); // Triggers calculations and drawing
+            animate();
+        }
+
+        function initThreeJS() {
+            const container = document.getElementById('three-canvas');
+            
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color('#020617'); // slate-950
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.up.set(0, 0, 1); // Set Z as the vertical axis
+            camera.position.set(15, -15, 12); // Adjust starting angle to view the X-Y floor
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.015; // Lowered from 0.05 to reduce friction (more momentum)
+            controls.rotateSpeed = 0.8;     // Slightly lower rotate speed for a heavier, smoother feel
+
+            // Base Grid & Axes (Grid removed per request)
+            const axesHelper = new THREE.AxesHelper(10);
+            scene.add(axesHelper);
+
+            // Initialize Objects
+            arrowA = createArrow(config.colors.a);
+            arrowB = createArrow(config.colors.b);
+            arrowN = createArrow(config.colors.n);
+            arrowProj = createArrow(config.colors.proj); // Color will change based on mode
+            
+            scene.add(arrowA);
+            scene.add(arrowB);
+            scene.add(arrowN);
+            scene.add(arrowProj);
+
+            // Dashed Line (A tip to Proj tip)
+            const lineMat = new THREE.LineDashedMaterial({ color: config.colors.dash, dashSize: 0.3, gapSize: 0.2 });
+            const lineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)]);
+            dashLineA = new THREE.Line(lineGeo, lineMat);
+            scene.add(dashLineA);
+
+            // Infinite Line for Vector B
+            const lineGeoB = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-100,0,0), new THREE.Vector3(100,0,0)]);
+            const lineMatB = new THREE.LineBasicMaterial({ color: 0x475569, transparent: true, opacity: 0.3 });
+            dashLineB = new THREE.Line(lineGeoB, lineMatB);
+            scene.add(dashLineB);
+
+            // Plane Visualization (Opacity increased)
+            const planeGeo = new THREE.PlaneGeometry(20, 20);
+            const planeMat = new THREE.MeshBasicMaterial({ 
+                color: config.colors.plane, 
+                side: THREE.DoubleSide, 
+                transparent: true, 
+                opacity: 0.65,
+                depthWrite: false
+            });
+            visualPlane = new THREE.Mesh(planeGeo, planeMat);
+            scene.add(visualPlane);
+
+            // Window Resize
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function createArrow(hexColor) {
+            // Default pointing up (now Z-axis), will be updated immediately
+            return new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 1, hexColor, 0.6, 0.4);
+        }
+
+        function initUI() {
+            // Mode Select
+            document.getElementById('mode-select').addEventListener('change', (e) => {
+                state.mode = e.target.value;
+                updateMode();
+            });
+
+            // Toggle Projection
+            document.getElementById('toggle-proj').addEventListener('change', (e) => {
+                state.showProjection = e.target.checked;
+                updateScene();
+            });
+
+            // Toggle Normal Vector
+            document.getElementById('toggle-n').addEventListener('change', (e) => {
+                state.showNormal = e.target.checked;
+                updateScene();
+            });
+
+            // Vector Inputs
+            const inputs = ['ax', 'ay', 'az', 'bx', 'by', 'bz', 'nx', 'ny', 'nz'];
+            inputs.forEach(id => {
+                const el = document.getElementById(`input-${id}`);
+                el.addEventListener('input', handleManualInput);
+            });
+            
+            // Slider Inputs for Vector A
+            const sliders = ['ax', 'ay', 'az'];
+            sliders.forEach(id => {
+                const el = document.getElementById(`slider-${id}`);
+                el.addEventListener('input', handleManualInput);
+            });
+
+            syncInputsToState();
+        }
+
+        function handleManualInput(e) {
+            let val = parseFloat(e.target.value);
+            if (isNaN(val)) return; // Don't crash on empty/partial input
+
+            const id = e.target.id;
+            
+            // Vector A (Syncing number inputs and sliders)
+            if (id === 'input-ax' || id === 'slider-ax') {
+                state.a.x = val;
+                if (id === 'input-ax') document.getElementById('slider-ax').value = val;
+                else document.getElementById('input-ax').value = val;
+            }
+            if (id === 'input-ay' || id === 'slider-ay') {
+                state.a.y = val;
+                if (id === 'input-ay') document.getElementById('slider-ay').value = val;
+                else document.getElementById('input-ay').value = val;
+            }
+            if (id === 'input-az' || id === 'slider-az') {
+                state.a.z = val;
+                if (id === 'input-az') document.getElementById('slider-az').value = val;
+                else document.getElementById('input-az').value = val;
+            }
+            
+            if (id === 'input-bx') state.b.x = val;
+            if (id === 'input-by') state.b.y = val;
+            if (id === 'input-bz') state.b.z = val;
+
+            if (id === 'input-nx') state.n.x = val;
+            if (id === 'input-ny') state.n.y = val;
+            if (id === 'input-nz') state.n.z = val;
+
+            // Prevent zero-length vectors for B and N to avoid NaN
+            if (state.b.lengthSq() === 0) state.b.set(0.1, 0, 0);
+            if (state.n.lengthSq() === 0) state.n.set(0, 0.1, 0);
+
+            calculateMath();
+            updateScene();
+        }
+
+        function syncInputsToState() {
+            document.getElementById('input-ax').value = state.a.x;
+            document.getElementById('slider-ax').value = state.a.x;
+            
+            document.getElementById('input-ay').value = state.a.y;
+            document.getElementById('slider-ay').value = state.a.y;
+            
+            document.getElementById('input-az').value = state.a.z;
+            document.getElementById('slider-az').value = state.a.z;
+            
+            document.getElementById('input-bx').value = state.b.x;
+            document.getElementById('input-by').value = state.b.y;
+            document.getElementById('input-bz').value = state.b.z;
+
+            document.getElementById('input-nx').value = state.n.x;
+            document.getElementById('input-ny').value = state.n.y;
+            document.getElementById('input-nz').value = state.n.z;
+        }
+
+        function updateMode() {
+            // Toggle UI Visibility
+            document.getElementById('container-b').style.display = state.mode === 'vector' ? 'block' : 'none';
+            document.getElementById('container-n').style.display = state.mode === 'plane' ? 'block' : 'none';
+
+            // Toggle Normal Vector Checkbox Visibility
+            const labelToggleN = document.getElementById('label-toggle-n');
+            if (state.mode === 'plane') {
+                labelToggleN.classList.remove('hidden');
+                labelToggleN.classList.add('flex');
+            } else {
+                labelToggleN.classList.add('hidden');
+                labelToggleN.classList.remove('flex');
+            }
+
+            // Update Legend
+            const legend = document.getElementById('legend');
+            if (state.mode === 'vector') {
+                legend.innerHTML = `
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-sky-400"></div> Vector A (Projected)</div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-pink-400"></div> Vector B (Base)</div>
+                    <div id="legend-proj" class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-400"></div> Projection (Proj<sub>B</sub> A)</div>
+                `;
+            } else {
+                legend.innerHTML = `
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-sky-400"></div> Vector A (Projected)</div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-yellow-400"></div> Normal Vector n</div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-slate-500"></div> Projection Plane</div>
+                    <div id="legend-proj" class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-500"></div> Projection onto Plane</div>
+                `;
+            }
+
+            calculateMath();
+            updateScene();
+        }
+
+        // --- Math Logic ---
+        function calculateMath() {
+            if (state.mode === 'vector') {
+                // Projection of A onto B
+                const dot = state.a.dot(state.b);
+                const magSq = state.b.lengthSq();
+                const scalar = dot / magSq;
+                state.proj.copy(state.b).multiplyScalar(scalar);
+                
+                updateMathSidebarVector(dot, magSq, scalar);
+            } else {
+                // Projection of A onto Plane with normal N
+                // 1. Find projection onto normal (A_parallel)
+                const dot = state.a.dot(state.n);
+                const magSq = state.n.lengthSq();
+                const scalar = dot / magSq;
+                state.projN.copy(state.n).multiplyScalar(scalar); // Proj_n(A)
+
+                // 2. Subtract from A to get projection onto plane (A_perp)
+                state.proj.copy(state.a).sub(state.projN); // Proj_plane(A) = A - Proj_n(A)
+
+                updateMathSidebarPlane(dot, magSq, scalar);
+            }
+        }
+
+        // --- Updating Three.js Scene ---
+        function updateArrow(arrow, vec, isProj = false) {
+            const length = vec.length();
+            if (length > 0.001) {
+                arrow.setDirection(vec.clone().normalize());
+                arrow.setLength(length, isProj ? 0.8 : 0.6, isProj ? 0.6 : 0.4);
+                arrow.visible = true;
+            } else {
+                arrow.visible = false; // Hide if basically zero
+            }
+        }
+
+        function updateScene() {
+            // Vector A is always visible
+            updateArrow(arrowA, state.a);
+
+            const legendProj = document.getElementById('legend-proj');
+            if (legendProj) {
+                legendProj.style.display = state.showProjection ? 'flex' : 'none';
+            }
+
+            if (state.mode === 'vector') {
+                // visibility
+                arrowB.visible = true;
+                arrowN.visible = false;
+                visualPlane.visible = false;
+                dashLineB.visible = state.showProjection;
+
+                // Update B
+                updateArrow(arrowB, state.b);
+
+                // Update infinite line B
+                if (state.b.length() > 0.001) {
+                    const dir = state.b.clone().normalize();
+                    const p1 = dir.clone().multiplyScalar(-100);
+                    const p2 = dir.clone().multiplyScalar(100);
+                    dashLineB.geometry.setFromPoints([p1, p2]);
+                }
+
+                if (state.showProjection) {
+                    arrowProj.setColor(config.colors.proj);
+                    updateArrow(arrowProj, state.proj, true);
+                    
+                    dashLineA.geometry.setFromPoints([state.a, state.proj]);
+                    dashLineA.computeLineDistances();
+                    dashLineA.visible = true;
+                } else {
+                    arrowProj.visible = false;
+                    dashLineA.visible = false;
+                }
+
+            } else {
+                // Plane mode
+                arrowB.visible = false;
+                arrowN.visible = state.showNormal;
+                visualPlane.visible = true;
+                dashLineB.visible = false;
+
+                // Update N
+                if (state.showNormal) {
+                    updateArrow(arrowN, state.n);
+                }
+
+                // Orient plane to normal
+                if (state.n.length() > 0.001) {
+                    visualPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), state.n.clone().normalize());
+                }
+
+                if (state.showProjection) {
+                    arrowProj.setColor(config.colors.projPlane);
+                    updateArrow(arrowProj, state.proj, true);
+
+                    dashLineA.geometry.setFromPoints([state.a, state.proj]);
+                    dashLineA.computeLineDistances();
+                    dashLineA.visible = true;
+                } else {
+                    arrowProj.visible = false;
+                    dashLineA.visible = false;
+                }
+            }
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // required if controls.enableDamping is true
+            renderer.render(scene, camera);
+        }
+
+        // --- Math Formatting Helpers ---
+        function renderMath(elementId, mathString, isDisplay = false) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            try {
+                katex.render(mathString, el, {
+                    displayMode: isDisplay,
+                    throwOnError: false,
+                    strict: false
+                });
+            } catch (e) {
+                console.error("KaTeX Error: ", e);
+            }
+        }
+
+        function fN(num) {
+            return parseFloat(num.toFixed(2));
+        }
+        
+        function vecStr(vec, label) {
+            return `${label} = \\begin{bmatrix} ${fN(vec.x)} \\\\ ${fN(vec.y)} \\\\ ${fN(vec.z)} \\end{bmatrix}`;
+        }
+
+        function updateMathSidebarVector(dot, magSq, scalar) {
+            renderMath('math-formula', `Proj_{\\vec{b}}\\vec{a} = \\left( \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|^2} \\right) \\vec{b}`, true);
+
+            const stepsHtml = `
+                <div>
+                    <div class="text-slate-400 mb-1">1. Dot Product (<span class="text-sky-400">a</span> · <span class="text-pink-400">b</span>)</div>
+                    <div id="math-dot"></div>
+                </div>
+                <hr class="border-slate-700/50">
+                <div>
+                    <div class="text-slate-400 mb-1">2. Magnitude Squared of <span class="text-pink-400">b</span> (|b|²)</div>
+                    <div id="math-mag"></div>
+                </div>
+                <hr class="border-slate-700/50">
+                <div>
+                    <div class="text-slate-400 mb-1">3. Scalar Multiplier</div>
+                    <div id="math-scalar"></div>
+                </div>
+            `;
+            document.getElementById('math-steps').innerHTML = stepsHtml;
+
+            renderMath('math-dot', `\\vec{a} \\cdot \\vec{b} = (${fN(state.a.x)})(${fN(state.b.x)}) + (${fN(state.a.y)})(${fN(state.b.y)}) + (${fN(state.a.z)})(${fN(state.b.z)}) = ${fN(dot)}`);
+            renderMath('math-mag', `|\\vec{b}|^2 = (${fN(state.b.x)})^2 + (${fN(state.b.y)})^2 + (${fN(state.b.z)})^2 = ${fN(magSq)}`);
+            renderMath('math-scalar', `\\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|^2} = \\frac{${fN(dot)}}{${fN(magSq)}} = ${fN(scalar)}`);
+            renderMath('math-result', `\\begin{bmatrix} ${fN(state.proj.x)} \\\\ ${fN(state.proj.y)} \\\\ ${fN(state.proj.z)} \\end{bmatrix}`, true);
+        }
+
+        function updateMathSidebarPlane(dot, magSq, scalar) {
+            renderMath('math-formula', `Proj_{Plane}\\vec{a} = \\vec{a} - Proj_{\\vec{n}}\\vec{a} = \\vec{a} - \\left( \\frac{\\vec{a} \\cdot \\vec{n}}{|\\vec{n}|^2} \\right) \\vec{n}`, true);
+
+            const stepsHtml = `
+                <div>
+                    <div class="text-slate-400 mb-1">1. Find projection onto Normal Vector (<span class="text-sky-400">a</span> · <span class="text-yellow-400">n</span>) / |<span class="text-yellow-400">n</span>|²</div>
+                    <div id="math-scalar-n" class="mb-2"></div>
+                    <div id="math-proj-n"></div>
+                </div>
+                <hr class="border-slate-700/50">
+                <div>
+                    <div class="text-slate-400 mb-1">2. Subtract Normal projection from <span class="text-sky-400">a</span></div>
+                    <div id="math-sub"></div>
+                </div>
+            `;
+            document.getElementById('math-steps').innerHTML = stepsHtml;
+
+            renderMath('math-scalar-n', `\\frac{${fN(dot)}}{${fN(magSq)}} = ${fN(scalar)}`);
+            renderMath('math-proj-n', `Proj_{\\vec{n}}\\vec{a} = ${fN(scalar)} \\begin{bmatrix} ${fN(state.n.x)} \\\\ ${fN(state.n.y)} \\\\ ${fN(state.n.z)} \\end{bmatrix} = \\begin{bmatrix} ${fN(state.projN.x)} \\\\ ${fN(state.projN.y)} \\\\ ${fN(state.projN.z)} \\end{bmatrix}`);
+            
+            renderMath('math-sub', `\\begin{bmatrix} ${fN(state.a.x)} \\\\ ${fN(state.a.y)} \\\\ ${fN(state.a.z)} \\end{bmatrix} - \\begin{bmatrix} ${fN(state.projN.x)} \\\\ ${fN(state.projN.y)} \\\\ ${fN(state.projN.z)} \\end{bmatrix}`);
+            
+            renderMath('math-result', `\\begin{bmatrix} ${fN(state.proj.x)} \\\\ ${fN(state.proj.y)} \\\\ ${fN(state.proj.z)} \\end{bmatrix}`, true);
+        }
+
+        // Wait for external scripts to load
+        window.onload = () => {
+            const checkDependencies = setInterval(() => {
+                if (typeof katex !== 'undefined' && typeof THREE !== 'undefined') {
+                    clearInterval(checkDependencies);
+                    init();
+                }
+            }, 100);
+        };
+    </script>
+</body>
+</html>
