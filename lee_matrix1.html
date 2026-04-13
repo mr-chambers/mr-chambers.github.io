@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector & Matrix Algebra Visualizer</title>
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap');
+       
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Matrix styling */
+        .matrix-bracket {
+            border-left: 2px solid #334155;
+            border-right: 2px solid #334155;
+            position: relative;
+        }
+        .matrix-bracket::before, .matrix-bracket::after {
+            content: "";
+            position: absolute;
+            height: 2px;
+            width: 8px;
+            background: #334155;
+        }
+        .matrix-bracket::before { top: 0; left: 0; }
+        .matrix-bracket::after { top: 0; right: 0; }
+        .matrix-bottom::before { bottom: 0; left: 0; top: auto !important; }
+        .matrix-bottom::after { bottom: 0; right: 0; top: auto !important; }
+       
+        #canvas-parent {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .katex { font-size: 1.1em !important; }
+    </style>
+</head>
+<body class="md:flex-row">
+
+    <!-- Left Sidebar: Controls & Inputs -->
+    <aside class="w-full md:w-80 bg-white border-r border-slate-200 p-6 flex flex-col gap-6 shadow-lg z-10 shrink-0 overflow-y-auto max-h-[40vh] md:max-h-screen">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 mb-1">Vector Algebra</h1>
+            <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Interactive Laboratory</p>
+        </div>
+
+        <!-- Operation Toggle -->
+        <div class="space-y-3">
+            <label class="text-sm font-medium text-slate-700">Choose Operation</label>
+            <div class="flex bg-slate-100 p-1 rounded-lg">
+                <button id="btn-add" class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all bg-white shadow-sm text-indigo-600" onclick="setOp('add')">Addition</button>
+                <button id="btn-sub" class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all text-slate-600 hover:text-slate-800" onclick="setOp('sub')">Subtraction</button>
+            </div>
+        </div>
+
+        <!-- Matrix Inputs -->
+        <div class="space-y-6">
+            <!-- Vector A -->
+            <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                    <label class="text-sm font-bold text-slate-700">Vector A ($v_1$)</label>
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <div class="matrix-bracket matrix-bottom p-2 flex flex-col gap-3">
+                        <input type="number" id="ax" value="4" step="0.5" class="w-20 p-2 text-center bg-blue-50 border border-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-blue-700 font-mono font-bold">
+                        <input type="number" id="ay" value="3" step="0.5" class="w-20 p-2 text-center bg-blue-50 border border-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-blue-700 font-mono font-bold">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vector B -->
+            <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
+                    <label class="text-sm font-bold text-slate-700">Vector B ($v_2$)</label>
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <div class="matrix-bracket matrix-bottom p-2 flex flex-col gap-3">
+                        <input type="number" id="bx" value="2" step="0.5" class="w-20 p-2 text-center bg-red-50 border border-red-100 rounded focus:outline-none focus:ring-2 focus:ring-red-400 text-red-700 font-mono font-bold">
+                        <input type="number" id="by" value="-2" step="0.5" class="w-20 p-2 text-center bg-red-50 border border-red-100 rounded focus:outline-none focus:ring-2 focus:ring-red-400 text-red-700 font-mono font-bold">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-auto pt-6 border-t border-slate-100 hidden md:block">
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+                <span class="font-bold text-slate-700">Geometric Logic:</span><br>
+                The visualizer uses the <span class="italic">Tip-to-Tail</span> method.
+            </p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area: Visualizer & Equation -->
+    <main class="flex-1 flex flex-col relative">
+        <div id="canvas-parent"></div>
+       
+        <!-- Dynamic Matrix Equation Overlay -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-6 py-4 rounded-3xl shadow-xl border border-white/50 z-20 w-[90%] md:w-auto text-center">
+            <div id="math-display" class="text-slate-800 flex justify-center items-center min-h-[50px] overflow-x-auto">
+                <!-- KaTeX content -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentOp = 'add';
+        const config = {
+            gridSize: 45,
+            colors: {
+                grid: '#e2e8f0',
+                axes: '#64748b',
+                vectorA: [59, 130, 246],
+                vectorB: [239, 68, 68],
+                resultant: [168, 85, 247],
+            }
+        };
+
+        let sketch = (p) => {
+            let vA, vB, vR;
+            let offsetX, offsetY;
+
+            p.setup = () => {
+                const parent = document.getElementById('canvas-parent');
+                const canvas = p.createCanvas(parent.offsetWidth, parent.offsetHeight);
+                canvas.parent('canvas-parent');
+               
+                offsetX = p.width / 2;
+                offsetY = p.height / 2;
+               
+                vA = p.createVector(4, 3);
+                vB = p.createVector(2, -2);
+               
+                // Expose update function to global scope
+                window.updateFromInputs = () => {
+                    vA.x = parseFloat(document.getElementById('ax').value) || 0;
+                    vA.y = parseFloat(document.getElementById('ay').value) || 0;
+                    vB.x = parseFloat(document.getElementById('bx').value) || 0;
+                    vB.y = parseFloat(document.getElementById('by').value) || 0;
+                    updateEquation(vA, vB);
+                };
+
+                ['ax', 'ay', 'bx', 'by'].forEach(id => {
+                    document.getElementById(id).addEventListener('input', window.updateFromInputs);
+                });
+
+                updateEquation(vA, vB);
+            };
+
+            p.windowResized = () => {
+                const parent = document.getElementById('canvas-parent');
+                p.resizeCanvas(parent.offsetWidth, parent.offsetHeight);
+                offsetX = p.width / 2;
+                offsetY = p.height / 2;
+            };
+
+            p.draw = () => {
+                p.background(255);
+               
+                if (p.mouseIsPressed) {
+                    if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
+                        offsetX += p.mouseX - p.pmouseX;
+                        offsetY += p.mouseY - p.pmouseY;
+                    }
+                }
+
+                p.push();
+                p.translate(offsetX, offsetY);
+                drawGrid(p);
+               
+                const s = config.gridSize;
+               
+                // Vector Logic
+                if (currentOp === 'add') vR = p5.Vector.add(vA, vB);
+                else vR = p5.Vector.sub(vA, vB);
+
+                // 1. Vector A
+                drawVector(p, 0, 0, vA.x * s, -vA.y * s, config.colors.vectorA, 'v₁');
+
+                // 2. Vector B (Tip-to-Tail)
+                if (currentOp === 'add') {
+                    drawVector(p, vA.x * s, -vA.y * s, vB.x * s, -vB.y * s, config.colors.vectorB, 'v₂');
+                } else {
+                    drawVector(p, vA.x * s, -vA.y * s, -vB.x * s, vB.y * s, config.colors.vectorB, '-v₂');
+                }
+               
+                // 3. Resultant
+                drawVector(p, 0, 0, vR.x * s, -vR.y * s, config.colors.resultant, currentOp === 'add' ? 'v₁+v₂' : 'v₁-v₂');
+
+                p.pop();
+            };
+        };
+
+        // Create the p5 instance
+        new p5(sketch);
+
+        function setOp(op) {
+            currentOp = op;
+            document.getElementById('btn-add').className = op === 'add' ? "flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white shadow-sm text-indigo-600" : "flex-1 py-2 px-4 rounded-md text-sm font-medium text-slate-600";
+            document.getElementById('btn-sub').className = op === 'sub' ? "flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white shadow-sm text-indigo-600" : "flex-1 py-2 px-4 rounded-md text-sm font-medium text-slate-600";
+            if(window.updateFromInputs) window.updateFromInputs();
+        }
+
+        function updateEquation(vA, vB) {
+            let vR = currentOp === 'add' ? {x: vA.x + vB.x, y: vA.y + vB.y} : {x: vA.x - vB.x, y: vA.y - vB.y};
+            const sign = currentOp === 'add' ? '+' : '-';
+            const formula = `\\begin{bmatrix} ${vA.x} \\\\ ${vA.y} \\end{bmatrix} ${sign} \\begin{bmatrix} ${vB.x} \\\\ ${vB.y} \\end{bmatrix} = \\begin{bmatrix} ${vR.x.toFixed(1)} \\\\ ${vR.y.toFixed(1)} \\end{bmatrix}`;
+            const display = document.getElementById('math-display');
+            if (window.katex && display) katex.render(formula, display, { throwOnError: false });
+        }
+
+        function drawGrid(p) {
+            const s = config.gridSize;
+            p.stroke(config.colors.grid);
+            p.strokeWeight(1);
+           
+            for (let x = -2000; x <= 2000; x += s) p.line(x, -2000, x, 2000);
+            for (let y = -2000; y <= 2000; y += s) p.line(-2000, y, 2000, y);
+
+            p.stroke(config.colors.axes);
+            p.strokeWeight(2);
+            p.line(-2000, 0, 2000, 0);
+            p.line(0, -2000, 0, 2000);
+           
+            p.fill(config.colors.axes);
+            p.noStroke();
+            p.textSize(11);
+            p.textFont('JetBrains Mono');
+            for (let x = -20 * s; x <= 20 * s; x += s) if(x !== 0) p.text(x/s, x, 15);
+            for (let y = -20 * s; y <= 20 * s; y += s) if(y !== 0) p.text(-y/s, 10, y);
+        }
+
+        function drawVector(p, x, y, vx, vy, rgb, label) {
+            if (p.abs(vx) < 0.1 && p.abs(vy) < 0.1) return;
+            p.push();
+            p.translate(x, y);
+            p.stroke(rgb);
+            p.fill(rgb);
+            p.strokeWeight(3.5);
+            p.line(0, 0, vx, vy);
+            p.push();
+            p.translate(vx, vy);
+            p.rotate(p.atan2(vy, vx));
+            p.noStroke();
+            p.triangle(0, 0, -10, -4, -10, 4);
+            p.pop();
+            p.noStroke();
+            p.textSize(15);
+            p.textStyle(p.BOLD);
+            let mag = p.sqrt(vx*vx + vy*vy);
+            p.text(label, vx + (vx/mag)*20, vy + (vy/mag)*20);
+            p.pop();
+        }
+    </script>
+</body>
+</html>
