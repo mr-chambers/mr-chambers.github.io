@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Series</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="sequence.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="integraltest.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Series</h2>
+<p></p>
+<p>A <strong>series</strong> is just the sum of some set of terms of a sequence. For example, the sequence 2, 4, 6, 8, ... has partial sums of 2, 6, 12, 20, ... These partial sums are each a <strong>finite series</strong>. The <em>n</em>th partial sum of a sequence is usually called <em>S<sub>n</sub></em>. If the  sequence being summed is <em>s<sub>n</sub></em> we can use sigma notation to define the series: <img src="assets/images/Eqn236.gif" alt="series as sigma" width="66" height="45" align="absmiddle" /> which just says to sum up the first <em>n</em> terms of the sequence <em>s</em>. If we sum up an infinite number of terms of a sequence we get an <strong>infinite series</strong>.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Series" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;s&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="a(n)" />
+    <param name="Col2Title" value="&lt;html&gt;S&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="as(n)" />
+    <param name="Example1" value="1. Arithmetic Series;s1 + d(n-1),s;;10;0,10,0,120;1,s1,0,5;2,d,0,5;10,50,100,500,1000,5000;false" />
+    <param name="Example2" value="2. Geometric Series;s1*r^(n-1),s;;10;0,10,-1100,1100;1,s1,0,5;2,r;10,50,100,500,1000,5000;false" />
+    <param name="Example3" value="3. A Divergent Series;(n+1)/n,s;;10;0,10,0,13;;;10,50,100,500,1000,5000;false" />
+    <param name="Example4" value="4. Harmonic Series;1/n,s;;10;0,10,0,4;;;10,50,100,500,1000,5000;false" />
+    <param name="Example5" value="5. P-Series;1/n^p,s;;10;0,10,0,4;1,p;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the arithmetic sequence <em>s<sub>n</sub></em> = <em>s</em><sub>1</sub> + <em>d</em>(<em>n</em> - 1) with <em>s</em><sub>1</sub> and <em>d</em> set to generate odd integers. On this applet, the sequence is shown as rectangles of width 1, somewhat reminiscent of a Riemann sum. The first term of this sequence is 1 so the first rectangle is 1 by 1 wide. The second term in our example is 3 so the next rectangle is 3 high by 1 wide, the third term is 5 high by 1 wide and so on. The dots on this graph represent the different finite series, each being the sum of the terms of the  sequence up to that point. From a visualization standpoint, think of the height of each dot as being the total area of all the rectangles to the left of the dot. Hence the first dot is at (1,1), the second dot is at (2,3), the third is at (3,5), etc. Input boxes and sliders are provided to allow you to change <em>s</em><sub>1</sub> and <em>d</em>. The table on the left gives some large values of the sequence and the series, clearly showing that the infinite series diverges. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing the geometric sequence <em>s<sub>n</sub></em> = <em>s</em><sub>1</sub><em>r</em><sup><em>n</em> - 1</sup> with <em>s</em><sub>1</sub> = 1 and <em>r</em> = 2. Clearly the infinite series is also divergent. Try dragging the <em>r</em> slider to make <em>|r|</em> &lt; 1. Does it look like the infinite series converges now? What happens if <em>r</em> &lt; -1? We saw that geometric sequences converge if <em>|r|</em> &lt; 1 and the same is true for geometric series. The value of a finite geometric series is given by <img src="assets/images/Eqn234.gif" alt="geo. series" width="97" height="48" align="absmiddle" /> while the value of a convergent infinite geometric series is given by <img src="assets/images/Eqn235.gif" alt="convergent sum" width="66" height="41" align="absmiddle" />. Note that some textbooks start <em>n</em> at 0 instead of 1, so the partial sum formula may look slightly different. If you see &quot;undefined&quot; in the table, that happens when the absolute value of the number to be displayed is  too big.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing the sequence<em> s<sub>n</sub></em> = (<em>n</em> + 1)/<em>n</em>. Here, the  sequence converges to 1, but the infinite series is divergent because as <em>n</em> gets larger you keep adding a number close to 1 to the sum, hence the sum keeps growing without bound. The<strong> <em>n</em>th term divergence test</strong> says if the terms of the  sequence converge to a non-zero number, then the series diverges. Mathematically, if <img src="assets/images/Eqn237.gif" alt="lim n-&gt;inf s(n) &lt;&gt; 0" width="65" height="29" align="absmiddle" /> then the series diverges.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing the <strong>harmonic series</strong> defined by <img src="assets/images/Eqn238.gif" alt="harmonic series" width="34" height="45" align="absmiddle" />. The  sequence converges to zero, but looking at the table, it isn't clear whether the series converges or not. Also, the points of the series in the graph resemble the graph of <em>y</em> = ln(<em>x</em>), which we know doesn't converge. In fact, the harmonic series is divergent; it keeps growing without bound, albeit slowly. Note that the nth term divergence test says only that if the  sequence converges to a non-zero number, then the series diverges. It does not say what happens if the  sequence does converge to zero. In that case the series may converge or diverge, depending on how fast the sequence converges to zero. The harmonic sequence does converge to zero, but it just doesn't do it fast enough for the harmonic series to also converge.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing the <strong>p-series</strong> defined by <img src="assets/images/Eqn239.gif" alt="p series" width="42" height="45" align="absmiddle" />. With <em>p</em> = 1 we get the harmonic series from the previous example, which we know does not converge. Move the <em>p</em> slider to see what happens for <em>p</em> &gt; 1, 0 &lt; <em>p</em> &lt; 1, and <em>p</em> &lt; 0. For which of these cases does it appear that the p-series converges? You should notice that a <em>p-</em>series converges for <em>p</em> &gt; 1 and diverges otherwise.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Series" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Series" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;s&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="a(n)" />
+    <param name="Col2Title" value="&lt;html&gt;S&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="as(n)" />
+    <param name="Example1" value="1. Arithmetic Series;s1 + d(n-1),s;;10;0,10,0,120;1,s1,0,5;2,d,0,5;10,50,100,500,1000,5000;false" />
+    <param name="Example2" value="2. Geometric Series;s1*r^(n-1),s;;10;0,10,-1100,1100;1,s1,0,5;2,r;10,50,100,500,1000,5000;false" />
+    <param name="Example3" value="3. A Divergent Series;(n+1)/n,s;;10;0,10,0,13;;;10,50,100,500,1000,5000;false" />
+    <param name="Example4" value="4. Harmonic Series;1/n,s;;10;0,10,0,4;;;10,50,100,500,1000,5000;false" />
+    <param name="Example5" value="5. P-Series;1/n^p,s;;10;0,10,0,4;1,p;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="sequence.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="integraltest.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

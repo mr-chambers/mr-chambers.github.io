@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Polar Area</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="arclength.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="slopefields.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Polar Area</span></h2>
+<p></p>
+<p>We can also use integrals to find the area enclosed by a polar curve. Here, we use sectors of circles instead of rectangles to calculate the area.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.PolarArea" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="410">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Circle;1;1;0;2pi;-1.5,1.5,-1.5,1.5" />
+    <param name="Example2" value="2. Spiral;th;1;0;2pi;-7,7,-7,7" />
+    <param name="Example3" value="3. Rose;3sin(2th);1;0;2pi;-4,4,-4,4" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a circle defined using the polar equation <em>r</em> = 1. We know from geometry that the area of this circle is &pi;. We can approximate the area using sectors, one of which is shown in gray. Move the <em>th</em> slider (<em>th</em> is used instead of <em>&theta;</em> to make it easier to type in polar functions) to see the sector move. The area of a sector of width <em>d&theta;</em> and radius <em>r</em> is &frac12; <em>r</em>&sup2; <em>d&theta;</em>. If we add up a bunch of sectors to approximate the area enclosed by a polar curve and let<em> d&theta;</em> go to zero, we get the integral <img src="assets/images/Eqn222.gif" alt="polar area" width="66" height="41" align="absmiddle" />, where <em>r</em> is replaced by our polar equation in terms of <em>&theta;</em>. For this example, the integral is <img src="assets/images/Eqn223.gif" alt="circle area integral" width="98" height="41" align="absmiddle" />. One thing to note about polar area is that <em>a</em> should be less than <em>b</em>, just like for arc length (otherwise, the integral gives a negative area). The other caution is that the integral doesn't yield quite the right answer if the curve overlaps itself, or if some of the area enclosed is covered more than once. For example, if you set <em>b</em> to 4<em>pi</em> by typing in the <em>b</em> input box, the area shown is twice what it should be. That's because you only need <em>&theta;</em> to go from 0 to 2&pi; to cover the circle; if <em>&theta;</em> goes from 0 to 4&pi;, it goes around twice and covers the circle twice. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing a spiral defined as <em>r</em> =<em> &theta;</em> . Move the <em>th</em> slider to see the sector move, noticing that in this case the radius is not constant, but changes as <em>&theta;</em> changes. The integral in this case is <img src="assets/images/Eqn224.gif" alt="spiral area" width="118" height="44" align="absmiddle" />. Move the <em>b</em> slider to change the upper limit and notice what area is shaded in yellow. Unlike area under regular curves, where the edges of the yellow area is parallel to the <em>y</em> axis, here the boundaries of the area are lines through the origin.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing a rose. You can move the <em>th</em> slider to get a feel for how the sectors are added up. The integral in this case is <img src="assets/images/Eqn225.gif" alt="rose area" width="165" height="41" align="absmiddle" />. <br />
+    <br />
+  </li>
+  <li>You can try other polar equations by typing the definition in (using <em>th</em> for <em>&theta;</em>), setting <em>a</em> and <em>b</em> as desired, and zooming/panning. Note that you need to figure out what <em>a</em> and <em>b</em> are to only sweep out the area of interest once, to avoid double counting (use the sliders to help see where this is; if you need to set <em>a</em> or <em>b</em> beyond the range of 0 to 2&pi;, use the <em>a</em> and <em>b</em> input boxes instead of the sliders).</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.PolarArea" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Polar Area" />
+    <param name="FrameSize" value="575,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Circle;1;1;0;2pi;-1.5,1.5,-1.5,1.5" />
+    <param name="Example2" value="2. Spiral;th;1;0;2pi;-7,7,-7,7" />
+    <param name="Example3" value="3. Rose;3sin(2th);1;0;2pi;-4,4,-4,4" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="arclength.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="slopefields.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

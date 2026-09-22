@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Optimization: Maximize Volume</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="curveanalysisglobal.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="evt.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Optimization: Maximizing Volume</span></h2>
+<p></p>
+<p></p>
+<p></p>
+<p>One of the key applications of finding global extrema is in optimizing some quantity, either minimizing or maximizing it. For example, suppose you wanted to make an open-topped box out of a flat piece of cardboard that is 25&quot; long by 20&quot; wide. You cut a square out of each corner, all the same size, then fold up the flaps to form the box, as illustrated below.</p>
+<p align="center"><img src="assets/images/boxprob.png" alt="boxproblem" width="186" height="158" /></p>
+<p align="left">Suppose you want to find out how big to make the cut-out squares in order to maximize the volume of the box. This applet will illustrate the box and how to think about this problem using calculus.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.BoxProblem" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="600">
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the flat piece of cardboard in the upper left, and a 3D perspective view of the folded box on the lower left. Move the <em>x </em>slider to adjust the size of the corner cutouts and notice what happens to the box. When <em>x</em> is small, the box is flat and shallow and has little volume. When <em>x</em> is large, the box it tall and skinny, and also has little volume. Somewhere in between is a box with the maximum amount of volume. Obviously, the smallest <em>x</em> can be is zero, which corresponds to not cutting out anything at all. What is the largest possible value for <em>x</em>, and why?<br />
+    <br />
+  </li>
+  <li>The volume of the box, since it is just a rectangular prism, is length times width times height. The height is just the size of the corner cut out (<em>x</em> in this problem). The length and width of the bottom of the box are both smaller than the cardboard because of the cut out corners. So the volume, as a function of <em>x</em>, is given by<em> V</em>(<em>x</em>) = <em>x</em>(25 - 2<em>x</em>)(20 - 2<em>x</em>). The graph of this function is shown in the upper right corner. As you move the <em>x</em> slider, the corresponding point moves along the graph, and the volume for that particular <em>x</em> value is also shown in the upper corner of the graph. <br />
+    <br />
+  </li>
+  <li>Prior to calculus, you might have solved this problem by graphing it on a calculator and finding the highest point on the graph. But, you can do better by finding the derivative of the volume function, setting this equal to zero and solving to find the critical points, determining which is a local maximum, and lastly comparing the volume at this point with the volume at the endpoints (which we don't really need to do in this problem, since the volume is zero at the two ends of the relevant domain for <em>x</em>). It is  easier for most people to find the derivative by first exanding the volume formula into <img src="assets/images/Eqn82.gif" alt="volume formula" width="165" height="24" align="absmiddle" />and then finding the derivative, which is <img src="assets/images/Eqn83.gif" alt="vol derivative" width="166" height="24" align="absmiddle" />. Setting this equal to zero and solving (e.g., via the quadratic formula) gives solutions <em>x</em> &asymp; 11.319 and <em>x</em> &asymp; 3.681. The first of these is outside the allowable values for <em>x</em>, so the solution is the second. Plugging <em>x</em> &asymp; 3.681 back into the volume formula gives a maximum volume of<em> V </em>&asymp; 820.529 in&sup3;. In the applet, the derivative is graphed in the lower right graph. Note that the derivative crosses the <em>x</em> axis at this value, and goes from positive to negative, indicating that this critical point is a local maximum.<br />
+    <br />
+  </li>
+  <li>At the bottom of the applet are input fields for the length and width of the cardboard. Play around with different values to see how it affects the solution and the shape of the volume function. Note that this applet automatically computes the limits for the graphs (i.e., you can't zoom on this applet). The applet also displays the formula for the volume (in terms of <em>x</em>, <em>L</em>, and <em>W</em>) as well as the formula for the derivative, but it computes the derivative without expanding (i.e., using the product rule) so the derivative formula is a bit messy.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.BoxProblem" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Optimization: Maximize Volume" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="curveanalysisglobal.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="evt.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

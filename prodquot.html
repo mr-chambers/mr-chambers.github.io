@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Product and Quotient</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="summdiff.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="chainrule.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Combinations: Product and Quotient</span></h2>
+<p></p>
+<p></p>
+<p>What is the derivative of the product of two functions? Of their quotient? You saw on the previous page that the rules for sums and differences is simple, but the rule for products and quotients seems to be more complex.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.FunctionCombination" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Sum;sin(x);x;f(x)+g(x);-5,5,-5,5,1" />
+    <param name="Example2" value="2. A Product;sin(x);x;f(x)*g(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. A Quotient;sin(x);x;f(x)/g(x);-5,5,-5,5,1" />
+    <param name="ShowDerivativeGraphs" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first example shows a sum. The left-most panel shows the graph of <em>f</em> (<em>x</em>), in purple, and its derivative in blue. The middle graph shows the graph and derivative of<em> g</em> (<em>x</em>). The right-most panel shows the graph and derivative of<em> h</em> (<em>x</em>), which in this example is the sum of <em>f</em> and <em>g</em>. First, look at the graphs of the functions (the purple curves). In this example, <em>f</em> is a sine curve, <em>g</em> is a straight line, and <em>h</em> is their sum, a line that wiggles like a sine curve. Now look at the blue derivative curves. The derivative of sine is cosine, the derivative of a line is a horizontal line, and the derivative of their sum is just the sum of these two (i.e., a cosine curve shifted up). <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. Here, <em>f</em> and <em>g</em> are the same, but <em>h</em> is now the product. Clearly the derivative of <em>h</em> is not just the product of the derivatives of <em>f</em> and <em>g</em> (if it was, it would look like a stretched cosine). The product rule is <img src="assets/images/Eqn59.gif" alt="product rule" width="278" height="41" align="absmiddle" />. In other words, the derivative of a product of two functions equals the derivative of the first times the second, plus the first times the derivative of the second. <br />
+    <br />
+  </li>
+  <li>Select the third example, showing a quotient. Here the rule is <img src="assets/images/Eqn60.gif" alt="quotient rule" width="218" height="49" align="absmiddle" />. I learned a mneumonic to help remember this formula. If you call the function on top HI and the one on the bottom HO, and their derivatives dHI and dHO, then the rule becomes <img src="assets/images/Eqn61.gif" alt="hi d  ho" width="201" height="41" align="absmiddle" />, which can be read as &quot;HO dHI minus HI dHO, all over HO HO.&quot; This is sometimes referred to as the HIdHO rule (think Cab Calloway singing Hi De Ho, dressed up as Santa Claus...). <br />
+    <br />
+  </li>
+  <li>Feel free to enter your own functions for <em>f</em> and <em>g</em>, to explore what the product and quotients, and their derivatives, look like.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.FunctionCombination" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Sums and Differences" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Sum;sin(x);x;f(x)+g(x);-5,5,-5,5,1" />
+    <param name="Example2" value="2. A Product;sin(x);x;f(x)*g(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. A Quotient;sin(x);x;f(x)/g(x);-5,5,-5,5,1" />
+    <param name="ShowDerivativeGraphs" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="summdiff.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="chainrule.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

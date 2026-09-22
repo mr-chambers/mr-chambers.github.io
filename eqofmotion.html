@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Equations of Motion</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="definedasintegral.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="substitution.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Equations of Motion</span></h2>
+<p></p>
+<p>We have seen that, given the position function for an object in motion, <em>s</em> (<em>t</em>), we can find the velocity function, <em>v</em>(<em>t</em>), by taking the derivative of <em>s</em> and can find the acceleration function by taking the derivative of <em>v</em>. Instead, suppose we are given the acceleration function and the initial velocity and position. Using antiderivatives we can then find <em>v</em> and <em>s</em>. Let <em>a</em>(<em>t</em>) be the acceleration function, <em>v</em><sub>0</sub> be the initial velocity and<em> s</em><sub>0</sub> be the initial position. Solving the differential equation <img src="assets/images/Eqn161.gif" alt="dv/dt = a(t)" width="64" height="41" align="absmiddle" />will give us <em>v</em>(<em>t</em>) (where the constant of integration,<em> C</em>, is <em>v</em><sub>0</sub> in this case). Once we have <em>v</em>, we can then solve <img src="assets/images/Eqn162.gif" alt="ds/dt = v(t)" width="61" height="41" align="absmiddle" /> to find the position function (where the constant of integration,<em> C</em>, is<em> s</em><sub>0</sub> in this case).</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.EqOfMotion" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Constant Acceleration;-9.8;1;0;0;-1,5,-10,10;-1,5,-50,50;-1,5,-100,100;-30;30;-50;50" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the graph of <em>a</em>(<em>t</em>) on the left, <em>v</em>(<em>t</em>) in the middle, and <em>s</em>(<em>t</em>) on the right. In this example, the acceleration is constant and equal to -9.8 m/sec&sup2; (i.e., the downward acceleration due to gravity at the surface of the Earth). The area &quot;under&quot; this straight horizontal line is shown in red on the left graph from 0 to time <em>t</em>. You can move the slider to change the time. Note that the area on the left graph is the same as the value of the velocity in the middle graph; velocity is the antiderivative (or accumulation) of acceleration. In this example, <img src="assets/images/Eqn163.gif" alt="a(t) = dv/dt = -9.8" width="108" height="41" align="absmiddle" />, so finding the antiderivative we get <img src="assets/images/Eqn164.gif" alt="v(t) = -9.8t+v0" width="104" height="24" />. This is the straight line graphed in the center.<br />
+    <br />
+  </li>
+  <li>Now look at the area shaded in the middle graph and notice that it is the same as the value of the position function shown on the right; position is the antiderivative (or accumulation) of velocity. In this example, <img src="assets/images/Eqn165.gif" alt="v(t)=ds/dt=-9.8t+v0" width="137" height="41" align="absmiddle" />, so finding the antiderivative gives us <img src="assets/images/Eqn166.gif" alt="s(t)=-9.8/2*t^2+v0*t+s0" width="148" height="41" align="absmiddle" />, which is the parabola graphed on the right. It is worth remembering that this parabola is <strong>not</strong> the path of the object in motion. We are looking at one-dimensional motion here and the right hand graph shows position (e.g., height above the ground) versus time.<br />
+    <br />
+  </li>
+  <li>Move the<em> v</em><sub>0</sub> slider to see the effect of changing the starting velocity (i.e., <em>v</em> at <em>t</em> = 0). Move the<em> s</em><sub>0</sub> slider to see the effect of changing the starting position (i.e., <em>s</em> at <em>t</em> = 0). <br />
+    <br />
+  </li>
+  <li>You can enter your own acceleration function to explore more complex examples. Each graph can be panned and zoomed independently. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.EqOfMotion" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Equations of Motion" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Constant Acceleration;-9.8;1;0;0;-1,5,-10,10;-1,5,-50,50;-1,5,-100,100;-30;30;-50;50" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="definedasintegral.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="substitution.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

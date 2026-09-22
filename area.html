@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Areas Via Slicing</title>
+<link type="text/css" href="style.css" rel="stylesheet" /></head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="improper.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="revolution.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Areas Via Slicing</span></h2>
+<p></p>
+<p>We have seen previously that you can use integrals to find the area under a curve. In some applications we want to find the unsigned area instead of the signed area. For example, if the area under the curve represents a physical shape (e.g., a piece of wood) and we want to know how much paint to buy to paint it, we would like to know the total area. In these applications, all area is counted positively. If we want the unsigned area between two functions from <em>a</em> to <em>b</em> we want to evaluate <img src="assets/images/Eqn181.gif" alt="unsigned area integral" width="120" height="34" align="absmiddle" />. If you are using a numerical tool, you can just evaluate this integral using the absolute value of the integrand. In other cases if the curves for the two functions cross in the interval from <em>a</em> to <em>b</em>, it may be easier to divide the interval up into parts where the curves don't cross and evaluate each separately. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Area" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="400">
+    
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Vertical Slices of a line;x;0;1;0;2;false;false;-3,3,-3,3" />
+    <param name="Example2" value="2. Vertical Slices of a line;-x;0;1;0;2;false;false;-3,3,-3,3" />
+    <param name="Example3" value="3. Vertical Slices of a cubic;x^3;0;1;-2;2;false;false;-3,3,-10,10" />
+    <param name="Example4" value="4. Vertical Slices between line and parabola;x;x^2;0.5;0;1;false;false;-.25,1.25,-.25,1.25" />
+    <param name="Example5" value="5. Vertical Slices between line and parabola;x;x^2;1.5;1;2;false;false;0,3,0,5" />
+    <param name="Example6" value="6. Vertical Slices of a parabola;1;x^2;0.5;0;1;false;false;-.5,1.5,-.5,1.5" />
+    <param name="Example7" value="7. Horizontal slices;0;sqrt(y);0.5;0;1;true;false;-.5,1.5,-.5,1.5" />
+    <param name="Example8" value="8. You Try!;x^2;0;1;0;2;false;true;-5,5,-5,5" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a line and the area (yellow) between this line and the <em>x</em>-axis from 0 to 2. We can think about finding this area using the limit of a Riemann sum, where each slice of the sum is a vertical rectangle. One such rectangle is shown in gray, and you can move the <em>x</em>-slider to move this rectangle about in the interval of interest. We can call the small width of this rectangle <em>dx</em> and the height of this rectangle <em>f</em> (<em>x</em>) (since the rectangle extends from the <em>x</em>-axis up to the curve), then the area is just <em>f</em> (<em>x</em>)<em>dx</em>. If we sum up these rectangles from 0 to 2, and take the limit as the width goes to 0, we get the integral <img src="assets/images/Eqn182.gif" alt="integral(0,2,x-0,dx)" width="82" height="34" align="absmiddle" />, which you can evaluate to get an area of 2. In the integrand, the 0 represents the lower curve, which in this example is just the <em>x</em>-axis.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing a slightly different line. Note that the area is still positive, since what we care about in this case is unsigned area. We can find this using either <img src="assets/images/Eqn183.gif" alt="integral(0,2,0-(-x),dx)" width="102" height="34" align="absmiddle" /> or <img src="assets/images/Eqn184.gif" alt="integral(0,2,-x-0,dx)" width="85" height="34" align="absmiddle" />. I generally like to think about the &quot;top&quot; curve minus the &quot;bottom&quot; curve, instead of using absolute value (although if I'm evaluating the integral numerically with my calculator, I tend to use the absolute value form). <br />
+    <br />
+  </li>
+  <li>Select the third example, showing a cubic with limits from -2 to 2. Notice that the area is positive, instead of 0. Also note that the exact area is 8, but rounding error in the software causes the displayed answer to be slightly short of this value. You can also move the <em>a</em> and <em>b</em> sliders to explore different limits. <br />
+    <br />
+  </li>
+  <li>Select the fourth example. This shows the area between a line and a parabola. Note that in the interval of interest, the line is &quot;on top&quot;, so the integral (without absolute value) is <img src="assets/images/Eqn185.gif" alt="integral(0,1,x-x^2,dx)" width="89" height="34" align="absmiddle" />. Think about the height of the gray rectangle. Its top is at <em>f</em> (<em>x</em>) = <em>x</em> and its bottom is at <em>g</em>(<em>x</em>) = <em>x</em>&sup2;, so the integrand of this integral represents the height of the rectangle.<br />
+    <br />
+  </li>
+  <li>Select the fifth example. This shows the area between the same two curves, but now the parabola is on top because the interval has changed. We could write this integral as <img src="assets/images/Eqn186.gif" alt="integral(1,2,x^2-x,dx)" width="89" height="34" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the sixth example, showing a parabola and a horizontal line other than the <em>x</em> axis. Here, the line is &quot;on top&quot; so the integral is <img src="assets/images/Eqn187.gif" alt="integral(0,1,1-x^2,dx)" width="85" height="34" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the seventh example. Here we repeat the previous example, but we use horizontal slices instead. Think of each slice as being <em>dy</em> tall and the length is then the difference between <em>f</em> (<em>y</em>) and <em>g</em>(<em>y</em>). Hence the integral is <img src="assets/images/Eqn188.gif" alt="integral(0,1,sqrt(y)-0,dy)" width="94" height="34" align="absmiddle" />. Move the <em>y</em> slider to move the sample rectangle. Note that in the previous example, <em>y</em> = <em>x</em>&sup2; so the inverse is <img src="assets/images/Eqn189.gif" alt="x = sqrt(y)" width="50" height="26" align="absmiddle" /> to draw the same curve (at least for positive <em>x</em> and <em>y</em>). <br />
+    <br />
+  </li>
+  <li>Select the eight example. You can try your own area example by setting <em>f</em>(<em>x</em>), <em>g</em>(<em>x</em>), <em>a</em>, and <em>b</em>. If you want to use horizontal slices, click the &quot;inverse&quot; check box and redefine your functions as functions of <em>y</em>. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Area" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Areas Via Slicing" />
+    <param name="FrameSize" value="550,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Vertical Slices of a line;x;0;1;0;2;false;false;-3,3,-3,3" />
+    <param name="Example2" value="2. Vertical Slices of a line;-x;0;1;0;2;false;false;-3,3,-3,3" />
+    <param name="Example3" value="3. Vertical Slices of a cubic;x^3;0;1;-2;2;false;false;-3,3,-10,10" />
+    <param name="Example4" value="4. Vertical Slices between line and parabola;x;x^2;0.5;0;1;false;false;-.25,1.25,-.25,1.25" />
+    <param name="Example5" value="5. Vertical Slices between line and parabola;x;x^2;1.5;1;2;false;false;0,3,0,5" />
+    <param name="Example6" value="6. Vertical Slices of a parabola;1;x^2;0.5;0;1;false;false;-.5,1.5,-.5,1.5" />
+    <param name="Example7" value="7. Horizontal slices;0;sqrt(y);0.5;0;1;true;false;-.5,1.5,-.5,1.5" />
+    <param name="Example8" value="8. You Try!;x^2;0;1;0;2;false;true;-5,5,-5,5" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+        This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="improper.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="revolution.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

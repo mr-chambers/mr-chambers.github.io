@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Fundamental Theorem of Calculus</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="riemann.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="aveval.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Fundamental Theorem of Calculus</span></h2>
+<p></p>
+<p>You saw on the preceeding pages that the area under the velocity curve gives the net distance traveled. In other words, if <em>s</em>(<em>t</em>) is the position of the car at time <em>t</em>, and <em>v</em>(<em>t</em>) = <em>s</em>'(<em>t</em>) is the velocity, then <img src="assets/images/Eqn117.gif" alt="integrate velocity" width="217" height="34" align="absmiddle" />, where <em>s</em>(<em>b</em>) - <em>s</em>(<em>a</em>) is the net distance traveled from time <em>a</em> to time <em> b</em>. It turns out that this relationship between a function, its derivative, and the definite integral of that derivative is true for functions other than velocity. This relationship, call the <strong>Fundamental Theorem of Calculus</strong>, states: If <em>f</em> is continuous on the interval [<em>a</em>,<em>b</em>] then <img src="assets/images/Eqn118.gif" alt="FTC" width="164" height="34" align="absmiddle" />. In other words, integrating the rate of change of <em>f</em> over an interval gives the net change in <em>f</em> over that same interval. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.FundamentalTheorem" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="480" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Line;20x;0;8;-0.5,8,-10,160;0;8;0;8" />
+    <param name="Example2" value="2. Cubic;-1/3*x^3+15/2*x^2+20x;0;8;-0.5,8,-50,500;0;8;0;8" />
+    <param name="Example3" value="3. Parabola;x^2;1;3;-4,4,-8,16;-4;4;-4;4" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the graph of <em>f</em> (<em>x</em>) on the left and the graph of <em>f</em> '(<em>x</em>) on the right. The area under <em>f</em> '(<em>x</em>) between <em>a</em> and <em>b</em> is colored in cyan on the right, and the difference <em>f</em> (b) - <em>f</em> (<em>a</em>) is shown on the left as a thick cyan bar on the <em>y</em> axis. Notice that the difference and the area are equal, as shown by the value displayed in the top left corner of each graph. Now, move the <em>b</em> slider to shorten up the interval. The area decreases, of course, but so does the difference. You can also move <em>a</em> to be closer to <em>b</em>. For now, keep <em>a</em> less than <em>b</em> (if you happen to make <em>a</em> larger than <em>b</em>, something interesting happens to the value of the area and the difference; we will come back to it on a different page). This example corresponds to the constant velocity case used with the car. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop-down menu. This shows a cubic function and its derivative. You can move the <em>a</em> and <em>b</em> sliders and notice that the difference and the area remain the same (they might be slightly different due to rounding errors). This example corresponds to the speeding up example for the car.<br />
+    <br />
+  </li>
+  <li>Select the third example from the drop-down menu. This shows a simple parabola and its derivative. Move the <em>a</em> slider to the left and watch what happens. Can you make the area and the difference zero? Where does this happen? Why? (Note that the area might not be exactly zero, but really small due to rounding error).<br />
+    <br />
+  </li>
+  <li>You can also try your own functions by typing them in. Just make sure it is continuous, at least on the interval [<em>a</em>,<em>b</em>]. You can zoom and pan as usual. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.FundamentalTheorem" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Fundamental Theorem of Calculus" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Line;20x;0;8;-0.5,8,-10,160;0;8;0;8" />
+    <param name="Example2" value="2. Cubic;-1/3*x^3+15/2*x^2+20x;0;8;-0.5,8,-50,500;0;8;0;8" />
+    <param name="Example3" value="3. Parabola;x^2;1;3;-4,4,-8,16;-4;4;-4;4" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="riemann.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="aveval.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

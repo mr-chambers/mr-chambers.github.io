@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Ratio Test</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="limitcomparisontest.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="altseqtest.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Ratio Test</h2>
+<p></p>
+<p>The <strong>ratio test</strong> is helpful for determining the convergence of a series when the terms grow very large as <em>n</em> increases.. Suppose we have a series <img src="assets/images/Eqn247.gif" alt="series" width="73" height="45" align="absmiddle" /> where the <em>a<sub>n</sub></em> are positive. If <img src="assets/images/Eqn259.gif" alt="lim ratio test" width="84" height="45" align="absmiddle" />, then if <em>N</em> &lt; 1 the series converges, if <em>N</em> &gt; 1 the series diverges, and if <em>N</em> = 1 we don't know whether it diverges or converges. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Series" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Col2Title" value="&lt;html&gt;a&lt;sub&gt;n+1&lt;/sub&gt;/a&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="a(n+1)/a(n)" />
+    <param name="Example1" value="1. Factorial;1/n!,a;;10;0,10,0,2;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the series <img src="assets/images/Eqn260.gif" alt="factorial series" width="70" height="45" align="absmiddle" />. From the graph and table it definitely looks like this series converges, and quite rapidly, too (the &quot;undefined&quot; entries in the table are due to the <em>n</em>! becoming so large that the value exceeds the capacity of the variable storing the number). The ratio test says that we want to look at the ratio of successive terms as <em>n</em> gets large: <img src="assets/images/Eqn261.gif" alt="ratio test with factorial" width="348" height="82" align="absmiddle" />. Since the limit is &lt; 1, the series converges.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Series" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Ratio Test" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Col2Title" value="&lt;html&gt;a&lt;sub&gt;n+1&lt;/sub&gt;/a&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="a(n+1)/a(n)" />
+    <param name="Example1" value="1. Factorial;1/n!,a;;10;0,10,0,2;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="limitcomparisontest.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="altseqtest.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

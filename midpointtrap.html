@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Midpoint and Trapezoidal Riemann Sums</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="substitution.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="improper.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Midpoint and Trapezoidal Riemann Sums</span></h2>
+<p></p>
+<p>We have seen Riemann sums that use the left or right endpoints on the intervals to find the height of the rectangles. On this page we explore two different methods. The midpoint method uses a point in the middle of the interval to find the height of the rectangle. The trapezoid method uses a trapezoid instead of a rectangle to approximate the area of each interval. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.MidPointTrapezoid" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Line;x;-1;1;4;0;-2,2,-1,1" />
+    <param name="Example2" value="2. Parabola;x^2;-1;1;4;0;-2,2,-1,1" />
+    <param name="Example3" value="3. Cubic;x^3;-1;1;4;0;-2,2,-1,1" />
+    <param name="Example4" value="4. Cosine;cos(x);-1;1;4;0;-2,2,-1,1" />
+    <param name="Example5" value="5. Sine;sin(x);-1;1;4;0;-2,2,-1,1" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a line and a Riemann sum using 4 intervals with left endpoints. The height of each rectangle is determined by the value of the function at the left edge of each rectangle. Why is the third rectangle from the left missing? (Hint: what is the value of the function for <em>x</em> = 0?). Use the choice box to select &quot;Right.&quot; Now the height of each rectangle is determined by the value of the function at the right edge of each rectangle. Next, select &quot;MidPoint&quot; and notice the heights of the rectangles. Lastly, select &quot;Trapezoid&quot; and notice that the rectangles now have become trapezoids, using both the left and right heights with a slanted top (which lies right along the line in this example). At the top of the graph is shown the area of the Riemann sum and the area under the curve (which may not be exactly 0 due to rounding errors). Which of the four methods is closest to the actual area? Which are over estimates? Underestimates?<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing a parabola. Explore the four different types of Riemann sums. On this example, it is easier to see the trapezoids. Which of the four methods is closest to the actual area? Which are over estimates? Underestimates?<br />
+    <br />
+  </li>
+  <li>Repeat these explorations for the other examples (a cubic, a cosine, and a sine). You can also enter your own functions, changes <em>a</em> and <em>b</em>, and zoom/pan the graph.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.MidPointTrapezoid" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Midpoint and Trapezoidal Riemann Sums" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Line;x;-1;1;4;0;-2,2,-1,1" />
+    <param name="Example2" value="2. Parabola;x^2;-1;1;4;0;-2,2,-1,1" />
+    <param name="Example3" value="3. Cubic;x^3;-1;1;4;0;-2,2,-1,1" />
+    <param name="Example4" value="4. Cosine;cos(x);-1;1;4;0;-2,2,-1,1" />
+    <param name="Example5" value="5. Sine;sin(x);-1;1;4;0;-2,2,-1,1" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="substitution.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="improper.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

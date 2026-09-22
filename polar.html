@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Polar Derivatives</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="parametric.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="motionline.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Polar Derivatives</span></h2>
+<p></p>
+<p>Curves can also be defined using polar equations, based on polar coordinates. In normal rectangular coordinates we define horizontal and vertical axes, with the location of a point defined by <em>x</em> and <em>y</em>, the coordinates along these two axes. In polar coordinates we instead use <em>r</em> and <em>&theta;</em>, where <em>r</em> is the distance from the origin and <em>&theta;</em> is the angle between the positive <em>x</em> axis and a line through the origin and the point. We can convert from polar coordinates to rectangular using <em>x</em> = <em>r</em> cos<em>&theta;</em> and <em>y</em> = <em>r</em> sin<em>&theta;</em>. A curve can then be defined as <em>r</em> = <em>f</em> (<em>&theta;</em>) (i.e., <em>r</em> is a function of <em>&theta;</em>). To find the derivatives of <em>y</em> with respect to <em>x</em> for this curve, we can convert its definition to parametric equations and then use the formulas for parametric derivatives. In other words, if <em>r</em> = <em>f</em> (<em>&theta;</em>), then <em>x</em>(<em>&theta;</em>) = <em>r</em> cos<em>&theta;</em> = <em>f</em> (<em>&theta;</em>)cos<em>&theta;</em> and <em>y</em> = <em>r</em> sin<em>&theta;</em> = <em>f</em> (<em>&theta;</em>)sin<em>&theta;</em>. Thus the derivative formulas become:</p>
+<p align="center"> <img src="assets/images/Eqn99.gif" alt="polar 1st deriv" width="62" height="80" align="absmiddle" /> and <img src="assets/images/Eqn100.gif" alt="polar 2nd deriv" width="108" height="84" align="absmiddle" />.</p>
+<p>This is just like the parametric case, except that our parameter is now named <em>&theta;</em> instead of <em>t</em>.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.PolarDeriv" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="600">
+    <param name="Example1" value="1. Circle;1;-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example2" value="2. Archimedean Spiral;th;-7,7,-7,7;0;6.28;100;invoke;0" />
+    <param name="Example3" value="3. Extended Spiral;th;-7,7,-7,7;-6.28;6.28;100;invoke;0" />
+    <param name="Example4" value="4. Rose;3sin(2th);-3,3,-3,3;0;6.28;100;invoke;0" />
+    <param name="Example5" value="5. Limacon;1+2cos(th);-1.5,4.5,-3,3;0;6.28;100;invoke;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a circle, which is defined very simply as <em>r</em> = 1 (if the circle looks squished, click Equalize Axes). In this applet, <em>th</em> is used instead of <em>&theta;</em> to make it easier to type. Move the <em>th</em> slider to change the value of <em>&theta;</em>. In polar coordinates, <em>&theta;</em> is the angle between the positive <em>x</em> axis and a line from the origin through the point (which is illustrated as a dashed magenta line on the graph). <em>&theta;</em> is just the angle between this dashed line and the positive <em>x</em> axis. Notice that for this polar equation, as <em>&theta;</em> changes and as the magenta point traces out the polar curve, its distance from the origin, <em>r</em>, is always 1, for any value of <em>&theta;</em>. For this polar equation, the parametric equations are <em>x</em>(<em>&theta;</em>) = cos<em>&theta;</em> and <em>y</em>(<em>&theta;</em>) = sin<em>&theta;</em>, so the derivative is <img src="assets/images/Eqn104.gif" alt="polar deriv" width="141" height="41" align="absmiddle" />, which matches what we got for the parametric derivative of a circle.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing the spiral <em>r</em> = <em>&theta;</em>. Move the <em>th</em> slider, which changes <em>&theta;</em>, and notice what happens to <em>r</em>. As <em>&theta;</em> increases, so does <em>r</em>, so the point moves farther from the origin as <em>&theta;</em> sweeps around. The parametric equations are <em>x</em>(<em>&theta;</em>) = <em>&theta;</em>cos<em>&theta;</em> and <em>y</em>(<em>&theta;</em>) = <em>&theta;</em>sin<em>&theta;</em>, so the derivative is <img src="assets/images/Eqn105.gif" alt="polar deriv" width="129" height="41" align="absmiddle" />, a more complicated result due to the product rule.<br />
+    <br />
+  </li>
+  <li>Select the third example. This shows the same spiral, but now tmin = -6.28, allowing <em>&theta;</em> to be negative. Move the <em>th</em> slider to make <em>&theta;</em> negative and see what happens. What is the value of <em>r</em> in this case? What does a negative <em>r</em> mean? As you will notice, a negative <em>r</em> means that the point is at a distance of <em>r</em> from the origin, but it is opposite the half-line used to show where <em>&theta;</em> is located. This ability to have negative <em>r</em> is what enables polar equations to represent some amazing and beautiful curves.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a four-petaled rose defined by <em>r</em> = 3sin2<em>&theta;</em>. Move the <em>th</em> slider and notice whether <em>r</em> is positive or negative for each petal of the rose. The parametric equations are <em>x</em>(<em>&theta;</em>) = 3sin2<em>&theta;</em>cos<em>&theta;</em> and <em>y</em>(<em>&theta;</em>) = 3sin2<em>&theta;</em>sin<em>&theta;</em>, so the derivative is given by <img src="assets/images/Eqn106.gif" alt="polar deriv" width="220" height="41" align="absmiddle" />. If you'd like, change the 3 and the 2 in the definition to different values and see what those changes do to the rose. For <em>r</em> = 3sin3<em>&theta;</em>, how many times does the curve get traced as you change <em>&theta;</em> from 0 to 6.28? As you increase the multiple inside the sine function, the graph gets coarser-looking, because it is being traced multiple times. To make it look smoother, either reduce tmax so that it only is traced once, or increase intervals to 1,000 so that there are more segments of the curve drawn, making the curve look smoother.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing a Lima&ccedil;on, defined as <em>r</em> = 1+2cos<em>&theta;</em>. If you'd like, play around with the 1 and the 2 in this definition and see how it changes the shape of the curve. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.PolarDeriv" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Polar Derivatives" />
+    <param name="FrameSize" value="800,580" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Circle;1;-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example2" value="2. Archimedean Spiral;th;-7,7,-7,7;0;6.28;100;invoke;0" />
+    <param name="Example3" value="3. Extended Spiral;th;-7,7,-7,7;-6.28;6.28;100;invoke;0" />
+    <param name="Example4" value="4. Rose;3sin(2th);-3,3,-3,3;0;6.28;100;invoke;0" />
+    <param name="Example5" value="5. Limacon;1+2cos(th);-1.5,4.5,-3,3;0;6.28;100;invoke;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="parametric.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="motionline.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

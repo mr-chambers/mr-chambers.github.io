@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Applet Introduction</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="index.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="grapherrors.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Applet Introduction</span></h2>
+<p>The calculus applets are all based on the Web
+  Components for Mathematics library and developed with the Java programming
+language. A typical applet, for graphing a function, appears below.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.SimpleGraph" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Example1" value="1. A Line;x" />
+    <param name="Example2" value="2. A Different Line;2x+1" />
+    <param name="Example3" value="3. A Parabola;x^2" />
+    <param name="Example4" value="4. A Sine;sin(x)" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>At the top of the applet is a drop down menu of
+    examples. Click on it to drop down the menu, then click on one of the
+    selections. Note that the function definition (just below the graph)
+    changes, as does the graph itself. Many of the applets have an examples
+    menu at the top.<br />
+    <br />
+  </li>
+  <li>You can type your own function definition.
+    Click-drag over the current function definition and type a new one, such
+    as x^3, then press Enter. You will see your cubic on the graph. More
+    information on the syntax of function definitions can be found
+    below.<br />
+    <br />
+  </li>
+  <li>Error messages show up in the graphing area. For
+    example, type in the function z^3 and press Enter. Since this applet
+    doesn't know about the variable z (only about x), it displays an error
+    message. To fix things, just edit the z back to an x and press Enter.<br />
+    <br />
+    </li>
+  <li>You can zoom in and out using the zoom buttons on
+    the Limit Control Panel, shown to the right of the graph. You can also
+    directly edit the xmin, xmax, ymin, and ymax fields, pressing Enter to
+    cause your limits to take effect (or click the Set Limits button).
+    Pressing the Restore Limits button returns you to the last saved set of
+    limits, useful if you've messed around with the limits and want to get
+    back where you started. Some applets also have a Save Limits button,
+    which saves the current limits for use by the Restore Limits
+    button.<br />
+    <br />
+  </li>
+  <li>You can also zoom and pan using the mouse. Click on
+    the graph and the applet will zoom in by a factor of 2, centered on the
+    location of the click. Do this with the Shift key held down to zoom out
+    x2. Click-drag on the graph window creates a rectangle; when you let go
+    of the mouse button, the graph will be zoomed to that rectangle.
+    Click-drag with the right mouse button (or while holding down the command
+    key on a Macintosh) will pan the graph. Remember, you can always undo
+    your zoom/pan experiments with the Restore Limits button.<br />
+    <br />
+  </li>
+  <li>The Equalize button will cause both axes to have
+    the same scale (i.e., circles will look like circles instead of
+    ellipses). This is useful if you want the scales to be the same on both axes and you have
+    resized the window or zoomed in a way that the axes no longer have the
+    same scale.<br />
+    <br />
+   </li>
+  <li>Try dragging the slider at the bottom of the
+    applet, and watch the crosshair move along the graph. Many applets have
+    sliders that allow you to adjust a value. You can also type a value into
+    the <em>x</em> = box next to the slider, and have the slider updated directly to
+    your desired value. Once you have clicked on the slider, you can also move the slider using the &larr; and &rarr; keys on your keyboard.<br />
+    <br />
+  </li>
+  <li>If you want to project an applet onto a screen for
+    use in a lecture, the normal applet's lines and fonts may be too small.
+    Most pages provide a Launch Presentation button that opens a new window
+    with the applet in it, also with larger fonts and wider lines. Try
+    clicking the button below to see what this looks like. The resulting
+    window can be resized to fit your screen.<br />
+
+    <p style="text-align: center;">
+      <applet
+    code="net.sourceforge.webcompmath.applets.SimpleGraph"
+    codebase="./assets" archive="webcompmath.jar" height="40"
+    width="160">
+        <param name="LaunchButtonName" value="Launch Presentation" />
+        <param name="FrameTitle" value="Applet Introduction" />
+        <param name="FrameSize" value="640,580" />
+        <param name="Presentation" value="yes" />
+        <param name="UseMouseZoom" value="yes" />
+        <param name="UsePanner" value="yes" />
+        <param name="UseRestoreButton" value="yes" />
+        <param name="UseComputeButton" value="no" />
+        <param name="UseZoomButtons" value="yes" />
+        <param name="UseEqualizeButton" value="yes" />
+        <param name="UseSaveButton" value="yes" />
+        <param name="OptionalStars" value="yes" />
+        <param name="OptionalFunctions" value="yes" />
+        <param name="RationalExponents" value="yes" />
+        <param name="Factorials" value="yes" />
+    <param name="Example1" value="1. A Line;x" />
+    <param name="Example2" value="2. A Different Line;2x+1" />
+    <param name="Example3" value="3. A Parabola;x^2" />
+    <param name="Example4" value="4. A Sine;sin(x)" />
+        <param name="UseLoadButton" value="no" />
+      </applet>
+    </p>
+  </li>
+</ol>
+<p><span style="font-weight: bold;">Function Syntax: </span>The syntax for the definition of a function is very similar to that
+  found on common graphing calculators. Binary operators such as + (addition),
+  - (subtraction), * (multiplication), / (division), and ^ (exponentiation)
+  follow the standard rules for precedence. Operators at equal levels are
+  performed left to right, and grouping parentheses are also supported. The
+  following are the symbols and operations allowed in a function
+definition.</p>
+
+<table style="text-align: left; margin-left: 0.5in; margin-right: 0.5in;" border="1" cellpadding="2"
+cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="text-align: center;">+, -, *,
+      /</td>
+      <td>The standard arithmetic binary operators.
+        Multiplication is implied if the * is left out (e.g., 2*x and 2x are
+        equivalent, but note that 2*3 is not the same as 23). Example:
+        2x-1<br />
+        The &ndash; sign can also be used as negation, as in &ndash; ( x + 2
+      ). Use parentheses when an exponent has a - sign, as in e^(-1).<br /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">( )</td>
+      <td>Parentheses are used for grouping and also to
+        delimit the arguments to a function. Examples: (x-2)/3 and
+        sin(x)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">x</td>
+      <td>The independent variable used in all function
+        definitions (some applets support other variables, as noted on those
+        pages)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">^</td>
+      <td>Exponentiation binary operator. If the exponent
+        is not an integer, the program checks whether it is a rational
+        number. If the reduced denominator is even, or if the program cannot
+        determine that the exponent is rational, then only the non-negative
+        part of the domain is graphed. If it is rational and the reduced
+        denominator is odd, then the negative part of the domain is also
+        graphed. For example, x^(1/3) will graph a domain of all reals, while
+        x^(pi) will only use non-negative reals.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">!</td>
+      <td>Factorial, as in x !</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">e, pi</td>
+      <td>Built-in constants.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span style="font-weight: bold;">Built-in Functions: </span>The following built-in functions are provided:</p>
+
+<table style="text-align: left; margin-left: 0.5in; margin-right: 0.5in;" border="1" cellpadding="2"
+cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="text-align: center;">abs(x)</td>
+      <td>Absolute value</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">arccos(x)</td>
+      <td>Inverse cosine (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">arcsin(x)</td>
+      <td>Inverse sine (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">arctan(x)</td>
+      <td>Inverse tangent (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">ceiling(x)</td>
+      <td>The smallest (closest to negative infinity)
+        real value that is greater than or equal to x and is equal to a
+        mathematical integer.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">cos(x)</td>
+      <td>Cosine (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">cosh(x)</td>
+      <td>Hyperbolic cosine</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">cot(x)</td>
+      <td>Cotangent (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">csc(x)</td>
+      <td>Cosecant (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">cubert(x)</td>
+      <td>Cube root</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">exp(x)</td>
+      <td>Exponential function (i.e., e^x)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">floor(x)</td>
+      <td>The largest (closest to positive infinity) real
+        value that is less than or equal to x and is equal to a mathematical
+        integer.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">ln(x)</td>
+      <td>Natural logarithm (base e)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">log2(x)</td>
+      <td>Base 2 logarithm</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">log10(x)</td>
+      <td>Common logarithm (base 10)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">round(x)</td>
+      <td>The closest integer to x</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">sec(x)</td>
+      <td>Secant (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">sin(x)</td>
+      <td>Sine (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">sinh(x)</td>
+      <td>Hyperbolic sine</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">sqrt(x)</td>
+      <td>Square root</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">tan(x)</td>
+      <td>Tangent (radians)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">tanh(x)</td>
+      <td>Hyperbolic tangent</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">trunc(x)</td>
+      <td>Drop any digits after the decimal
+      point</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span style="font-weight: bold;">Piecewise Functions: </span>In addition, a special syntax is provided for conditional expressions,
+  which enables you to graph piecewise functions. A conditional expression is
+  an expression using the ? operator. An example is ((x &gt; 0)? x : -x) which
+  says: &ldquo;if x is greater than 0, then the value is x, otherwise it is
+  &ndash; x.&rdquo; The part before the ? is the condition and compares two
+  quantities using one of the comparison operators =, &gt;, &lt;, &gt;=, &lt;=,
+  or &lt;&gt; (not equal). You can also write more complex expressions using
+  &amp; (the AND binary operator), | (the OR binary operator), and ~ (the NOT
+  unary operator). The part between the ? and the : is the value if the
+  condition is true and can be any valid expression (even another conditional
+  expression). The part after the : is the value if the condition is false.
+  Note that the parentheses surrounding the conditional expression are not
+  required, but are recommended if the conditional expression is part of a
+  larger expression. The false part (after the :) is optional. If it is not
+  present, then when the condition is false the expression evaluates to
+  &ldquo;not a number,&rdquo; which will cause nothing to be graphed for that
+domain value.</p>
+<p><span style="font-weight: bold;">Background: </span>These applets are built using the Web Components for Mathematics(WCM)
+  library and the Java programming language. More information on WCM can be
+found at <a
+href="http://webcompmath.sourceforge.net/">http://webcompmath.sourceforge.net/</a></p>
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+        This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="index.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="grapherrors.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

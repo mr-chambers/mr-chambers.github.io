@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Comparison Test</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="integraltest.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="limitcomparisontest.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Comparison Test</h2>
+<p></p>
+<p>The <strong>comparison test</strong> provides a way to use the convergence of a series we know to help us determine the convergence of a new series. Suppose we have two series <img src="assets/images/Eqn247.gif" alt="A(inf)" width="73" height="45" align="absmiddle" />and <img src="assets/images/Eqn248.gif" alt="b series" width="72" height="45" align="absmiddle" />, where 0 &le; <em>a<sub>n</sub></em> &lt; <em>b<sub>n</sub></em>. Then if<em> B </em>converges, so does <em>A</em>. Also, if <em>A</em> diverges, then so does <em>B</em>. So if we suspect that a series <em>A</em> converges, we can try to find a similar series <em>B</em> where the terms are all bigger than the terms of <em>A</em> and where <em>B</em> is known to converge, thus proving that <em>A</em> converges. Conversely, if we have a series <em>B</em> that we suspect diverges, we can try to find a similar series<em> A </em>where the terms are all smaller than the terms of<em> B </em>and where<em> A </em>is known to diverge, thus proving that<em> B </em>diverges.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Series" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Col2Title" value="&lt;html&gt;B&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="bs(n)" />
+    <param name="Example1" value="1. Close to a P series;1/(n^2+1),a;1/n^2,b;10;0,10,0,2;;;10,50,100,500,1000,5000;false" />
+    <param name="ShowSecond" value="yes" />
+    <param name="Example2" value="2. Close to a harmonic series;1/n,a;(n^2+2)/(n^3+1),b;10;0,10,0,4;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the series <img src="assets/images/Eqn249.gif" alt="conv. series" width="94" height="45" align="absmiddle" />. This is similar to a <em>p</em>-series, so the applet also shows a <em>p</em>-series as <em>B</em>. The blue dots are terms of <em>A</em> and the blue/purple rectangles are the terms of the underlying sequence <em>a<sub>n</sub></em>. The red dots represent <em>B</em> and the red/pink rectangles are the terms <em>b<sub>n</sub></em>. Note that all of the <em>a<sub>n</sub></em> are less than the corresponding <em>b<sub>n</sub></em> and that all are positive, so we can apply the comparison test. Since we know that a <em>p</em>-seriese with <em>p</em> &gt; 1 converges, <em>B</em> converges, and hence so does <em>A</em>. The table on the left shows terms of <em>A</em> and <em>B</em> and supports the convergence of both series.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing the series <img src="assets/images/Eqn250.gif" alt="almost a harmonic series" width="98" height="46" align="absmiddle" />. This is similar to a harmonic series, which is shown as <em>A</em>.   Note that all of the <em>b<sub>n</sub></em> are greater than the corresponding <em>a<sub>n</sub></em> and that all are positive, so we can apply the comparison test. Since we know that the harmonic series diverges, then so must <em>B</em>. The table of values isn't quite clear on whether <em>B</em> converges or diverges, so the comparison test is useful here to determine what happens to <em>B</em> in the long run.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Series" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Comparison Test" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Col2Title" value="&lt;html&gt;B&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="bs(n)" />
+    <param name="Example1" value="1. Close to a P series;1/(n^2+1),a;1/n^2,b;10;0,10,0,2;;;10,50,100,500,1000,5000;false" />
+    <param name="ShowSecond" value="yes" />
+    <param name="Example2" value="2. Close to a harmonic series;1/n,a;(n^2+2)/(n^3+1),b;10;0,10,0,4;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="integraltest.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="limitcomparisontest.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

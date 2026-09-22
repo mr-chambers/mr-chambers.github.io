@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Twice Differentiable</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="differentiability.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="makecontdiff.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Twice Differentiable</span></h2>
+<p></p>
+<p></p>
+<p>A function may be differentiable at a point but not twice differentiable (i.e., the first derivative exists, but the second derivative does not). </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="Example1" value="1. A Cubic;(x-1)^3+1;-1,3,-1,3,1" />
+    <param name="Example2" value="2. A Piecewise Function; x&lt;1?(x-1)^3+1:(x-1)^2+1;-1,3,-1,3,1;open,1,0,second;open,1,2,second" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial graph shows a cubic, shifted up and to the right so the axes don't get in the way. Note that there is a derivative at <em>x</em> = 1, and that the derivative (shown in the middle) is also differentiable at <em>x</em> = 1. Move the slider around to see that there are no abrupt changes. So this function is said to be twice differentiable at <em>x</em> = 1. <br />
+    <br />
+  </li>
+  <li>The second example shows a half of a parabola connected to half of a cubic, also shifted up and to the right. This is defined as <img src="assets/images/Eqn31.gif" alt="piecewise function" width="184" height="50" align="middle" />. The middle graph shows the derivative, which exists for <em>x</em> = 1 since the left-hand and right-hand derivatives are the same at this point (i.e., both are 0). But, look at the graph of the first derivative in the middle; is it differentiable at <em>x</em> = 1 (i.e., is the original function twice differentiable)? Move the slider, and notice that the first derivative has a corner at x = 1. So the first derivative is not differentiable there. <br />
+    <br />
+  </li>
+  <li>You may have noticed in the last example that for <em>x</em> = 1, the graph of the second derivative shows an open point at (1,2), but the applet reports in the little box on the graph that <em>f </em>'' (1) = 2, implying that there is a second derivative. Which is right? In fact, the second derivative does not exist, as we noted above, but the graphing software isn't quite smart enough to know this and thinks that there is a second derivative there. That's why the little box says the value of the second derivative is 2, when it should really say &quot;undefined.&quot; The open point is actually not drawn by the software, but manually added by hand to the example to make the graph clearer. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Twice Differentiable" />
+    <param name="FrameSize" value="800,600" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Cubic;(x-1)^3+1;-1,3,-1,3,1" />
+    <param name="Example2" value="2. A Piecewise Function; x&lt;1?(x-1)^3+1:(x-1)^2+1;-1,3,-1,3,1;open,1,0,second;open,1,2,second" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="differentiability.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="makecontdiff.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

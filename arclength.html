@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Arc Length</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="knowncrosssection.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="polararea.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Arc Length</span></h2>
+<p></p>
+<p>We have seen how Riemann sums can be used to approximate areas and volumes. The definite integral, as the limit of a Riemann sum as the slice width goes to zero and the number of slices goes to infinity, provides a way to find the actual area or volume. We can use the same technique to find the length of the graph of a function. Obviously, if the function's graph is a straight line, we can just used the distance formula to find the length of a piece of the line. However, we can approximate a curve by using straight line segments and can use the distance formula to find the length of each segment. Then, as the segment size shrinks to zero, we can use a definite integral to find the length of the arc of the curve.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.ArcLength" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="400">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Standard;x^2;0;1;-1;2;0;false;-1.5,2.5,-1,5" />
+    <param name="Example2" value="2. Inverse;y^2;0;1;-1;2;1;false;-1,5,-1.5,2.5" />
+    <param name="Example3" value="3. Parametric;cos(t);sin(t);2;0;3.14159;2;false;-1.1,1.1,-0.545,1.545" />
+    <param name="Example4" value="4. Polar;th;0;4;0;6;3;false;-7,7,-7.38,7.38" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows an arc that is part of the graph of a parabola. Initially, we approximate the length of this arc by a straight segment connecting the end points. This is clearly not a very good approximation, but we can do better by increasing the number of segments. Move the intervals slider to increase the number, and see how the black set of segments more closely approximates the magenta curve. Note that the approximate length gets closer and closer to the actual length. If we let &Delta;<em>x</em> be the change in <em>x</em> between the endpoints of a straight line segment and &Delta;<em>y </em>be the change in<em> y</em>, then from the distance formula the length of the segment is <img src="assets/images/Eqn210.gif" alt="distance formula" width="104" height="34" align="absmiddle" />. Unfortunately, this doesn't look like the element of a Riemann sum, which should be a function of some variable times a little bit of that variable. We can massage this into that form with a little algebra by factoring a &Delta;<em>x</em> out of the radical to get <img src="assets/images/Eqn211.gif" alt="distance formula, Riemann version" width="101" height="53" align="absmiddle" />. Summing this up and taking the limit as &Delta;<em>x</em> goes to zero gives us the definite integral <img src="assets/images/Eqn212.gif" alt="arc length integral" width="109" height="53" align="absmiddle" />, where <em>a</em> &lt; <em>b</em>. Since <em>dy</em>/<em>dx</em> = <em>f</em> '(<em>x</em>) if <em>f</em> is the function whose arc length is being measured, this integral is more commonly written as <img src="assets/images/Eqn213.gif" alt="arc length integral" width="122" height="36" />. In our example this integral becomes <img src="assets/images/Eqn214.gif" alt="arc length integral for parabola" width="104" height="36" align="absmiddle" />, where 2<em>x</em> is the derivative of <em>x</em>&sup2;. It is common that arc length integrals generate integrands for which it is not simple to find the antiderivative, hence it is usually best to evaluate arc length integrals numerically. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This is essentially the same example, except that now <em>x</em> is a function of <em>y</em>. The general formula is just <img src="assets/images/Eqn216.gif" alt="inverse arc length integral" width="124" height="36" align="absmiddle" /> and the specific example in this case is <img src="assets/images/Eqn215.gif" alt="inverse arc length example" width="105" height="36" align="absmiddle" />. The length is the same, since this is really the same as the first example, just mirrored through the line <em>y</em> = <em>x</em>. <br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu, showing a parametric curve. The curve is a semicircle (if it looks squashed a bit, click the Equalize Axes button). You can move the intervals slider to make the approximation closer to the actual answer, which we know from geometry is &pi;. Since our independent variable in parametric equations is <em>t</em>, we can go back to the original distance formula <img src="assets/images/Eqn210.gif" alt="distance formula" width="104" height="34" align="absmiddle" /> and factor a &Delta;<em>t </em>out of the radical to get <img src="assets/images/Eqn217.gif" alt="parametric distance" width="134" height="53" align="absmiddle" />. Summing this up and taking the limit as  &Delta;<em>t </em>goes to zero gives us the integral <img src="assets/images/Eqn218.gif" alt="parametric arc length" width="136" height="53" align="absmiddle" />. Note that here <em>a</em> and <em>b</em> are <em>t</em> limits, not <em>x</em> limits. To evaluate for our example we just plug in the derivatives of the two parametric equations to get <img src="assets/images/Eqn219.gif" alt="parametric arc length example" width="290" height="36" align="absmiddle" />. Note that this integral can be evaluated exactly, using the Pythagorean Identity to simplify the integrand.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a polar curve. In this example, <em>th</em> is used instead of <em>&theta;</em> to make it easier to type from the keyboard. Move the intervals slider see how the approximation gets better as the number of segments increases. To find the arc length, first we convert the polar equation <em>r = f</em> (<em>&theta;</em>) into a pair of parametric equations <em>x</em> = <em>f</em> (<em>&theta;</em>)cos<em>&theta;</em> and <em>y</em> = <em>f</em> (<em>&theta;</em>)sin<em>&theta;</em>. We then use the parametric arc length formula <img src="assets/images/Eqn220.gif" alt="polar arc length" width="153" height="53" align="absmiddle" />, where the two derivatives are of the parametric equations. Our example becomes <img src="assets/images/Eqn221.gif" alt="polar example" width="273" height="53" align="absmiddle" />, which is best evaluated numerically (you can greatly simplify the radicand by finding the derivatives, expanding the terms, and simplifying with the Pythagorean Identity, but the result is still not a simple enough integrand). <br />
+    <br />
+  </li>
+  <li>You can explore your own arc lengths by selecting the example that matches the type of curve (normal, inverse, parametric, polar) in which you are interested, then setting <em>a</em> and <em>b</em> and zooming/panning as usual. Note that if you set <em>a</em> &gt; <em>b</em> the resulting length comes out negative. Since length is usually defined to be positive, you should keep <em>a</em> &lt; <em>b</em>. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.ArcLength" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Arc Length" />
+    <param name="FrameSize" value="600,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Standard;x^2;0;1;-1;2;0;false;-1.5,2.5,-1,5" />
+    <param name="Example2" value="2. Inverse;y^2;0;1;-1;2;1;false;-1,5,-1.5,2.5" />
+    <param name="Example3" value="3. Parametric;cos(t);sin(t);2;0;3.14159;2;false;-1.1,1.1,-0.5,1.35" />
+    <param name="Example4" value="4. Polar;th;0;4;0;6;3;false;-7,7,-6.53,6.53" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="knowncrosssection.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="polararea.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

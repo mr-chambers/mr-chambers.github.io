@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Average Value</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="fundtheorem.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="inttheorems.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Average Value</h2>
+<p></p>
+<p>To find the average value of a set of numbers, you just add the numbers and divide by the number of numbers. How would you find the average value of a continuous function over some interval? The problem is that there are an infinite number of numbers to add up, then divide by infinity. One approach is to divide up the interval and use <em>n</em> left or right samples of the value of the function, add them up, then divide by <em>n</em>. If we take the limit as <em>n</em> approaches infinity, then we will get the average value. The formula for the average value of a function, <em>f</em>, over the interval from <em>a</em> to <em>b</em> is <em>average</em> = <img src="assets/images/Eqn119.gif" alt="ave value" width="104" height="41" align="absmiddle" />. One way to think about this is to rewrite this formula as <img src="assets/images/Eqn120.gif" alt="ave value rewritten" width="186" height="34" align="absmiddle" />. Think of (<em>b</em> - <em>a</em>) as the width of a rectangle, and <em>average</em> as the height. Then the average value of a function on an interval is the height of a rectangle that has the same width as the interval and has the same area as the function on that interval. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.AveValue" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="480" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Line;x;0;2;-1,3,-1,3;0;true" />
+    <param name="Example2" value="2. Parabola;x^2;0;2;-1,3,-0.5,4.5;0;false" />
+    <param name="Example3" value="3. Cubic;-1/2(x-2)^3+4;1;4;-1,5,-2,5;0;false" />
+    <param name="Example4" value="4. Another Cubic;-1/2(x-2)^3+2;1;4;-1,5,-2,5;0;false" />
+    <param name="Example5" value="5. Yet Another Cubic;-(x-3)^3-3(x-3)^2+2;1;4;-1,5,-2,5;0;false" />
+    <param name="Example6" value="6. Sinusoid;sin(x)+1;pi/2;3pi/2;-1,5,-2,3;0;false" />
+    <param name="Example7" value="7. Sine;sin(x);pi/2;3pi/2;-1,5,-2,3;0;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph of the line <em>y</em> = <em>x</em>. The area under this curve from 0 to 2 is shaded in yellow. It is easy to compute using geometry that the area is 1. The pink rectangle (shows as orange where it overlaps the yellow area) has the same width as the interval, and its height is such that the area of the rectangle is the same as the yellow area (i.e., 1). <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This shows the area under a parabola from 0 to 2. What is the average value? You can try to guess it by dragging the black square on the graph (click and hold on the square, then drag it up and down). When you think you have a rectangle with an area the same as the yellow area under the curve, click the Show Answer button. <br />
+    <br />
+  </li>
+  <li>Try other examples from the drop down menu. For each one, drag the black square to make the rectangle have the same area as the yellow. Then the height of the rectangle is the average value. Click the Show Answer button to see the answer.<br />
+    <br />
+  </li>
+  <li>You can make your own problems by typing in a function, entering values for <em>a</em> and <em>b</em>, and using the limit control panel to adjust the axes (mouse zooming and panning is turned off on this applet, so you don't accidentally zoom when trying to drag the black square). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.AveValue" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Average Value" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Line;x;0;2;-1,3,-1,3;0;true" />
+    <param name="Example2" value="2. Parabola;x^2;0;2;-1,3,-0.5,4.5;0;false" />
+    <param name="Example3" value="3. Cubic;-1/2(x-2)^3+4;1;4;-1,5,-2,5;0;false" />
+    <param name="Example4" value="4. Another Cubic;-1/2(x-2)^3+2;1;4;-1,5,-2,5;0;false" />
+    <param name="Example5" value="5. Yet Another Cubic;-(x-3)^3-3(x-3)^2+2;1;4;-1,5,-2,5;0;false" />
+    <param name="Example6" value="6. Sinusoid;sin(x)+1;pi/2;3pi/2;-1,5,-2,3;0;false" />
+    <param name="Example7" value="7. Sine;sin(x);pi/2;3pi/2;-1,5,-2,3;0;false" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="fundtheorem.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="inttheorems.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

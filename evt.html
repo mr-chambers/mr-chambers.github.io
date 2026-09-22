@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Extreme Value Theorem</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="boxproblem.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="snowballproblem.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Extreme Value Theorem</span></h2>
+<p>In finding the optimal value of some function we look for a global minimum or maximum, depending on the problem. How do we know that one exists? The Extreme Value Theorem says: If a function <em>f</em> is continuous on the closed interval <em>a</em> &le; <em>x </em>&le; <em>b</em>, then <em>f</em> has a global minimum and a global maximum on that interval. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Piece of a Parabola;x&gt;=1 &amp; x &lt;=2?x^2;-5,5,-5,5,0;closed,1,1;closed,2,4" />
+    <param name="Example2" value="2. Piece of a Sine Curve;x&gt;=-2*pi &amp; x&lt;= 2*pi?sin(x);-10,10,-2,2,0;closed,-6.28,0;closed,6.28,0" />
+    <param name="Example3"
+value="3. Open Interval;x&gt;1 &amp; x &lt;2?x^2;-5,5,-5,5,0;open,1,1;open,2,4" />
+    <param name="Example4"
+value="4. Discontinuous;x&gt;=-1 &amp; x&lt;=1?1/x;-5,5,-5,5,0;closed,-1,-1;closed,1,1" />
+    <param name="Example5"
+value="5. Another Discontinuous;x&gt;=0 &amp; x &lt; 1?2*x:(x&gt;=1 &amp; x&lt;=2?1);-5,5,-5,5,-1;closed,0,0;open,1,2;closed,1,1;closed,2,1" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first graph shows a piece of a parabola on a closed interval. Clearly there is a global minimum and maximum. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This shows a sine curve with an interval set to a couple of cycles. There is clearly a global minimum and maximum, although in this case they aren't unique. EVT doesn't guarantee uniqueness of global extrema, just that at least one minimum and one maximum will exist.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing the same piece of a parabola as the first example, only with an open interval. Since the endpoints are not included, they can't be the global extrema, and this interval has no global minimum or maximum. Hence EVT requires a closed interval to avoid this problem.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing an interval of a hyperbola with a vertical asymptote. There is no global extrema on this interval, which is one reason why the EVT requires a continuous interval.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing a different type of discontinuity. Here, there is no global maximum, showing another reason why EVT requires continuity on the interval.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Extreme Value Theorem" />
+    <param name="FrameSize" value="640,580" />
+    <param name="Presentation" value="yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Piece of a Parabola;x&gt;=1 &amp; x &lt;=2?x^2;-5,5,-5,5,0;closed,1,1;closed,2,4" />
+    <param name="Example2" value="2. Piece of a Sine Curve;x&gt;=-2*pi &amp; x&lt;= 2*pi?sin(x);-10,10,-2,2,0;closed,-6.28,0;closed,6.28,0" />
+    <param name="Example3"
+value="3. Open Interval;x&gt;1 &amp; x &lt;2?x^2;-5,5,-5,5,0;open,1,1;open,2,4" />
+    <param name="Example4"
+value="4. Discontinuous;x&gt;=-1 &amp; x&lt;=1?1/x;-5,5,-5,5,0;closed,-1,-1;closed,1,1" />
+    <param name="Example5"
+value="5. Another Discontinuous;x&gt;=0 &amp; x &lt; 1?2*x:(x&gt;=1 &amp; x&lt;=2?1);-5,5,-5,5,-1;closed,0,0;open,1,2;closed,1,1;closed,2,1" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="boxproblem.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="snowballproblem.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

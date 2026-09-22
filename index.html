@@ -1,20 +1,190 @@
----
-layout: default
----
-
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>My Repository Index</title>
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
+<title>Calculus Applets</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
-    <h1>My HTML Files</h1>
-    <ul>
-      {% for file in site.static_files %}
-        {% if file.extname == ".html" and file.name != "index.html" %}
-          <li><a href="{{ file.path | relative_url }}">{{ file.name }}</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(51, 102, 255);"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td>Prev</td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="appletintro.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Introduction to Calculus Applets</span></h2>
+<p>These pages present interactive Java applets for teaching and learning
+  single variable calculus. They use graphs and tables to illustrate concepts
+  in calculus and allow the user to dynamically change the functions involved
+  or the point on the graph that is of interest. These pages can be explored by
+  students learning calculus, or used by teachers while teaching calculus, and are geared to the topics covered in AB and BC Advanced Placement Calculus. Each
+  applet comes in a version shown on a web page, suitable for viewing in a
+  browser window, and also as a separate resizeable window with larger fonts
+  and line widths, suitable for projection on a screen. Note that this set of
+  pages is not a complete text for calculus, but is intended to supplement a
+  standard textbook or web site. I have used <a
+href="http://www.amazon.com/Calculus-Single-Variable-Deborah-Hughes-Hallett/dp/0471484822/ref=sr_1_5/002-1748946-4260841?ie=UTF8&amp;s=books&amp;qid=1176480353&amp;sr=8-5">Calculus</a> by Hughes-Hallett, Gleason, McCallum, et al. in my teaching, and I also like <a
+href="http://www.amazon.com/Master-Calculus-Tests-2003-Teacher-Tested/dp/0768909899/ref=sr_1_1/002-1748946-4260841?ie=UTF8&amp;s=books&amp;qid=1176480481&amp;sr=1-1">Master
+  the AP Calculus AB &amp; BC Tests</a> by Michael Kelley.</p>
+<p>See <a href="download.html">Compatibility, Downloading, and Modifying</a> for more information on computer/OS/browser compatibility, downloading the entire web site, and modifying the web pages.</p>
+<ol>
+  <li>Using the Graphing Tools
+    <ol>
+      <li><a href="appletintro.html">Introduction to using the applets</a>.</li>
+      <li><a href="grapherrors.html">Limitations of Graphing Software</a></li>
+    </ol>
+  </li>
+  <li>Continuity and Limits
+    <ol>
+      <li><a href="informalcontinuity.html">An Informal, Graphical View of
+        Continuity</a></li>
+      <li><a href="ivt.html">Intermediate Value Theorem</a></li>
+      <li><a href="informallimits.html">Informal View of Limits</a></li>
+      <li><a href="limitsfail.html">One- and Two-Sided Limits and When
+        Limits Fail to Exist</a></li>
+      <li><a href="limitsatinfinity.html">Limits at Infinity</a></li>
+      <li><a href="tablelimits.html">Table View of Limits</a></li>
+      <li><a href="formallimits.html">Formal Definition of Limits</a></li>
+      <li><a href="formalcontinuity.html">Definition of Continuity Using
+        Limits</a></li>
+    </ol>
+  </li>
+  <li>Introduction to the Derivative
+    <ol>
+      <li><a href="avevel.html">Average Velocity and Speed</a></li>
+      <li><a href="instantvel.html">Instantaneous Velocity</a></li>
+      <li><a href="derivpoint.html">Derivative at a Point</a></li>
+      <li><a href="derivfunc.html">Derivative Function</a></li>
+      <li><a href="derivtable.html">A Tabular View of the Derivative</a></li>
+      <li><a href="secondderiv.html">Second Derivative</a></li>
+      <li><a href="secondderivtable.html">A Tabular View of the Second
+        Derivative</a></li>
+      <li><a href="differentiability.html">Differentiability</a></li>
+      <li><a href="twicediff.html">Twice Differentiable</a></li>
+      <li><a href="makecontdiff.html">Making a Piecewise Function Continuous and Differentiable</a></li>
+    </ol>
+  </li>
+  <li>Differentiation Short Cuts
+    <ol>
+      <li><a href="power.html">Constant, Line, and Power Functions</a></li>
+      <li><a href="exp.html">Exponential Functions</a></li>
+      <li><a href="trig.html">Trigonometric Functions</a></li>
+      <li><a href="constantmult.html">Constant Multiple</a></li>
+      <li><a href="summdiff.html">Combinations: Sum, and Difference</a></li>
+      <li><a href="prodquot.html">Combinations of Functions: Product and Quotient</a></li>
+      <li><a href="chainrule.html">Composition of Functions (the Chain Rule)</a></li>
+      <li><a href="transform.html">Transformations of Functions</a></li>
+      <li><a href="inverses.html">Inverses of Functions</a></li>
+      <li><a href="hyperbolic.html">Hyperbolic Functions</a></li>
+      <li><a href="linearapprox.html">Linear Approximation</a></li>
+      <li><a href="meanvalue.html">Mean Value Theorem</a></li>
+    </ol>
+  </li>
+  <li>Applications of Differentiation
+    <ol>
+      <li><a href="curveanalysisbasic.html">Curve Analysis: Basics</a></li>
+      <li><a href="curveanalysisspecial.html">Curve Analysis: Special Cases</a></li>
+      <li><a href="curveanalysisglobal.html">Curve Analysis: Global Extrema</a></li>
+      <li><a href="boxproblem.html">Optimization: Maximize Volume</a></li>
+      <li><a href="evt.html">Extreme Value Theorem</a></li>
+      <li><a href="snowballproblem.html">Related Rates</a></li>
+      <li><a href="lhopitals.html">L'Hopital's Rule</a></li>
+      <li><a href="parametric.html">Parametric Derivatives</a></li>
+      <li><a href="polar.html">Polar Derivatives</a></li>
+      <li><a href="motionline.html">Motion on a Line</a></li>
+      <li><a href="motionplane.html">Motion in the Plane</a></li>
+    </ol>
+  </li>
+  <li>Introduction to the Definite Integral
+    <ol>
+      <li><a href="inttable.html">Approximating Distance Traveled With a Table</a></li>
+      <li><a href="intgraph.html">Approximating Distance Traveled With a Graph</a></li>
+      <li><a href="riemann.html">Riemann Sums and The Definite Integral</a></li>
+      <li><a href="fundtheorem.html">Fundamental Theorem of Calculus</a></li>
+      <li><a href="aveval.html">Average Value</a></li>
+      <li><a href="inttheorems.html">Properties of  Definite Integrals</a></li>
+    </ol>
+  </li>
+  <li>Constructing Antiderivatives
+    <ol>
+      <li><a href="antislope.html">Antiderivatives from Slope and the Indefinite Integral</a></li>
+      <li><a href="accumulation.html">Accumulation Functions</a></li>
+      <li><a href="basicantiderivs.html">Basic Antiderivatives</a></li>
+      <li><a href="introdiffeq.html">Introduction to Differential Equations</a></li>
+      <li><a href="secondfundtheorem.html">Second Fundamental Theorem of Calculus</a></li>
+      <li><a href="definedasintegral.html">Functions Defined Using Integrals</a></li>
+      <li><a href="eqofmotion.html">Equations of Motion</a></li>
+    </ol>
+  </li>
+  <li>Integration Techniques
+    <ol>
+      <li><a href="substitution.html">Substitution</a></li>
+      <li><a href="midpointtrap.html">Midpoint and Trapezoid Riemann Sums</a></li>
+      <li><a href="improper.html">Improper Integrals</a></li>
+    </ol>
+  </li>
+  <li>Applications of Integration
+    <ol>
+      <li><a href="area.html">Areas by Slicing</a></li>
+      <li><a href="revolution.html">Volumes of Revolution</a></li>
+      <li><a href="knowncrosssection.html">Volumes of Known Cross Section</a></li>
+      <li><a href="arclength.html">Arc Length</a></li>
+      <li><a href="polararea.html">Area of Polar Curve</a></li>
+    </ol>
+  </li>
+  <li>Differential Equations
+    <ol>
+      <li><a href="slopefields.html">Slope Fields</a></li>
+      <li><a href="euler.html">Euler's Method</a></li>
+      <li><a href="separationofvariables.html">Separation of Variables</a></li>
+      <li><a href="growthdecay.html">Growth, Decay and the Logistic Equation</a></li>
+    </ol>
+  </li>
+  <li>Sequences and Series
+    <ol>
+      <li><a href="sequence.html">Sequences</a></li>
+      <li><a href="series.html">Series</a></li>
+      <li><a href="integraltest.html">Integral Test</a></li>
+      <li><a href="comparisontest.html">Comparison Test</a></li>
+      <li><a href="limitcomparisontest.html">Limit Comparison Test</a></li>
+      <li><a href="ratiotest.html">Ratio Test</a></li>
+      <li><a href="altseqtest.html">Alternating Series and Absolute Convergence</a></li>
+      <li><a href="powerseries.html">Power Series &amp; Interval of Convergence</a></li>
+      <li><a href="taylor.html">Taylor Series &amp; Polynomials</a></li>
+      <li><a href="lagrange.html">Lagrange Remainder</a></li>
+    </ol>
+    <blockquote>
+      <p> <br />
+      </p>
+    </blockquote>
+  </li>
+</ol>
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+        This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td>Prev</td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="appletintro.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
 </body>
 </html>

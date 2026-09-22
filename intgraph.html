@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Approximating Distance Traveled Using A Graph</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="inttable.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="riemann.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Approximating Distance Traveled From Velocity</span> Using A Graph</h2>
+<p></p>
+<p>Let's revisit the distance traveled by the car, only this time we will use a graph instead of a table. The data for the examples in this applet are all the same as the previous page.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.IntGraph" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="480" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Steady;20;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example2" value="2. Speeding Up;-t^2+15t+20;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example3" value="3. Fast and slow;t^3-9t^2+18t+10;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example4" value="4. Forwards and Backwards;t^3-9t^2+18t;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example5" value="5. You Try!;t;0;8;2;0;true;0,8,-10,90" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph (in magenta) of the velocity  for the car, in feet/second. The initial example shows a constant velocity of 20 ft/sec and divides the 8 seconds into two 4-second intervals. The distance traveled in each interval is thus 4 times 20, or 80 feet, for a total of 80 + 80 = 160 feet. Notice that the distance traveled is just the area of a rectangle with a width of 4 seconds and a height of 20 ft/sec. You can change the number of intervals to 4 or 8, but this example is not very interesting graphically.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. In this case, the car is speeding up over the 8 seconds.  Initially, we estimate the distance traveled using 2 intervals, each 4 seconds wide (the width is given by deltaT, shown at the top of the graph, which is just the end time minus the start time, divided by the number of intervals). Using the starting velocity for each of the two intervals (i.e., left), the distance estimate for the first interval is 4 times 20 and the second interval is 4 times 64, for a total of 336 feet. Notice again that the distance is the area of the rectangles (shown in pink). Use the choice box to change to using the right-hand velocity for the 2 intervals (the rectangles are shown in blue). The rectangles are bigger, so the total distance estimate is larger. Now select left &amp; right from the choice box. This shows both the pink and blue rectangles, with purple showing where they overlap. You can see that the blue rectangles are larger, and the area of the blue showing is the difference between the two estimates, 560 - 336 = 224. Now change the number of intervals to 4. Notice that the difference, 520 - 408 = 112 is half of the previous difference between the left and right totals. So, doubling the number of intevals cuts the difference in half for this example. Try 8, 16, and 32 intervals and see if this is still true.<br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu at the top. Here the car speeds up, then slows to a stop, then speeds up again. Obviously the estimate using 2 intervals and left-hand velocities isn't a very good one. Select right from the choice box. This doesn't look too good either, as the second blue rectangle seems too big. Select left &amp; right, and notice that the difference is quite large, 368 - 48 = 320. Now use 4 intervals. Notice that the difference between the two estimates has halved, to 240 - 80 = 160. In this case, sometimes the blue rectangles are taller, but sometimes the pink ones are taller. Now try 8, 16, and 32 intervals. In each case, the difference gets smaller. <br />
+    <br />
+  </li>
+  <li>Select the fourth example from the drop down menu at the top. This is like the previous example, except that the car starts out stopped (velocity = 0) speeds up, slows down, stops, then goes backwards (negative velocity), comes back to a stop, then speeds up. Since the starting velocity is 0, the rectangle for the first interval using left-hand velocities has no area (i.e., its height is 0). Notice that the second interval's rectangle is below the horizontal axis, so it's area is counted as negative, which is why the total left-hand estimate (pink) is -32 feet. Select right from the choice box; now the estimate is positive. Select left &amp; right to see them both. Now set the number of intervals to 16 (you can check out 4 and 8, too). Notice that, when the distance from the curve to the horizontal axis is increasing, the blue rectangles are taller (right hand), but when the curve is getting closer to the horizontal axis the pink rectangles are taller. Think about this in terms of whether the velocity function is positive or negative and whether the function is increasing or decreasing. Which combinations of these two characteristics result in larger left-hand (pink) rectangles? Which combinations result in larger right-hand (blue) rectangles?<br />
+    <br />
+  </li>
+  <li>Try setting the number of intervals to 1000 and the value to use to left &amp; right. What do you notice about the difference between the left and right estimates? As we will see, the exact answer for the distance between the car's starting and ending positions is just the area under the curve, with area above the horizontal axis counted positively and the area below the axis counted negatively. The exact answer, which we will learn how to compute, is 64 feet.<br />
+    <br />
+  </li>
+  <li>Select the fifth example. This exposes the box where the velocity function is defined, so you can try your own examples. You can edit the velocity function definition (which uses <em>t</em> as the variable), the start time, the stop time, and the number of intervals.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.IntGraph" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Distance Traveled" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Steady;20;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example2" value="2. Speeding Up;-t^2+15t+20;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example3" value="3. Fast and slow;t^3-9t^2+18t+10;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example4" value="4. Forwards and Backwards;t^3-9t^2+18t;0;8;2;0;false;0,8,-10,90" />
+    <param name="Example5" value="5. You Try!;t;0;8;2;0;true;0,8,-10,90" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="inttable.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="riemann.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

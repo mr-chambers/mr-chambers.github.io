@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>L'Hopital's Rule</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="snowballproblem.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="parametric.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">L'Hopital's Rule</span></h2>
+<p></p>
+<p>Suppose that we want to find the value of <img src="assets/images/Eqn90.gif" alt="lim(x-&gt;a) f(x)/g(x)" width="61" height="44" align="absmiddle" />,  when <em>f</em> (<em>a</em>) = <em>g</em> (<em>a</em>) = 0. One method is to use L'Hopital's Rule, which says: if <em>f</em> (x) and <em>g</em> (<em>x</em>) are differentiable functions and <em>f</em> (<em>a</em>) = <em>g</em> (<em>a</em>) = 0, then <img src="assets/images/Eqn91.gif" alt="L'Hopital's rule" width="137" height="44" align="absmiddle" />, if the limit on the right exists. In other words, we can find the original limit by finding the limit of the ratio of the derivatives of the numerator and denominator functions. The following applet helps to explain why this works.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.LHopital" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="800">
+    <param name="Example1" value="1. An Example;e^(2x)-1;x;0;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example2" value="2. Another Example;sin(x);x;0;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example3" value="3. Not Applicable;1/x+sin(1/x);1/x;0;-5,5,-5,5;-5,5,-5,5" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>In the graph on the left, the applet shows a graph of <img src="assets/images/Eqn92.gif" alt="y=(e^(2x)-1)/x" width="70" height="44" align="absmiddle" />. This is not defined for <em>x</em> = 0, but it clearly seems to have a limit there. If we let <em>f</em> (<em>x</em>) = <em>e</em><sup><em>2x</em></sup> - 1 and <em>g</em> (<em>x</em>) = <em>x</em>, then we can use L'Hopital's Rule to find the limit via finding the derivatives of the numerator and denominator functions: <img src="assets/images/Eqn93.gif" alt="l'hopital" width="188" height="44" align="absmiddle" />. Note that we do not take the derivative of the ratio using the quotient rule, but rather separately find the derivatives of the numerator and denominator functions, then find the limit of their ratio. Notice that, while the original ratio is undefined for <em>x</em> = 0, the ratio of the derivatives is defined, hence we can evaluate the limit just by substituting <em>x</em> = 0. <br />
+    <br />
+    Why does this work? The graph on the right shows <em>f</em> (<em>x</em>) and <em>g</em> (<em>x</em>). If you click the zoom in button several times, local linearity makes the curves look like straight lines. Hence the functions can be approximated by their tangent lines at <em>x</em> = 0 (i.e., <em>f</em> (<em>x</em>) &asymp; 2<em>x</em> and <em>g</em>(<em>x</em>)  &asymp; <em>x</em>) , and the ratio can be approximated by the ratio of these tangent lines. In the limit, this equals the ratio of the slopes of the tangent lines, which is just the ratio of the derivatives of the numerator and denominator functions.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This shows another example, <img src="assets/images/Eqn94.gif" alt="example" width="177" height="41" align="absmiddle" />. Again, if you click on Zoom In a few times, the graphs look like straight lines and the ratio can be evaluated just by using the ratio of the values of the derivatives.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing . <img src="assets/images/Eqn95.gif" alt="not applicable" width="194" height="50" align="absmiddle" />. In this case, the limit on the right does not exist, so L'Hopital's Rule cannot be used in this case.<br />
+    <br />
+  </li>
+  <li>L'Hopital's Rule also works if <em>f</em> (<em>a</em>) = <em>g</em> (<em>a</em>) = &infin;, and when<em> </em><img src="assets/images/Eqn96.gif" alt="x -&gt; inf." width="46" height="14" align="baseline" />.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.LHopital" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="L'Hopital's Rule" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. An Example;e^(2x)-1;x;0;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example2" value="2. Another Example;sin(x);x;0;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example3" value="3. Not Applicable;1/x+sin(1/x);1/x;0;-5,5,-5,5;-5,5,-5,5" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="snowballproblem.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="parametric.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

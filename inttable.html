@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Approximating Distance Traveled</title>
+<link type="text/css" href="style.css" rel="stylesheet" /></head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="motionplane.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="intgraph.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Approximating Distance Traveled From Velocity</span> Using a Table</h2>
+<p></p>
+<p>Suppose a car is traveling on a road and you are given the velocity of the car at various times. How can you approximate the distance from the car's initial starting place to where it is at the end?</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.IntTable" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="200" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Steady;20;0;8;1;0;false" />
+    <param name="Example2" value="2. Speeding Up;-t^2+15t+20;0;8;1;0;false" />
+    <param name="Example3" value="3. Fast and slow;t^3-9t^2+18t+10;0;8;2;0;false" />
+    <param name="Example4" value="4. Forwards and Backwards;t^3-9t^2+18t;0;8;2;0;false" />
+    <param name="Example5" value="5. You Try!;t;0;8;1;0;true" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a table of the velocity samples for the car, in feet/second. The initial example shows the velocity at <em>t</em> = 0 and <em>t</em> = 8, with the time shown in the first row and <em>v</em>(<em>t</em>) shown in the second. We don't know anything about the velocity of the car in between these two times. As you will notice, in this example the car is going the same velocity at each time, 20 ft/sec. We could just assume that the car is going this same speed over the entire 8 seconds (this velocity guess is shown in the third row), in which case the distance traveled is just 8 seconds times 20 feet.second or 160 feet. This is shown in the bottom row of the table.<br />
+    <br />
+  </li>
+  <li>Change the number of intervals to 2 (i.e., replace the 1 with a 2 in the Intervals box and press Enter). Now you have some additional data, the velocity at <em>t</em> = 4, which turns out to be the same as the other samples. Let's assume that the car is traveling at 20 ft/sec over the first interval (from 0 to 4 seconds) and also 20 ft/sec over the second interval (from 4 to 8 seconds); these assumed velocities are shown in the third row of the table, labeled &quot;velocity.&quot; Hence the total distance is just <img src="assets/images/Eqn109.gif" alt="speed" width="121" height="18" align="absbottom" />feet.. You can change the number of intervals to larger numbers, but it appears in this case that the car really is going at a constant velocity, so we know that the distance traveled is 160 feet.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. In this case, the car is going 20 ft/sec at <em>t</em> = 0 but is going 76 ft/sec at <em>t</em> = 8. What should we use for our assumed velocity over this interval? One choice is to use the velocity at the start of the interval (i.e., the velocity listed on the left), assuming that the car traveled at this constant velocity over  the entire interval, then accelerated instantaneously right at the end. This yields 160 feet for our approximation of the distance traveled. We could also assume that the car traveled at the higher speed over the interval, accelerating instantaneously to 76 ft/sec right at the start. Select &quot;right&quot; from the choice box on the applet instead of &quot;left&quot;, to see the result of 608 feet. Quite a difference! <br />
+    <br />
+  </li>
+  <li>How could we get a better approximation to the distance traveled? We could make more exotic guesses for the velocity over those 8 seconds, but another approach is to use more velocity samples. Type 2 for the intervals and press Enter. Now we see the velocity at <em>t</em> = 4 is 64 ft/sec. We now have two intervals of time, each 4 seconds long, and we can use either the starting (&quot;left&quot;) velocity or the ending (&quot;right&quot;) velocity as our guess for each interval. Use the choice box to select either left or right (ignore lesser and greater for now) and note what happens to the table. Changing whether we use the left or right velocity on each interval changes the third row (i.e., the assumed velocity for the interval), the fourth row (which shows the distance traveled in each interval, which is just the velocity times the length of the time interval) and the fifth row (which shows the total distance). Note that the gap between the left total and the right total is now smaller than it was for one interval. More data helps us to narrow in on what the car really is doing.<br />
+    <br />
+  </li>
+  <li>Set the number of intervals to 4 and press Enter. Look at both the left and right cases. What do you notice? Try 8 intervals, 16, and more. At some point, the table won't show the data, because there are just too many columns, but it will still show the total distance. What happens to the gap between the left total and right total as the number of intervals gets large? Make sure that, for the 4 interval case, you understand how the third, fourth, and fifth rows of the table are computed from the velocity data in the second row.<br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu at the top. Here we start out with 2 intervals and you will notice that the car starts off at 10 ft/sec, then slows down to 2 ft/sec, and then speeds up to 90 ft/sec. You can select left and right to see the approximation for the distance. But, now we have two new strategies for picking a velocity for an interval. We could use the lesser of the starting and ending velocities, or we could use the greater. In the previous example this is the same as left and right, because the car is speeding up during our 8 seconds. But this car slows down then speeds up, so lesser and greater will give different answers from left and right. Select lesser or greater from the choice box and notice what happens to the velocities in the third row. In particular, compare left and lesser, then compare right and greater. <br />
+    <br />
+  </li>
+  <li>Change the number of intervals to 4 and press Enter. As before, the gap between the left and right totals gets smaller. Also, the gap between the lesser and greater totals also gets smaller. Try higher numbers of intervals and see what happens. Try 1000 intervals. Do the totals all seem to be closing in on some number?<br />
+    <br />
+  </li>
+  <li>Select the fourth example from the drop down menu at the top. Here the car starts out stopped (velocity is zero). At <em>t</em> = 4 seconds, the car is going backwards, which is what a negative velocity means. At <em>t</em> = 8 seconds, the car is moving forwards at 90 ft/sec. If we use the left velocities for each of our two intervals, we would estimate that the car doesn't move at all over the first interval, since we assume that it is traveling at 0 ft/sec over the first 4 seconds. Over the second 4 seconds we use the velocity -8 ft/sec, so the car goes backwards -32 feet. The total distance that the car is from its starting location is -32 feet, which means that the car ends up 32 feet behind where it started. Note that this is not the same as the distance that would be shown on the odometer, which counts backwards movement positively. To find that number, we'd need to add the absolute value of each interval distance. <br />
+    <br />
+  </li>
+  <li>Try 4, 8 and more intervals for this example, and left, right, lesser and greater options for choosing the velocity for an interval. <br />
+    <br />
+  </li>
+  <li>Select the fifth example. This exposes the box where the velocity function is defined, so you can try your own examples. You can edit the velocity function definition (which uses <em>t</em> as the variable), the start time, the stop time, and the number of intervals.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.IntTable" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Distance Traveled" />
+    <param name="FrameSize" value="800,370" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Steady;20;0;8;1;0;false" />
+    <param name="Example2" value="2. Speeding Up;-t^2+15t+20;0;8;1;0;false" />
+    <param name="Example3" value="3. Fast and slow;t^3-9t^2+18t+10;0;8;2;0;false" />
+    <param name="Example4" value="4. Forwards and Backwards;t^3-9t^2+18t;0;8;2;0;false" />
+    <param name="Example5" value="5. You Try!;t;0;8;1;0;true" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="motionplane.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="intgraph.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

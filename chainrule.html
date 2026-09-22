@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Chain Rule</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="prodquot.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="transform.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Composition: The Chain Rule</span></h2>
+<p></p>
+<p></p>
+<p>What is the derivative of the composition of two functions? </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.FunctionComposition" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="PointAlt" value="yes" />
+    <param name="ShowTangents" value="yes" />
+    <param name="ShowSlopes" value="yes" />
+    <param name="ShowSlider" value="yes" />
+    <param name="SliderStep" value="100" />
+    <param name="Example1" value="1. (2x)^2;2x;x^2;-5,5,-5,5,1" />
+    <param name="Example2" value="2. e^(2x);2x;e^x;-5,5,-5,5,1" />
+    <param name="Example3" value="3. sin(2x);2x;sin(x);-5,5,-5,5,1" />
+    <param name="Example4" value="4. (x^2)^2;x^2;x^2;-5,5,-5,5,1" />
+    <param name="Example5" value="5. e^(x^2);x^2;e^x;-5,5,-5,5,1" />
+    <param name="Example6" value="6. sin(x^2);x^2;sin(x);-5,5,-5,5,1" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first example shows the composition of a line and a parabola. Here, <em>f</em> (<em>x</em>) = 2<em>x</em>, <em>g</em> (<em>x</em>) = <em>x</em><sup>2</sup>, and <em>h</em> (<em>x</em>) = <em>g</em> (<em>f</em> (<em>x</em>)). The graphs are shown in purple, and each has a tangent line (hard to see for <em>f</em>, because <em>f</em> is also a line). On the graph of <em>f</em> (on the left) you will see a red square (which is draggable) and a red line. The length of the red line represent the <em>x</em> input to <em>f</em>, and the green vertical line represents the <em>y</em> output of <em>f</em>. Since <em>f</em> is the inner function of the composition, the green <em>y</em> output of <em>f</em> becomes the <em>x</em> input for <em>g</em>, and you can see a green horizontal line on the middle graph showing the <em>x</em> input for g (these two green line segments should be the same length, if you have equalized axes). The graph of <em>g</em> also shows a blue vertical line segment which represents the<em> y</em> output of <em>g</em>. The right hand graph shows the composition. Here, the <em>x</em> input is the original red input to <em>f</em>, and the  output is the blue output of <em>g</em>. Click the &quot;Equalize Axes&quot; button, then move the slider and notice how the colored line segments illustrate the composition process. On this same example, now notice that the slope of the tangent line is shown in the upper right corner of each graph. What do you notice about the relationship between the slopes of the tangents to <em>f</em> and <em>g</em>, and the slope of the tangent to the composite function? Move the slider and see if your conjecture holds.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, which changes <em>g</em> to an exponential function. Does the relationship between the slopes that you noticed above still hold? Examine some of the other examples in the drop down menu, which use different functions for <em>f</em> and <em>g</em>. <br />
+    <br />
+  </li>
+  <li>Hopefully you saw that the slope of the tangent for the composite function was the product of the other two slopes. The slope of the tangent in the first graph is just <em>f</em> '(<em>x</em>), but notice that the slope in the middle graph is being evaluated at a different place (i.e., not at <em>x</em> but at <em>y</em> = <em>f</em> (<em>x</em>)). The slope in the middle graph is <em>g</em> ' (<em>f</em> (<em>x</em>)). Multiplying these two gives the shortcut for finding the derivative of a composite function, called the chain rule: <img src="assets/images/Eqn62.gif" alt="chain rule" width="196" height="41" align="absmiddle" />. You can think of this rule as a process to do: multiply the derivative of the outside function (leaving the inside function alone) by the derivative of the inside function.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.FunctionComposition" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Chain Rule" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="PointAlt" value="yes" />
+    <param name="ShowTangents" value="yes" />
+    <param name="ShowSlopes" value="yes" />
+    <param name="ShowSlider" value="yes" />
+    <param name="SliderStep" value="100" />
+    <param name="Example1" value="1. (2x)^2;2x;x^2;-5,5,-5,5,1" />
+    <param name="Example2" value="2. e^(2x);2x;e^x;-5,5,-5,5,1" />
+    <param name="Example3" value="3. sin(2x);2x;sin(x);-5,5,-5,5,1" />
+    <param name="Example4" value="4. (x^2)^2;x^2;x^2;-5,5,-5,5,1" />
+    <param name="Example5" value="5. e^(x^2);x^2;e^x;-5,5,-5,5,1" />
+    <param name="Example6" value="6. sin(x^2);x^2;sin(x);-5,5,-5,5,1" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="prodquot.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="transform.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Sum and Difference</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="constantmult.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="prodquot.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Combinations: Sum and Difference</span></h2>
+<p></p>
+<p></p>
+<p>What is the derivative of the sum of two functions? Of their difference? This page begins to explore the derivative of function combinations. Note that the applet on this page does not have a limit control panel, in order to make room for all three graphs (but it does have zoom buttons). </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.FunctionCombination" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Simple Sum;x;x^2;f(x)+g(x);-5,5,-5,5,1" />
+    <param name="Example2" value="2. A More Complex Sum;x^2;sin(x);f(x)+g(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. A Difference;x^2;sin(x);f(x)-g(x);-5,5,-5,5,1" />
+    <param name="Example4" value="4. A Product;x^2;sin(x);f(x)*g(x);-5,5,-5,5,1" />
+    <param name="ShowTangents" value="Yes" />
+    <param name="ShowSlopes" value="yes" />
+    <param name="ShowSlider" value="yes" />
+    <param name="SliderStep" value="100" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The example shows three graphs: <em>f</em> (<em>x</em>) = <em>x</em>, <em>g</em> (<em>x</em>) = <em>x</em><sup>2</sup>, and <em>h</em> (<em>x</em>) = <em>f</em> (<em>x</em>) + <em>g</em> (<em>x</em>). There is also a tangent line on each graph, the position of which is controlled by the <em>x</em> slider. Text at the bottom of each graph shows the value of the function at the current <em>x</em> position. Note that the value of <em>h</em> (<em>x</em>) is just the sum of the values of <em>f</em> (<em>x</em>) and <em>g</em> (<em>x</em>), as you can verify by adding the <em>f</em> and <em>g</em> values. Now, look in the top right corner of each graph, which shows the slope of the tangent line. The slope for the tangent line of <em>f</em> is constant, since <em>f</em> is a straight line, but the slope of <em>g</em> changes as you change <em>x</em>. What is the slope of the tangent line for <em>h</em>? How does it relate to the slopes for <em>f</em> and <em>g</em>?<br />
+    <br />
+  </li>
+  <li>Select the second example, showing a parabola and a sine curve. How is the slope of <em>h</em>'s tangent line related to the slopes of <em>f</em> and <em>g</em>? It appears that the slope of <em>h</em> is just the sum of the slopes of <em>f</em> and <em>g</em>. You can try some more examples by typing different functions in for <em>f</em> and <em>g</em>. You can even create your own graph by clicking one or both of the &quot;Use Mouse&quot; check boxes. The graph now shows a straight line with some small squares. Click and drag one of these squares to change the shape of the function. You can move them up and down to create a really curvy graph! Then, move the slider and see if the slope of <em>h</em> is still the sum of the slopes of <em>f</em> and <em>g</em>. The general rule is <img src="assets/images/Eqn57.gif" alt="(d/dx)(f(x)+g(x))=f'(x)+g'(x)" width="209" height="41" align="absmiddle" />or, in other words, the derivative of a sum is the sum of the derivatives.<br />
+    <br />
+  </li>
+  <li>Select the third example. This is just like the second example, but now <em>h</em> is defined as the difference between <em>f</em> and <em>g</em>. How is the slope of <em>h</em> related to those of <em>f</em> and <em>g</em>? If you play with the slider and maybe try some of your own function definitions for <em>f</em> and <em>g</em>, you should find that the derivative of a difference is just the difference of the derivatives, or <img src="assets/images/Eqn58.gif" alt="(d/dx)(f(x)-g(x))=f'(x)-g'(x)" width="209" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing the product of <em>f</em> and <em>g</em>. Is the slope of <em>h</em> the product of the slopes of <em>f</em> and <em>g</em>? It doesn't look like it. You can really see something isn't right if you set <em>x</em> = 0.5. Here the slope of <em>f</em> is 1, but the slope of <em>h</em> is not the same as the slope of <em>g</em>! So the derivative of a product of two functions isn't  the product of the derivatives, but something more complex (which we will see later). If you edit the definition of <em>h</em> to be <em>f</em> (<em>x</em>) / <em>g</em> (<em>x</em>), you will quickly see that the derivative of the quotient of two functions is also not so simple. Lastly, try making <em>h</em> (<em>x</em>) = <em>f</em> (<em>g</em> (<em>x</em>)) and play around; you will notice that function composition is also more complex than sums and differences. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.FunctionCombination" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Sums and Differences" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. A Simple Sum;x;x^2;f(x)+g(x);-5,5,-5,5,1" />
+    <param name="Example2" value="2. A More Complex Sum;x^2;sin(x);f(x)+g(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. A Difference;x^2;sin(x);f(x)-g(x);-5,5,-5,5,1" />
+    <param name="Example4" value="4. A Product;x^2;sin(x);f(x)*g(x);-5,5,-5,5,1" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="ShowTangents" value="Yes" />
+    <param name="ShowSlopes" value="yes" />
+    <param name="ShowSlider" value="yes" />
+    <param name="SliderStep" value="100" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="constantmult.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="prodquot.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

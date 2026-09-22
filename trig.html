@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Trigonometric Functions</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="exp.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="constantmult.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Trigonometric Functions</span></h2>
+<p></p>
+<p></p>
+<p>This page explores the derivatives of trigonometric functions. In calculus, we generally use radians instead of degrees.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="Example1" value="1. Sine;sin(x);-6.28,6.28,-2,2,1" />
+    <param name="Example2" value="2. Cosine;cos(x);-6.28,6.28,-2,2,1" />
+    <param name="Example3" value="3. Tangent;tan(x);-6.28,6.28,-5,5,1" />
+        <param name="Example4" value="4. Secant;sec(x);-6.28,6.28,-5,5,1" />
+    <param name="Example5" value="5. Cotangent;cot(x);-6.28,6.28,-5,5,1" />
+    <param name="Example6" value="6. Cosecant;csc(x);-6.28,6.28,-5,5,1" />
+    <param name="ShowFormula" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial example shows a sine function. Can you recognize the derivative? This means that <img src="assets/images/Eqn50.gif" alt="(d/dx)sin x = cos x" width="101" height="41" align="absmiddle" />. Drag the x slider to convince yourself that the derivative function is really showing the slope of the tangent line at any given point.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing the cosine function. What does its derivative look like? In fact, <img src="assets/images/Eqn51.gif" alt="(d/dx)cos x = -sin x" width="113" height="41" align="absmiddle" />. Both of these shortcuts could be written in terms of sine, since sine and cosine are related by a horizontal shift, but it is customary to define the derivatives as shown.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing the tangent function. Here, it isn't quite so obvious what the derivative is, but it looks vaguely like the secant function, except that all of the curves are above the <em>x</em> axis. The rule is <img src="assets/images/Eqn52.gif" alt="(d/dx)tan x = (sec x)^2" width="109" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing the secant function. The derivative looks vaguely like tangent, but not quite. The rule is <img src="assets/images/Eqn53.gif" alt="(d/dx)sec x = (tan x)(sec x)" width="140" height="41" align="absmiddle" />. One way to remember these two derivatives is: the derivative of tan <em>x</em> or sec <em>x</em> equals sec <em>x</em> times the other one. So the derivative of tan <em>x</em> is sec <em>x</em> times sec <em>x</em> (where sec <em>x</em> is &quot;the other one). The derivative of sec <em>x</em> is sec <em>x</em> times tan <em>x</em> (i.e., &quot;the other one&quot;).<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing the cotangent function. The derivative sort of looks like the derivative of tangent, but upside down. The actual rule is <img src="assets/images/Eqn54.gif" alt="(d/dx) cot x = -(csc x)^2" width="120" height="41" align="absmiddle" />. Notice how this is almost the same as the rule for tan <em>x</em>, but the right hand side has csc <em>x</em> instead of sec <em>x</em> and also has a minus sign.<br />
+    <br />
+  </li>
+  <li>Select the sixth example, showing a cosecant function. The rule is <img src="assets/images/Eqn55.gif" alt="(d/dx) csc x = -(csc x)(cot x)" width="150" height="41" align="absmiddle" />. This is similar to the rule for sec <em>x</em>, but using csc <em>x</em> and cot <em>x</em>, plus a minus sign. Notice that all of the derivatives for co-functions (cos, cot, csc) have a minus sign, while the derivatives for the other three functins (sin, tan, sec) do not. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Trigonometric Functions" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="Example1" value="1. Sine;sin(x);-6.28,6.28,-2,2,1" />
+    <param name="Example2" value="2. Cosine;cos(x);-6.28,6.28,-2,2,1" />
+        <param name="Example3" value="3. Tangent;tan(x);-6.28,6.28,-5,5,1" />
+            <param name="Example4" value="4. Secant;sec(x);-6.28,6.28,-5,5,1" />
+    <param name="Example5" value="5. Cotangent;cot(x);-6.28,6.28,-5,5,1" />
+    <param name="Example6" value="6. Cosecant;csc(x);-6.28,6.28,-5,5,1" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="ShowFormula" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="exp.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="constantmult.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

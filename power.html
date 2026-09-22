@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Power Functions</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="makecontdiff.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="exp.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Power Functions</span></h2>
+<p></p>
+<p></p>
+<p>In this section we will explore shortcuts for computing derivatives. By combining these shortcuts you can figure out the derivative function for functions that can be written in terms of basic functions. We will start by looking at contant, line, and power functions (of course, constant functions and lines through the origin are special cases of power functions). A power function can be written as <img src="assets/images/Eqn36.gif" alt="power function" width="97" height="24" align="absmiddle" />where<em> k</em> and <em>n</em> are real numbers.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseParameter" value="yes" />
+    <param name="Example1" value="1. A Constant Function;k;-5,5,-5,5,0;parameter,1,-5,5,1000" />
+    <param name="Example2" value="2. A Line;k*x;-5,5,-5,5,0;parameter,1,-5,5,1000" />
+    <param name="Example3" value="3. A Parabola;x^2;-5,5,-5,5,1" />
+    <param name="Example4" value="4. A Cubic;x^3;-5,5,-5,5,1" />
+    <param name="Example5" value="5. A Quartic;x^4;-5,5,-5,5,1" />
+    <param name="Example6" value="6. Power Function with Integer Exponent;x^k;-5,5,-5,5,1;parameter,2,-5,5,10" />
+    <param name="Example7" value="7. PowerFunction with Real Exponents;x^k;-5,5,-5,5,1;parameter,1/2,-5,5,10000" />
+    <param name="ShowFormula" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial example shows a constant function <em>f</em> (<em>x</em>) = <em>k</em> (which is a power function with <em>n</em> = 0). Initially <em>k</em> is set to 1. The function is a horizontal line and is hiding behind the red tangent line. Move the <em>x</em> slider and watch the cross hair move. What is the derivative function? Move the <em>k</em> slider; does the derivative change? The derivative of a constant function is always 0, or <img src="assets/images/Eqn37.gif" alt="(d/dx)k=0" width="57" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, which graphs a line through the origin with slope <em>k</em>. As in the previous example, the red tangent line is right on top of the function. Move the <em>x </em>slider; what is the derivative function, and how does it relate to <em>k</em>? Move the <em>k</em> slider; how does the derivative change? The derivative of a line through the origin is a constant function equal to the slope of the line, or <img src="assets/images/Eqn38.gif" alt="(d/dx)kx=k" width="64" height="41" align="absmiddle" />. This makes sense, because the derivative tells you the slope of the graph of a function, and a line has constant slope everywhere.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing a parabola. What is its derivative? Move the <em>x</em> slider and convince yourself that the derivative function at a specific <em>x</em> gives the slope of the parabola at that point (the <em>k</em> slider is not used in this example). What is the equation of the derivative (hint: set <em>x</em> = 1 makes it easy to find the slope of the derivative function)? The derivative of a simple parabola is a line with slope of 2, or <img src="assets/images/Eqn39.gif" alt="(d/dx)x^2=2x" width="72" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a cubic. What is its derivative? Move the  <em>x</em> slider and convince yourself that the derivative function at a specific <em>x</em> gives the slope of the cubic at that point (the <em>k</em> slider is not used in this example). What is the equation of the derivative (hint: set <em>x</em> = 1 makes it easy to find the slope of the derivative function). The derivative of a simple cubic is a simple parabola scaled by 3, or <img src="assets/images/Eqn40.gif" alt="(d/dx)x^3=3x^2" width="76" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing a quartic. What does the derivative look like? It is, in fact, <img src="assets/images/Eqn41.gif" alt="(d/dx)x^4=4x^3" width="77" height="41" align="absmiddle" />. Do you notice any pattern emerging in these derivatives? Is the derivative of a power function also a power function? What happens to the exponent when you find the derivative? What is the constant multiplier on the derivative? You may have noticed the following shortcut for finding the derivative of a power function, called the power rule: <img src="assets/images/Eqn42.gif" alt="power rule" width="86" height="41" align="absmiddle" />. This says that, to find the derivative function of a simple power function, just bring the exponent out in front as a constant multiplier, and subtract 1 from the exponent. <br />
+    <br />
+  </li>
+  <li>Select the sixth example. Here, <em>k</em> is the exponent and takes on integer values from -5 to 5. Does our power rule hold for all of these values? Move the k slider, especially examining <em>k</em> = 0 and negative values of <em>k</em>. In fact, the power rule does hold for integer values of the exponent, including 0 and negative integers. You may have noticed that the graphing software mistakenly tries to connect the left and right halves of the graph for negative odd exponents; this shouldn't be there and is a limitation of the software. <br />
+    <br />
+  </li>
+  <li>Select the seventh example. This is the same, except that the k slider takes on non-integer values. Does the rule still hold? Initially <em>k</em> = 1/2 to graph a square root function. Since our rule says to subtract 1 from the exponent, we get <img src="assets/images/Eqn43.gif" alt="deriv of square root" width="138" height="46" align="absmiddle" />. So the power rule works for the square root function. <br />
+    <br />
+  </li>
+  <li>Type &quot;1/3&quot; into the <em>k</em> input box to get a graph of the cube root function. The derivative looks strange, but it is just the power rule again:<img src="assets/images/Eqn45.gif" alt="deriv of x^(1/3)" width="89" height="44" align="absmiddle" />. Set <em>x</em> = 0; what is the value of the derivative? The cube root function has a vertical tangent here, so the derivative is undefined. Try other values for <em>k</em> that are simple fractions. Notice that when the denominator is odd, you get both a positive and negative side to the graph, while for even denominators you only get a positive side (after simplifying your fractional exponent, of course; 2/6 has an even denominator, but it reduces to 1/3). Note also that sometimes the graphing software mistakenly connect the left and right sides of the function and/or the derivative. <br />
+    <br />
+  </li>
+  <li>Move the <em>k</em> slider to pick other real values for the exponent. The software tries to turn these into reduced fractional exponents, if it can, so some values may have both left and right hand sides. The power rule still works.<br />
+    <br />
+  </li>
+  <li>Type &quot;pi&quot; in for <em>k</em> and 1 in for <em>x</em>. Does the power rule still work? In fact it does work for all real numbers; in this case <img src="assets/images/Eqn44.gif" alt="x^pi" width="90" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>What is the derivative of <img src="assets/images/Eqn46.gif" alt="f(x)=sqrt(x^5)" width="78" height="28" align="absmiddle" />? This is simple if you rewrite square roots (and other roots) using exponents: <img src="assets/images/Eqn47.gif" alt="f(x)=x^(5/2)" width="66" height="34" align="absmiddle" />. Then just use the power rule to find the derivative. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Power Functions" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="Example1" value="1. A Constant Function;k;-5,5,-5,5,0;parameter,1,-5,5,1000" />
+    <param name="Example2" value="2. A Line;k*x;-5,5,-5,5,0;parameter,1,-5,5,1000" />
+    <param name="Example3" value="3. A Parabola;x^2;-5,5,-5,5,1" />
+    <param name="Example4" value="4. A Cubic;x^3;-5,5,-5,5,1" />
+    <param name="Example5" value="5. A Quartic;x^4;-5,5,-5,5,1" />
+    <param name="Example6" value="6. Power Function with Integer Exponent;x^k;-5,5,-5,5,1;parameter,2,-5,5,10" />
+    <param name="Example7" value="7. PowerFunction with Real Exponents;x^k;-5,5,-5,5,1;parameter,1/2,-5,5,10000" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseParameter" value="yes" />
+    <param name="ShowFormula" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="makecontdiff.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="exp.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

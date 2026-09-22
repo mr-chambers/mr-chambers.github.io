@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Mean Value Theorem</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="linearapprox.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="curveanalysisbasic.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Mean Value Theorem</span></h2>
+<p></p>
+<p></p>
+<p>The Mean Value Theorem says: If a function, <em>f</em>, is continuous on an interval <em>a</em> &le; <em>x</em> &le; <em>b</em> and differentiable on <em>a</em> &lt; <em>x</em> &lt; <em>b</em>, then there exists a number,<em> c</em>, with <em>a</em> &lt;<em> c </em>&lt; <em>b</em>, such that <img src="assets/images/Eqn78.gif" alt="mvt" width="132" height="41" align="absmiddle" />. This means that, somewhere in the interval, there is a place on the curve where the slope is the same as the average slope over the interval (or, equivalently, the slope of the secant line connecting the points (<em>a</em>, <em>f</em> (<em>a</em>)) and (<em>b</em>, <em>f</em> (<em>b</em>))).</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.MeanValue" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="400">
+    <param name="Example1" value="1. A Parabola;x^2;-5,5,-5,5;1000;1000;1000;-1;2;0" />
+    <param name="Example2" value="2. A Sine Curve;sin(x);-7,16,-2,2;2300;2300;2300;-1.571;14.137;0" />
+    <param name="Example3" value="3. Not Differentiable;abs(x);-5,5,-5,5;1000;1000;1000;-1;2;1" />
+    <param name="Example4" value="4. Not Continuous;x&lt;1?-1:1;-5,5,-5,5;1000;1000;1000;-1;1;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows the graph of a parabola. The red dot is  (<em>a</em>, <em>f</em> (<em>a</em>)), the blue dot is (<em>b</em>, <em>f</em> (<em>b</em>)), and the magenta dot is (<em>c</em>, <em>f</em> (<em>c</em>)). The secant line segment connectiong <em>a</em> and <em>b</em> is shown, as is its slope. The Mean Value Theorem says that there exists a value of <em>c</em> between <em>a</em> and <em>b</em> such that the slope of <em> f</em> at <em>c</em> is the same as the slope of the secant. Move the <em>c</em> slider until you find a point where this is true (you will also see that the tangent line looks parallel to the secant). You can move the <em>a</em> and <em>b</em> sliders around, which changes the secant slope, and hence requires you to find a new <em>c</em>.<br />
+    <br />
+  </li>
+  <li>Select the second example from the pull down menu, showing a sine curve. Move the <em>c</em> slider to find a place where the slopes are the same. Can you find more than one? The Mean Value Theorem only says that there is at least one value for <em>c</em>; there may be more than one.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing the absolute value function, which is not differentiable at a point in between <em>a</em> and <em>b</em>. Move the <em>c</em> slider; can you match up the slopes? This is why the Mean Value Theorem only holds if the function is differentiable on the  interval.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a function with a discontinuity. Move the <em>c</em> slider; can you make the slopes match? This is why the Mean Value Theorem only holds if the function is continuous on the interval.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.MeanValue" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Mean Value Theorem" />
+    <param name="FrameSize" value="600,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;-5,5,-5,5;1000;1000;1000;-1;2;0" />
+    <param name="Example2" value="2. A Sine Curve;sin(x);-7,16,-2,2;2300;2300;2300;-1.571;14.137;0" />
+    <param name="Example3" value="3. Not Differentiable;abs(x);-5,5,-5,5;1000;1000;1000;-1;2;1" />
+    <param name="Example4" value="4. Not Continuous;x&lt;1?-1:1;-5,5,-5,5;1000;1000;1000;-1;1;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="linearapprox.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="curveanalysisbasic.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

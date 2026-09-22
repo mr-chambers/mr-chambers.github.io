@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Curve Analysis: Special Cases</title>
+<link type="text/css" href="style.css" rel="stylesheet" /></head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="curveanalysisbasic.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="curveanalysisglobal.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Curve Analysis: Special Cases</span></h2>
+<p></p>
+<p></p>
+<p>This applet will explore some special cases of the definitions and concepts from the previous page.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="Example1" value="1. Critical Points?;x&lt;2?abs(x):(x&lt;&gt;3 &amp; x &lt;&gt;4?x-1:(x=3?4));-5,5,-5,5,-1;open,2,2;closed,2,1;open,3,2;closed,3,3;open,4,3;open,0,-1,first;open,0,1,first;open,2,1,first;open,4,1,first;open,0,0,second;open,2,0,second;open,4,0,second;open,3,1,first;open,3,0,second" />
+    <param name="Example2" value="2. Critical point? ;x^3;-5,5,-5,5,0" />
+    <param name="Example3" value="3. Where is the miminum?;x&lt;1?(x-1)^2+1: (x&lt;3?1:(x-3)^2+1);-5,5,-5,5,0" />
+    <param name="Example4" value="4. Inflection point?;cubert(x);-5,5,-5,5,1" />
+    <param name="Example5" value="5. Inflection Point?;x^4;-5,5,-5,5,1" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>Critical points occur when the first derivative is zero or undefined. This example shows several places that might or might not be critical points. Which ones are? At <em>x</em> = 0 the derivative of absolute value is not defined, so this is a critical point. At <em>x</em> = 2 there is a jump discontinuity, so this is also a critical point. At <em>x</em> = 3 there is a displaced point, so this is also a critical point. At <em>x</em> = 4 there is a hole, so this is <em>not</em> a critical point, because this is not in the domain of the function. Similarly, locations of vertical asymptotes are not critical points, even though the first derivative is undefined there, because the location of the vertical asymptote is not in the domain of the function (in general; a piecewise function might add a point there just to make life difficult). <br />
+    <br />
+  </li>
+  <li>Are any of the critical points just examined local minima or maxima? <em>x</em> = 0 is a critical point where the first derivative is undefined. It is a local minimum because the function is decreasing to the left and increasing to the right. Note also that the first derivative is negative to the left and positive to the right, so the first derivative changes sign from negative to positive, telling you this is a local minimum (you may need to move the <em>x</em> slider so that the green tangent line in the middle graph moves out of the way, to see the graph of the derivative). Here, the second derivative is undefined at <em>x</em> = 0, so it does not help you figure out whether the point is a minimum or maximum. What about <em>x</em> = 2, the jump discontinuity? Here, the value of the function is smaller for some set of <em>x</em>'s near 2, so it is a local minimum, even though in this case the first derivative tells you nothing. Similarly, the flying point at <em>x</em> = 3 is a local maximum, but nothing in the first derivative helps you out. In general, calculus helps you find local extrema for differentiable functions, and may not help at all for discontinuous functions.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing a simple cubic. Notice that there is a critical point at <em>x</em> = 0, since the derivative is zero there. Is this a local minimum or maximum? Obviously not, but why? The reason is that the sign of the first derivative has not changed. It is positive on the left and positive on the right of the critical point, indicating that this is not a local extremum. Note that the second derivative is zero here and does change sign, so this is an inflection point.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing a parabola with a long flat spot inserted into it. Where is the minimum? Move the <em>x</em> slider to get a feel for what is going on. Given that the definition of a local minimum uses &le;, the whole flat section contains an infinite number of local minima. Where is this function increasing? Decreasing? Since these definitions use &lt; and &gt;, only the first point in the flat spot with a derivative of zero is included in the interval. Hence this function is increasing on the interval [3,&infin;) and is decreasing on the interval (-&infin;,1]. Note the use of the closed end brackets to indicate that <em>x</em> = 3 is part of the increasing interval and that <em>x</em> = 1 is part of the decreasing interval. Also note that infinity is always used with an open parentheses in interval notation (i.e., <em>x</em> &le; &infin; does not make sense, as infinity is not a number that <em>x</em> can be equal to, only approach). <br />
+    <br />
+  </li>
+  <li>What about the concavity of this function? The flat part is not concave up or concave down. Unlike for increasing/decreasing intervals, the points at the end of concavity intervals are not included. So this function is concave up on the interval (-&infin;,1) and also on (3,&infin;). It is flat on the interval [1,3].<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing the cube root function. Is there an inflection point? The derivative is undefined at <em>x</em> = 0, but there is in fact a tangent line there (even though the software doesn't draw it, because it uses the derivative to find the slope of the tangent line, which is undefined at this point). Since there is a tangent line, the second derivative is zero or undefined (undefined in this case) and the second derivative changes sign, there is an inflection point at <em>x</em> = 0.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing a quartic power function. Is there an inflection point at <em>x</em> = 0? The second derivative is zero, but it doesn't change sign! So there is no inflection point here.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Curve Analysis: Speical Cases" />
+    <param name="FrameSize" value="800,600" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="Example1" value="1. Critical Points?;x&lt;2?abs(x):(x&lt;&gt;3 &amp; x &lt;&gt;4?x-1:(x=3?4));-5,5,-5,5,-1;open,2,2;closed,2,1;open,3,2;closed,3,3;open,4,3;open,0,-1,first;open,0,1,first;open,2,1,first;open,4,1,first;open,0,0,second;open,2,0,second;open,4,0,second;open,3,1,first;open,3,0,second" />
+    <param name="Example2" value="2. Critical point? ;x^3;-5,5,-5,5,0" />
+    <param name="Example3" value="3. Where is the miminum?;x&lt;1?(x-1)^2+1: (x&lt;3?1:(x-3)^2+1);-5,5,-5,5,0" />
+    <param name="Example4" value="4. Inflection point?;cubert(x);-5,5,-5,5,1" />
+    <param name="Example5" value="5. Inflection Point?;x^4;-5,5,-5,5,1" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="curveanalysisbasic.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="curveanalysisglobal.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

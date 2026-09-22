@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Motion on a Plane</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="motionline.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="inttable.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Motion on a Plane</span></h2>
+<p></p>
+<p>We can use calculus to understand the motion of an object in two dimensions on a flat plane. In this case we use a pair of parametric equations, <em>x</em>(<em>t</em>) and <em>y</em>(<em>t</em>) to represent the position on the plane of the object at time <em>t</em>. The derivatives with respect to <em>t</em> of these two functions give the <em>x</em> and <em>y</em> components of the velocity of the object, <em>v<sub>x</sub></em>(<em>t</em>) = <em>x</em>'(<em>t</em>) and <em>v<sub>y</sub></em>(<em>t</em>) = <em>y</em>'(<em>t</em>). The speed, or magnitude of velocity, is given by <img src="assets/images/Eqn107.gif" alt="velocity magnitude" width="154" height="34" align="absmiddle" />. Note that the velocity is a vector, in that it has both a magnitude and a direction. Similarly, the acceleration has two components, , <em>a<sub>x</sub></em>(<em>t</em>) = <em>x</em>''(<em>t</em>) and <em>a<sub>y</sub></em>(<em>t</em>) = <em>y'</em>'(<em>t</em>) and its magnitude is computed as <img src="assets/images/Eqn108.gif" alt="accel mag" width="160" height="34" align="absmiddle" />.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.MotionOnPlane" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="450" width="600">
+    <param name="Example1" value="1. Circular Motion;cos(t);sin(t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example2" value="2. Complicated Motion;2t^3-9t^2+12t;3t^4-16t^3+18t^2;-30,40,-30,40;0;4;100;invoke;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows circular motion on the plane (click Equalize Axes if the circle looks squished). The black dot is the object that is moving and the magenta curve is its path, defined parametrically. Click Start to begin the animation. The graph display the values for |<em>v</em>| and |<em>a</em>|, which in this example are constant and both equal to 1. The velocity vector is graphed as the blue arrow (with its tail at the black dot) and the acceleration vector is graphed as the red arrow. When is the object moving parallel to the <em>x</em> axis? This happens when the velocity vector is also parallel to the <em>x</em> axis. Move the slider to find this point. You can also think about this as finding when <em>v<sub>y</sub></em>(<em>t</em>) = <em>y</em>'(<em>t</em>) = 0 (i.e., when the velocity in the <em>y</em> direction is 0). The applet shows that <em></em><em>y</em>'(<em>t</em>) = cos <em>t</em>. Setting this to zero and solving gives values of <em>t</em> that are odd multiples of &pi;/2. <br />
+    <br />
+  </li>
+  <li>Select the second example, showing a much more complicated motion in the plane. Click Start to see the animation. When is the object stopped? You can move the slider to get an estimate of this time. We can find this more exactly by finding when both <em>x</em>'(<em>t</em>) and <em>y</em>'(<em>t</em>) are zero. In other words, find these two derivatives, set them both equal to zero and solve. The object will be stopped at any time that is a solution to both of these, which in this example is <em>t</em> = 1.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.MotionOnPlane" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Motion on a Plane" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Circular Motion;cos(t);sin(t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example2" value="2. Complicated Motion;2t^3-9t^2+12t;3t^4-16t^3+18t^2;-30,40,-30,40;0;4;100;invoke;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="motionline.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="inttable.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

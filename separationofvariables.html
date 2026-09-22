@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Separation of Variables</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="euler.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="growthdecay.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Separation of Variables</h2>
+<p></p>
+<p>Many differential equations are not solvable except by either numerical methods or by guess-and-check. Some, however, can be solved by separating the <em>x</em>'s and <em>y</em>'s, then integrating.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.DiffEq" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="500">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. dy/dx = y;y;1;1;-5,5,-5,5" />
+    <param name="ShowSlopeField" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the slope field for <em>dy/dx</em> =<em> y</em>. The solution appears to be an exponential function. In fact, if we guess that <em>y</em> = e<em><sup>x</sup></em> and plug that in, we find that it works (i.e., <img src="assets/images/Eqn226.gif" alt="dy/dx = e^x = y" width="78" height="41" align="absmiddle" />). We can be more methodical by using a technique called <strong>separation of variables</strong>. You start with the differential equation and use algebra to move the <em>y</em>'s to the left-hand side and the <em>x</em>'s to the right-hand side. You also treat <em>dy</em> and <em>dx</em> as if they were objects and move them, using algebra, to the appropriate sides. Then integrate both sides and simplify. For this example, it looks like <img src="assets/images/Eqn227.gif" alt="sep vars" width="449" height="44" align="absmiddle" />. In the first step, we divide both sides by <em>y</em>, then multiply both sides by <em>dx</em>. Integrating both sides by their respective variables yields the result. Note that, since both<em> C</em>'s are just arbitrary constants, we can subtract either one of them from both sides and then combine them into a new arbitrary constant to get <img src="assets/images/Eqn228.gif" alt="sep vars" width="88" height="21" align="absmiddle" />. Exponentiating both sides gives <img src="assets/images/Eqn229.gif" alt="sep vars" width="148" height="24" align="absmiddle" />, where we converted <em>e<sup>C</sup></em> to a new arbitrary constant <em>A</em>&gt;0. Getting rid of the absolute value just allows <em>A</em> to also be negative. Can <em>A</em> be 0? We need to check this case, because when we initially divided by <em>y</em> on both sides, we might have lost the solution <em>y</em> = 0. In fact, this is a solution, so we wind up with <img src="assets/images/Eqn230.gif" alt="exponential" width="53" height="24" align="absmiddle" /> as the family of solutions for this differential equation, where <em>A</em> can be any real number. <br />
+    <br />
+    Separation of variables only works if we can move the <em>y</em>'s to the left-hand side using multiplication or division, not addition or subtraction. So something like <em>dy/dx</em> = <em>x</em> + <em>y</em> is not separable, but <em>dy/dx</em> = <em>y</em> + <em>xy</em> is separable, because we can factor the <em>y</em> out of the terms on the right-hand side, then divide both sides by <em>y</em>. An equation like <em>dy/dx</em> = (<em>x</em> + 3)/(<em>y </em>- 2) is also separable, because we can multiply both sides by (<em>y</em> - 2); it is ok to move constants to either side. Your calculus textbook may have other examples of separable differential equations that you can type in to this applet and see what the graph looks like (remembering that if the solution isn't a function of <em>x</em>, the graphing algorithm may mess up). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.DiffEq" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Separation of Variables" />
+    <param name="FrameSize" value="600,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. dy/dx = y;y;1;1;-5,5,-5,5" />
+    <param name="ShowSlopeField" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="euler.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="growthdecay.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

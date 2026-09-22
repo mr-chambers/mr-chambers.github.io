@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Riemann Sums</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="intgraph.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="fundtheorem.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Riemann Sums</span></h2>
+<p></p>
+<p>On the preceeding pages we looked at computing the net distance traveled given data about the velocity of a car. We saw that as we increased the number of intervals (and decreased the width of the rectangles) the sum of the areas of the rectangles approached the area under the curve. On this page we will generalize this and write it more precisely. Let <em>f</em> (<em>t</em>) be a function that is continuous on the interval <em>a</em> &le; <em>t</em> &le; <em>b</em>. Divide this interval into <em>n</em> equal width subintervals, each of which is <img src="assets/images/Eqn110.gif" alt="delta t" width="69" height="41" align="absmiddle" /> wide. Let <em>t<sub>i </sub></em> be the <em>i</em>th endpoint of these subintervals, where <em>t<sub>0</sub></em> = <em>a</em>, <em>t<sub>n</sub></em> = <em>b</em>, and <em>t<sub>i</sub></em> = <em>a</em> + <em>i</em>&Delta;<em>t<em></em></em>. We can then write the left-hand sum and the right-hand sum as:</p>
+<p align="center">Left-hand sum = <img src="assets/images/Eqn112.gif" alt="left hand riemann sum" width="293" height="45" align="absmiddle" /></p>
+<p align="center">Right-hand sum = <img src="assets/images/Eqn111.gif" alt="right hand riemann sum" width="284" height="45" align="absmiddle" /></p>
+<p align="left">These sums, which add up the value of some function times a small amount of the independent variable are called Riemann sums. If we take the limit as <em>n</em> approaches infinity and &Delta;<em>t</em> approached zero, we get the exact value for the area under the curve represented by the function. This is called the <strong>definite integral</strong> and is written as:</p>
+<p align="center">Limit of left hand sum = <img src="assets/images/Eqn113.gif" alt="left hand integral" width="185" height="48" align="absmiddle" /></p>
+<p align="center">Limit of right hand sum =<img src="assets/images/Eqn114.gif" alt="right hand integral" width="185" height="48" align="absmiddle" /></p>
+<p align="left">The s-shaped curve is called the <strong>integral sign</strong>, <em>a</em> and <em>b</em> are the <strong>limits of integration</strong>, and the function <em>f </em>(<em>t</em>) is the <strong>integrand</strong>. The <em>dt</em> tells you which variable is being integrated (which will not be of much importance until you get to multivariable calculus). By convention the <em>dt</em> is written last. Note that in the limit as <em>n</em> approaches infinity, the left-hand and right-hand Riemann sums become equal. Also note that the variable does not have to be <em>t</em> or time. An example of an integral for a function of <em>x</em> is <img src="assets/images/Eqn115.gif" alt="integral of x^2" width="52" height="34" align="absmiddle" />, which means to divide up the interval from 0 to 2 into subintervals, sum up the areas of these rectangles (where the height is just <em>x</em>&sup2;), and take the limit of this sum as the number of subintervals goes to infinity. We can calculate the value of a definite integral using a calculator or software and letting <em>n</em> be some large number, like 1,000. Later we will learn how to compute the limits in some cases to find a more exact answer.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.IntGraph" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="480" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Hyperbola;1/x;1;2;2;2;true;0.5,2.5,-0.5,2" />
+    <param name="VarName" value="x" />
+    <param name="FuncName" value="f" />
+    <param name="Example2" value="2. Line;x;0;2;2;2;true;-0.5,2.5,-0.5,2.5" />
+    <param name="Example3" value="3. Semicircle;sqrt(1-x^2);-1;1;4;2;true;-1.5,1.5,-0.5,1.5" />
+    <param name="Example4" value="4. Parabola;x^2-1;-1;1;4;2;true;-1.5,1.5,-1.5,1.5" />
+    <param name="Example5" value="5. Sine curve;sin(x);0;2*pi;4;2;true;0,7,-1.5,1.5" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph of a portion of a hyperbola defined as <em>f</em> (<em>x</em>) = 1/<em>x</em>. Increase the intervals to 4, 10, 100, then 1000. While we don't know the exact value for the area under this curve over the interval from 1 to 2, we know it is between the left and right estimates, so it must be about 0.69, to two decimal places.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This shows a straight line <em>f</em> (<em>x</em>) = <em>x</em>. Increase the intervals and watch what happens to the left and right estimates. From geometry, you know that the area of a triangle is 1/2 base times height, so the exact area under this curve is 2.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing a semi-circle (click Equalize Axes if it looks squished). Why are the left and right estimates the same? (Hint: use the choice box to show only the left or only the right rectangles and see how they relate). Increase the number of intervals and watch what happens. Can you use formulas from geometry to calculate an area for this semicircle?<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a parabola that dips below the <em>x</em> axis. Are the left and right estimates the same? Why? Increase the number of intervals, up to 1000. What would you guess is the exact area, based on where the estimates are headed? Notice that the area is negative, since the graph dips below the <em>x</em> axis. <br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing one cycle of a sine curve. Increase the number of intervals and notice the estimates (these are displayed in scientific notation, where 1.00E-9 means <img src="assets/images/Eqn116.gif" alt="scientific notation" width="68" height="21" align="absbottom" />). What do you think the total area over one cycle should be, remembering to count the area above the <em>x</em> axis as positive and the area below the <em>x</em> axis as negative? The estimates are very close to zero, but are off by a little bit due to rounding errors.<br />
+    <br />
+  </li>
+  <li>You can try your own functions, by entering the function (with <em>x</em> as the variable) and setting the start and end points, the number of intervals, and using the limit control panel (or the mouse) to pan and zoom the graph as you would like. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.IntGraph" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Riemann Sums" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Hyperbola;1/x;1;2;2;2;true;0.5,2.5,-0.5,2" />
+    <param name="VarName" value="x" />
+    <param name="FuncName" value="f" />
+    <param name="Example2" value="2. Line;x;0;2;2;2;true;-0.5,2.5,-0.5,2.5" />
+    <param name="Example3" value="3. Semicircle;sqrt(1-x^2);-1;1;4;2;true;-1.5,1.5,-0.5,1.5" />
+    <param name="Example4" value="4. Parabola;x^2-1;-1;1;4;2;true;-1.5,1.5,-1.5,1.5" />
+    <param name="Example5" value="5. Sine curve;sin(x);0;2*pi;4;2;true;0,7,-1.5,1.5" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="intgraph.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="fundtheorem.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
