@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Second Derivative</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="derivtable.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="secondderivtable.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Second Derivative</span></h2>
+<p></p>
+<p></p>
+<p>Since the dervative of a function is another function, we can take the
+  derivative of a derivative, called the second derivative. Notationally if <i>y</i> = <i>f</i> (<i>x</i>), then the second derivative is written as
+  either <i>f ''</i> (<i>x</i>) or as <img alt="d2y/dx2"
+src="assets/images/Eqn25.gif" align="middle" />. Higher derivatives can also be
+  defined. If the first derivative tells you about the rate of change of a
+  function, the second derivative tells you about the rate of change of the
+  rate of change. In physics, if <i>s</i> (<i>t</i>) is the position of a
+  particle at time <em>t</em>, then <i>s'</i> (<i>t</i>) = <i>v</i> (<i>t</i>) is the
+  velocity (i.e., the rate of change of the position), and <i>v'</i> (<i>t</i>)
+  = <i>s''</i> (<i>t</i>) = <i>a</i> (<i>t</i>) is the acceleration (i.e., the
+  rate of change of the velocity). </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="Example1" value="1. A Cubic;x^3;-5,5,-5,5,1" />
+    <param name="Example2" value="2. Sine Curve;sin(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. Exponential;2^x;-5,5,-5,5,1" />
+    <param name="Example4" value="4. Hyperbola; 1/x;-5,5,-5,5,1" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial example shows a cubic curve on the left, its derivative in
+    the middle, and the second derivative on the right. The red line is
+    tangent to the cubic and the slope of this curve is the value of the
+    derivative. Move the slide and compare the red line and the red crosshair
+    in the middle graph. As the slope of the red tangent becomes more
+    positive, the crosshair moves higher; when the slope of the red line
+    decreases, the crosshair drops lower. <br />
+    <br />
+  </li>
+  <li>The green line in the middle graph is tangent to the derivative curve,
+    so the green crosshair in the right graph represents the value of the
+    slope of the green line, and hence is the second derivative (i.e., the
+    derivative of the derivative). Move the slider and note that when the
+    green line has positive slope, the second derivative is positive, but
+    where the green line has negative slope, the second derivative is
+    negative.<br />
+    <br />
+  </li>
+  <li>As you move the slider, do you notice anything that relates the second
+    derivative to the cubic's graph? When the second derivative is positive,
+    what do you notice about the shape of the cubic in that region? When the
+    second derivative is negative, what is the shape of the cubic? You should
+    find that when the second derivative is positive, the cubic curve is
+    concave up (i.e., looks like <img alt="concave up"
+    src="assets/images/Eqn26.gif" />) and when the second derivative is
+    negative, the cubic curve is concave down (i.e., looks like <img
+    alt="concave down" src="assets/images/Eqn27.gif" />).<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, the sine curve. Move
+    the slider. Can you see how the sine curve, the derivative curve, and the
+    second derivative curve are related? As the red tangent line moves, does
+    the red crosshair's height represent the slope? As the green tangent line
+    moves, does the green crosshair's height represent its slope? Does the
+    graph of the second derivative tell you the concavity of the sine
+    curve?<br />
+    <br />
+  </li>
+  <li>Select the third example, the exponential function. Move the slider.
+    Does it make sense that the second derivative is always positive? Why?
+    What is it about the shape of the original function that tells you the
+    second derivative will always be positive?<br />
+    <br />
+  </li>
+  <li>Select the fourth example, the hyperbola. Can you relate the concavity
+    of the hyperbola on the left to the second derivative graph on the
+    right?<br />
+    <br />
+  </li>
+  <li>You can also type your own function into the &quot;f(x)=&quot; box to explore
+    other derivatives and second derivatives.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Instantaneous Velocity" />
+    <param name="FrameSize" value="800,600" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="Example1" value="1. A Cubic;x^3;-5,5,-5,5,1" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="Example2" value="2. Sine Curve;sin(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. Exponential;2^x;-5,5,-5,5,1" />
+    <param name="Example4" value="4. Hyperbola; 1/x;-5,5,-5,5,1" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="derivtable.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="secondderivtable.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

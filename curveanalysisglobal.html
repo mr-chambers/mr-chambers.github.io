@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Curve Analysis: Global Extrema</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="curveanalysisspecial.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="boxproblem.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Curve Analysis: Global Extrema</span></h2>
+<p></p>
+<p></p>
+<p>This applet will explore global extrema.This is just like the case for local extrema, except you need to find which one is biggest/smallest, and you may have to check endpoints.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="Example1" value="1. A simple case;x^2;-5,5,-5,5,0" />
+    <param name="Example2" value="2. A Quartic;x^4/4-x^3/3-x^2;-5,5,-5,5,0" />
+    <param name="Example3" value="3. Restricted to a Closed Interval;x&gt;=-2 &amp; x&lt;=1?x^4/4-x^3/3-x^2;-5,5,-5,5,0;closed,-2,2.66667;closed,1,-1,0833" />
+    <param name="Example4" value="4. Restricted to an Open Interval;x&gt;-2 &amp; x&lt;1?x^4/4-x^3/3-x^2;-5,5,-5,5,0;open,-2,2.66667;open,1,-1,0833" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial example shows a simple case of a parabola. What is the global minimum? To solve this, find all of the local minima and see which one yields the lowest value. This is easy to do looking at the graph, but you can also do this by differentiating the definition of the function, setting the derivative to zero, and solving. Then check which points are minimums, find their values, and select the smallest. In this example the global minimum is at <em>x</em>= 0, with a value <em>f</em> (0) = 0.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. Here is another function with several local extrema. Now there are three local extrema, two minima and one maxima. Differentiating the function, setting the derivative to zero and solving will find all three. You then need to check which ones are minima and which are maxima (either by looking at the second derivative, or by seeing what the first derivative does on either side of the point). Once you've eliminated the maxima, then plug the <em>x</em> value of the local minima back into the function definition to find which yields the smallest value. Here, the global minimum is <em>x</em> = 2 with a value of <em>f</em> (2) = -2/3.<br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu. Here is the same function, but restricted to the interval [-2,1]. Now there are only two local extrema and only one local minimum. But, with closed endpoints you also need to check the endpoints to see if they yield values that are less than the local minima. In this case, the right endpoint has a smaller value, so it is the global minimum.<br />
+    <br />
+  </li>
+  <li>Select the fourth example from the drop down menu. This is the same example, but with open endpoints (i.e., on the interval (-2,1). What is the global minimum? Here, it is clear that there are points lower than the local minimum at <em>x</em> = -1, but <em>x</em> = 1 cannot be the global minimum because it isn't in the domain. What about the point &quot;right next to it&quot;? Unfortunately there is no such point; for any point you pick that is really close to <em>x</em> = 1, you can pick one even closer! Hence this example has no global minimum at all, and doesn't even have a global maximum. Note that if the interval has been (-2,0) then the local minimum at <em>x</em> = -1 would have become the global minimum, since it is now lower than the points near the endpoints.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Curve Analysis: Global Exptrema" />
+    <param name="FrameSize" value="800,600" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="Example1" value="1. A simple case;x^2;-5,5,-5,5,0" />
+    <param name="Example2" value="2. A Quartic;x^4/4-x^3/3-x^2;-5,5,-5,5,0" />
+    <param name="Example3" value="3. Restricted to a Closed Interval;x&gt;=-2 &amp; x&lt;=1?x^4/4-x^3/3-x^2;-5,5,-5,5,0;closed,-2,2.66667;closed,1,-1,0833" />
+    <param name="Example4" value="4. Restricted to an Open Interval;x&gt;-2 &amp; x&lt;1?x^4/4-x^3/3-x^2;-5,5,-5,5,0;open,-2,2.66667;open,1,-1,0833" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="curveanalysisspecial.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="boxproblem.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

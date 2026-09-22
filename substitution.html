@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Substitution</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="eqofmotion.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="midpointtrap.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Integration By Substitution</span></h2>
+<p></p>
+<p>We have seen how to find antiderivatives using our knowledge of basic derivatives, using these derivative rules &quot;backwards.&quot; In other words, if the integrand of an integral matches the result of one of our derivative rules, we know that the antiderivative is the function used in that rule. Suppose that we have a more complicated integrand that comes from the application of the chain rule. For example, suppose <em>f </em>(<em>u</em>) = e<em><sup>u</sup></em> (which we call the outer function) and <em>g</em>(<em>x</em>) = <em>x</em>&sup2; (which we call the inner function). Then the composition of these two is <em>f</em> (<em>g</em>(<em>x</em>)) = e<sup><em>x</em>&sup2;</sup> and the derivative of this, using the chain rule, is <em>f</em> '(<em>g</em>(<em>x</em>))<em>g</em>'(<em>x</em>) =2<em>x</em> e<sup><em>x</em>&sup2;</sup> . If we have an integral with this for the integrand, then we know that the integrand came from our original functions via differentiation and the chain rule, allowing us to simplify the integrand and making it easier to find the resulting antiderivative. In this specific example, suppose our integral is <img src="assets/images/Eqn167.gif" alt="sub1" width="72" height="34" align="absmiddle" />. The integrand is not the result of one of our basic derivative rules, but it looks like it might have come from the chain rule. If we let <em>u</em> = <em>g</em>(<em>x</em>) = <em>x</em>&sup2;, then <em>du</em>/<em>dx</em> = <em>g</em>'(<em>x</em>) = 2<em>x</em>. If we treat the <em>du</em> and <em>dx</em> as formal objects, we can use algebra to change this into <em>du</em> = 2<em>xdx</em>. We can then simplify our integral by substituting <em>du</em> for <em>2xdx</em>, <em>u</em> for <em>x</em>&sup2;, and converting the limits from <em>x</em> limits into<em> u</em> limits and we get <img src="assets/images/Eqn168.gif" alt="sub2" width="57" height="37" align="absmiddle" />, which is simple to evaluate using the rule for differentiating e<em><sup>u</sup></em>. More generically, we can write <img src="assets/images/Eqn169.gif" alt="substitution" width="225" height="37" align="absmiddle" />. This is the antidifferentiation rule that corresponds to the chain rule. The trick, of course, is to figure out <em>f</em> and <em>g</em> given a messy integrand. This applet helps you see the equivalence of these two integrals; the work of algebraic manipulation for the substitution method can be found in any good calculus textbook.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Substitution" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Substitution;e^u;x^2;0;2;-1,6,-5,20" />
+    <param name="Example2" value="2. More Substitution;e^u;sin(x);0;2;-5,5,-5,5" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet provides two functions, <em>f </em>(<em>u</em>) = e<em><sup>u</sup></em> and <em>g</em>(<em>x</em>) = <em>x</em>&sup2; . The left hand graph shows the integrand of the example used above, <em>f</em> '(<em>g</em>(<em>x</em>))<em>g</em>'(<em>x</em>) =2<em>x</em> e<sup><em>x</em>&sup2;</sup>, which is computed from <em>f</em> and <em>g</em>. The right hand graph shows the graph of <em>f</em> '(<em>u</em>) = e<em><sup>u</sup></em>. On the left hand graph are marked the limits of integration <em>a</em> and <em>b</em>, while the converted limits, <em>g</em>(<em>a</em>) and <em>g</em>(<em>b</em>) are marked on the right hand graph. Move the <em>a</em> or <em>b</em> sliders to change the limits, and notice how the converted limits on the right hand side move. Now notice the value of the area under each curve. The two areas are the same, indicating that we can simplify the more complicated integrand<em> </em>2<em>x</em> e<sup><em>x</em>&sup2;</sup> to the simpler e<em><sup>u</sup></em>, making our job of finding the antiderivative much easier.<br />
+    <br />
+  </li>
+  <li>Select the second example. Here, <em>f </em>(<em>u</em>) = e<em><sup>u</sup></em> and <em>g</em>(<em>x</em>) = sin(<em>x</em>), so the integral we are trying to evaluate is <img src="assets/images/Eqn170.gif" alt="sub" width="97" height="34" align="absmiddle" />. Using substitution this simplifies to <img src="assets/images/Eqn171.gif" alt="sub" width="66" height="37" align="absmiddle" />. The graphs show the equivalence of these two integrals, since the left hand graph plots the first integrand, the right hand graph plots the second, and the areas are shown to be the same (once the limits are converted). Move the <em>b</em> slider to change the upper limit and notice that the areas remain equal, even when it doesn't look like the shaded parts sum up properly. For example, set <em>b</em> = 4; can you see from the shaded areas how the two areas are equal?<br />
+    <br />
+  </li>
+  <li>You can enter your own functions for <em>f</em> and <em>g</em>, and zoom/pan the graphs. When you create your own example, use the chain rule to figure out what the composite integrand will be, then use substitution to simplify the integrand (and adjust the limits). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Substitution" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Substitution" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Substitution;e^u;x^2;0;2;-1,6,-5,20" />
+    <param name="Example2" value="2. More Substitution;e^u;sin(x);0;2;-5,5,-5,5" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="eqofmotion.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="midpointtrap.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

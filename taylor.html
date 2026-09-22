@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Taylor Series and Polynomials</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="powerseries.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="lagrange.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Taylor Series and Polynomials</h2>
+<p></p>
+<p>We can use power series to create a function that has the same value as another function, and we can then use a limited number of terms as a way to compute approximate values for the original function within the interval of convergence. A <strong>Taylor series</strong> provides a way to generate such a series and is computed as: <img src="assets/images/Eqn277.gif" alt="taylor series" width="158" height="46" align="absmiddle" />where <em>f</em> is the function for which we want a series representation and <img src="assets/images/Eqn278.gif" alt="nth deriv" width="49" height="24" />is the <em>n</em>th derivative of <em>f</em> evaluated at <em>c</em>. If <em>c</em> = 0 we call the series a <strong>Maclaurin series</strong>. To find a polynomial approximation to a function, just use this expression but let <em>n</em> range up to the desired degree instead of all the way to infinity.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.PowerSeries" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="500">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Cosine;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);cos(x);2;0;0;20;-6.28,6.28,-2,2" />
+    <param name="ShowF" value="yes" />
+    <param name="Example2" value="2. Sine;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);sin(x);3;0;0;20;-6.28,6.28,-2,2" />
+    <param name="Example3" value="3. Exponential;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);e^x;2;0;0;20;-5,5,-1,9" />
+    <param name="Example4" value="4. Limited Convergence;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);1/(1-x);2;0;0;6;-5,5,-5,5" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the 2nd degree Taylor polynomial for cos <em>x</em>. The cosine is graphed in magenta, while the Taylor polynomial is graphed in blue. Move the <em>nmax</em> slider to increase the degree of the polynomial to see that the polynomial becomes a better and better approximation of the function as the degree increases. You can also move the <em>c</em> slider to see what happens if you move the center point of the series. When <em>c</em> = 0 we have the Maclaurin series <img src="assets/images/Eqn279.gif" alt="taylor for cosine" width="177" height="44" align="absmiddle" /> We can use a limited number of terms of this series to calculate values for cosine using only addition, subtraction, multiplication and division. If you move the <em>x</em> slider, the black point moves along the polynomial curve and the top left corner of the graph shows the value of <em>f</em>, the value of the polynomial, and the error (i.e., the absolute value of the difference). <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing the 3rd degree Taylor polynomial for sin <em>x</em>. The Maclaurin series is <img src="assets/images/Eqn280.gif" alt="sin taylor" width="177" height="44" align="absmiddle" />. You can move the <em>nmax</em> slider to see that higher degree polynomials give more accurate approximations.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing the exponential function. Here the Maclaurin series is <img src="assets/images/Eqn281.gif" alt="taylor e^x" width="149" height="44" align="absmiddle" /><br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing the function 1/(1 - <em>x</em>). Note that in this case, the interval of convergence is not all real numbers but is limited to a radius of 1. The Maclaurin series is <img src="assets/images/Eqn282.gif" alt="geo" width="161" height="41" align="absmiddle" />which is a geometric series. Move the <em>nmax</em> slider to see the interval of convergence get smaller. For this example, the <em>nmax</em> slider is limited to 6 at the high end. For functions where the derivative doesn't get more complex (like sine and cosine), you can make <em>nmax</em> as big as you like. For functions where the successive derivatives get more complex (like 1/(1-x), tan <em>x</em>, etc.), the software quickly gets bogged down trying to evaluate the higher order derivatives. Hence for these types of functions, it is best to limit <em>nmax</em> to no more than 6. Note also that this series only approximates the left-hand part of the hyperbola. If you want to approximate the right-hand part of the hyperbola, you will need to make <em>c</em> &gt; 1. <br />
+    <br />
+  </li>
+  <li>You can try graphing your own Taylor polynomials by just typing in a function for <em>f</em> and setting <em>c</em>. Remember not to set <em>nmax</em> &gt; 6 if the function's higher order derivatives get more complex. You might try <em>f</em> (<em>x</em>) = ln(<em>x</em>), or try a polynomial function, like <em>f</em> (<em>x</em>) = <em>x</em>&sup2; - <em>x</em> - 1. For the logarith, what do you need to do with <em>c</em>? For the polynomial, does <em>nmax</em> make a difference? Does <em>c</em>?</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.PowerSeries" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Taylor Series and Polynomials" />
+    <param name="FrameSize" value="600,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Cosine;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);cos(x);2;0;0;20;-6.28,6.28,-2,2" />
+    <param name="ShowF" value="yes" />
+    <param name="Example2" value="2. Sine;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);sin(x);3;0;0;20;-6.28,6.28,-2,2" />
+    <param name="Example3" value="3. Exponential;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);e^x;2;0;0;20;-5,5,-1,9" />
+    <param name="Example4" value="4. Limited Convergence;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);1/(1-x);2;0;0;6;-5,5,-5,5" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="powerseries.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="lagrange.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

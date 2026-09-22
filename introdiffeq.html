@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Intro. to Differential Equations</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="basicantiderivs.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="secondfundtheorem.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Introduction to Differential Equations</h2>
+<p></p>
+<p>Suppose we have an equation like <img src="assets/images/Eqn152.gif" alt="dy/dx = 2x" width="56" height="41" align="absmiddle" /> and want to find a solution. Equations with derivatives are called <strong>differential equations</strong> and solving them means finding a function that satisfies the equation. In this case, <em>y</em> = <em>f</em> (<em>x</em>) = <em>x</em>&sup2; + <em>C</em> provides the family of solutions. If we also knew that <em>y</em> = 3 when <em>x</em> = 0, then we'd know that <em>y</em> = <em>x</em>&sup2; + 3 is the specific solution. This applet explores solutions to differential equations.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.DiffEq" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Deriv. is a Line;2x;0;3;-5,5,-5,5" />
+    <param name="Example2" value="2. Deriv. is cos;cos(x);0;1;-6.28,6.28,-5,5" />
+    <param name="ShowOriginSolution" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph of the solution to <img src="assets/images/Eqn152.gif" alt="dy/dx = 2x" width="56" height="41" align="absmiddle" />. The gray curve shows the solution that passes through the point (0,0), while the magenta curve shows the solution through the point (0,3), which is the example cited above. You can change the point (called the <strong>initial condition</strong>) which determines the specific member of the family of solutions by typing into the <em>x</em> and <em>y</em> boxes, moving the sliders, or click-dragging the magenta point on the graph. In particular, set <em>x</em> = 0 and move the <em>y</em> slider, noticing what happens to the graph. Is this what you expect? Now set <em>y</em> = 0 and move the <em>x</em> slider. What happens to the graph? You might have expected the graph to move right and left, but in fact it moves up and down. This is because the family of solutions are all just vertically displaced parabolas; moving the initial condition point horizontally picks out a different vertically-displaced parabola. In particular, set <em>x</em> = 1 and <em>y</em> = -1. What is the equation for the resulting solution? We can figure this out by plugging the coordinates of the point into the general solution to find <em>C</em>: -1 = (1)&sup2; + <em>C</em>, so <em>C</em> = -2. Note: on this graph, zooming with the mouse is disabled, to prevent accidental zooms when trying to click/drag the point. Panning with the mouse is supported (with right click on Windows/Linux systems and option-click on Macintosh systems). <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing <img src="assets/images/Eqn153.gif" alt="dy/dx = cos x" width="70" height="41" align="absmiddle" />. Move the sliders or drag the point to see various specific solutions. As above, if we have a specific <em>x</em>,<em>y</em> pair that we want the solution to pass through, we just substitute those values into the general solution, <em>y</em> = sin <em>x</em> + <em>C</em>, and solve for <em>C</em>. <br />
+    <br />
+  </li>
+  <li>You can type in your own right-hand side for the differential equations and press Enter to graph the solution. Note that functions with vertical asymptotes will cause problems, partly due to the specific algorithms that the software uses to graph the solution, but also due to the infinities that can result from such asymptotes (we'll see more about this later). Note that if you zoom out, you might see that the curves abruptly stop; this is an artifact of the algorithm used to draw the solutions (the curves actually should keep going). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.DiffEq" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Intro. to Differential Equations" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Deriv. is a Line;2x;0;3;-5,5,-5,5" />
+    <param name="Example2" value="2. Deriv. is cos;cos(x);0;1;-6.28,6.28,-5,5" />
+    <param name="ShowOriginSolution" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="basicantiderivs.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="secondfundtheorem.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

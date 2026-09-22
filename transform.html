@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Transformations of Functions</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="chainrule.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="inverses.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Transformations of Functions</span></h2>
+<p></p>
+<p></p>
+<p>Let <em>f</em> (<em>x</em>) be some function and let <img src="assets/images/Eqn79.gif" alt="transform" width="158" height="21" align="absmiddle" /> be another function that is a transformation of <em>f</em>. This applet explores how the derivatives of <em>f</em> and <em>g</em> are related.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Transform" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="600">
+    <param name="Example1" value="1. A Cubic;(x-3)(x+3)x/5;a*f(b*x+c)+d;-5,5,-5,5;1000;0;1;1;0;0" />
+    <param name="Example2" value="2. A Sinusoid;sin(x);a*f(b*x+c)+d;-6.28,6.28,-3,3;1256;0;1;1;0;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows the graph of a cubic. The function and its derivative are in magenta, while the transformation and its derivative are in blue. You can only see the blue one, since they start out identical. First, move the <em>d</em> slider. What happens to the graph of the function? What happens to the derivative? Why? Changing <em>d</em> moves the graph of <em>f</em> up and down, which does not change the slope at any point. Hence the derivative of <em>g</em> is still the same as the derivative of <em>f</em>. <br />
+    <br />
+  </li>
+  <li>Set <em>d</em> back to 0 and then move the <em>c</em> slider. What happens to the graph of the function? What happens to the derivative? Why? Changing <em>c</em> moves the graph left and right, so the derivative moves that way, too. At any time you can also play with the <em>x</em> slider, which moves the point of tangency.<br />
+    <br />
+  </li>
+  <li>Set<em> c </em>back to 0 and then move the <em>a</em> slider. What happens to the graph of the function? What happens to the derivative? Why? Changing<em> a </em>stretches and squishes the graph vertically. A vertical stretch causes the slopes to get steeper, so the derivative gets stretched vertically, too. Squishing the graph vertically causes the slopes to get shallower, so that causes the derivative to get squished vertically. For example, set <em>x</em> = 2 and <em>a</em> = 2; what is the relationship between the derivative values shown in the right hand graph? Try <em>a</em> = 3, etc. You should notice that the transformed derivative is just <em>a</em> times the original derivative.<br />
+    <br />
+  </li>
+  <li>Set<em> a </em>back to 1 and then move the <em>b</em> slider.What happens to the graph of the function? What happens to the derivative? Why? Changing <em>b</em> stretches and squishes the graph horizontally. A horizontal stretch causes the slopes to get shallower (i.e., closer to zero), so the derivative gets &quot;flattened.&quot; Squishing the graph horizontally causes the slopes to get steeper (i.e., farther from zero), so that causes the derivative to get stretched vertically. But, if you watch the values of the derivatives, it actually looks a bit more complex than this. For example, set <em>x</em> = 2 and <em>b</em> = 2. Clearly the value of the  derivative of the transformed function is not as simply related to the original value as in the case for <em>a</em>.<br />
+    <br />
+  </li>
+  <li>Select the second example, a sinusoid, and experiment with the sliders. In particular, set <em>a</em> = 1, <em>c</em> = <em>d</em> = 0, and play with the <em>b</em> slider. This example more clearly shows that the derivative of the transform has both a vertical and a horizontal stratch/squeeze.<br />
+    <br />
+  </li>
+  <li>You could have figured this out by just taking the derivative of the formula for <em>g</em>(<em>x</em>), using the chain rule:<img src="assets/images/Eqn80.gif" alt="deriv of transform" width="149" height="21" align="absmiddle" />. Notice that <em>d</em> is gone, so vertical shifts don't affect the derivative. <em>C</em> is in the same place, so horizontal shifts also shift the derivative. <em>A</em> is in the same place, so a vertical stretch/squish also happens to the derivative. Notice that <em>b</em> is now in two places, so figuring out the change in the derivative involves both a vertical and a horizontal stretch/squeeze. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Transform" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Derivative of Transformed Function" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. A Cubic;(x-3)(x+3)x/5;a*f(b*x+c)+d;-5,5,-5,5;1000;0;1;1;0;0" />
+    <param name="Example2" value="2. A Sinusoid;sin(x);a*f(b*x+c)+d;-6.28,6.28,-3,3;1256;0;1;1;0;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="chainrule.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="inverses.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

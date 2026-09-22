@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Motion on a Line</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="polar.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="motionplane.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Motion on a Line</span></h2>
+<p></p>
+<p>We can use calculus to understand the motion of an object along a straight line. Suppose an object is moving vertically along a line with a specified origin, and the position of the object at time <em>t</em> is represented by the position function <em>s</em>(<em>t</em>), which gives the distance of the object from the origin. By convention positive distances are defined as being up (i.e., above the origin point). The velocity of the object at time <em>t</em> is then just the rate of change of the position with respect to time, or <em>v</em>(<em>t</em>) = <em>s</em>'(<em>t</em>). Similarly, the acceleration of the object at time <em>t</em> is the derivative of the velocity and the second derivative of the position function, <em>a</em>(<em>t</em>) = <em>v</em>'(<em>t</em>) = <em>s</em>''(<em>t</em>). Knowing these three functions we can answer various questions about the motion of the object.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.MotionOnLine" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="600">
+    <param name="Example1" value="1. Tossing a Ball;-4.9t^2+20t;0,4.082,-20,22;0" />
+    <param name="Example2" value="2. More Complex Motion;t(t-2)(t-4);0,5,-13,15;0" />
+    <param name="Example3" value="3. Oscillations;sin(t);0,18.85,-2,2;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows an object being tossed vertically on the Earth, with <em>t</em> in seconds and <em>s</em> in meters measuring the height above the ground (<em>s</em> = 0 is the ground). The position function is given by <em>s</em>(<em>t</em>) = -4.9<em>t</em>&sup2; + 20<em>t</em> and  the velocity is the derivative of this, or <em>v</em>(<em>t</em>) = -9.8<em>t</em> + 20, measured in meters/second. The acceleration is the derivative of the velocity, or <em>a</em>(<em>t</em>) = -9.8. This constant acceleration is due to the Earth's gravity and is measured in meters/second&sup2;. It is negative because the acceleration is downward. In the applet, the left-hand graph shows the object as a black dot on a vertical line. The right-hand graphs plots <em>s</em> (in magenta), <em>v</em> (in blue) and <em>a</em> (in red), all against <em>t</em>. Click the Start button to run the animation. Note that the object goes straight up and then down, because in this problem the object is just moving vertically. It is easy to get confused and think of the magenta curve as showing the path of the object, but this is not true; the magenta curve is a plot of height vs. time. <br />
+    <br />
+  </li>
+  <li>On this example, the object reaches a peak and then falls back to Earth, eventually hitting the ground. How can we find the time when these two events happen? To find when the object hits the ground, we want to find when <em>s</em>(<em>t</em>) = 0. In other words, we want to solve 0 = -4.9<em>t</em>&sup2; + 20<em>t</em> for <em>t</em>. One solution is obviously <em>t</em> = 0, because the object started out at ground level. The other can be found using algebra and is <em>t</em> &asymp; 4.082. To find when the object reaches its peak, we want to find when the velocity is zero, which means we want to solve 0 = -9.8<em>t</em> + 20. A little algebra yields the answer <em>t</em> &asymp;2.041.<br />
+    <br />
+  </li>
+  <li>Select the second example. This shows a more complex motion over the time interval 0 &le; <em>t</em> &le; 5. Click Start to watch the animation of the black dot moving vertically. How would you find out when the object is at <em>s</em> = 0? How would you find out when the object reverses direction?<br />
+    <br />
+  </li>
+  <li>Select the third example, showing oscillating motion on the interval 0 &le; <em>t</em> &le; 6&pi;. Click Start to run the animation. How could you find out when the object reaches one of its highest points? Lowest points? Maximum velocity? Maximum acceleration?<br />
+    <br />
+  </li>
+  <li>Try your own examples. Enter a function using <em>t</em> as the variable. Set the values of tmin, tmax, smin, and smax (or pan and zoom using the mouse). The animation and the slider will run from tmin to tmax.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.MotionOnLine" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Motion on a Line" />
+    <param name="FrameSize" value="800,580" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Tossing a Ball;-4.9t^2+20t;0,4.082,-20,22;0" />
+    <param name="Example2" value="2. More Complex Motion;t(t-2)(t-4);0,5,-13,15;0" />
+    <param name="Example3" value="3. Oscillations;sin(t);0,18.85,-2,2;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="polar.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="motionplane.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

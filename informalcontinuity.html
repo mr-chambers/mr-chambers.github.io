@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Continuity: Informal Approach</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="grapherrors.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="ivt.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Continuity: Informal Approach</span></h2>
+<p>A function is continuous on an interval of its domain
+  if it has no gaps, jumps, or vertical asymptotes in the interval. Another way
+  to think informally about continuity is to ask: can I draw the graph of the
+  function on the interval from one side to the other without picking up my
+  pencil? Functions like lines and polynomials are continuous
+  everywhere.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Example1" value="1. Continuous; x^2" />
+    <param name="Example2" value="2. Also Continuous; sin(x)" />
+    <param name="Example3"
+value="3. Essential Discontinuity; 1/(x-1);;asymptote,1,0,1,1" />
+    <param name="Example4"
+value="4. Jump Discontinuity;(x&lt;1?1:2);;open,1,1;closed,1,2" />
+    <param name="Example5"
+value="5. Removeable Discontinuity;x(x-1)/(x-1);;open,1,1" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first graph shown, a simple parabola, is
+    continuous everywhere. Move the slider and notice that the crosshair
+    doesn't make any jumps. You could draw this curve without picking up your
+    pencil.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu.
+    The sine curve has more wiggles in it, but it is still
+    continuous.<br />
+    <br />
+  </li>
+  <li>Select the third example. This function has a
+    vertical asymptote at <em>x</em> = 1. Move the slider and note that if you were
+    drawing this curve, you'd have to pick up your pencil when you got to
+    this point to move it to the other part of the curve. This is called an
+    essential discontinuity.<br />
+    <br />
+  </li>
+  <li>Select the fourth example. This function jumps from
+    1 to 2 at <em>x</em> = 1, called a jump discontinuity. Moving the slider, it's
+    clear you would also have to pick up your pencil at this point to draw
+    the curve.<br />
+    <br />
+  </li>
+  <li>Select the fifth example. This function has a hole
+    in it at <em>x</em> = 1, called a removable discontinuity. You don't have to pick
+    up your pencil by much, but there still is a gap in the curve, even if it
+    is only a single point. You can move the slider to exactly <em>x</em> = 1 by
+    typing a 1 into the <em>x</em> = box to replace the value that's there. This will
+    move the slider to that<em> x</em> value. What <em>y</em> value results in this
+    case?</li>
+</ol>
+<p>You can talk about continuity on an interval of the
+  domain. For example, the functions with discontinuities above all are
+  continuous on the interval -1 &lt; <em>x</em> &lt; 0, because that part of the domain
+  misses the discontinuity.You can also ask whether a function is continuous,
+  which (in most textbooks) is equivalent to asking whether the function is
+  continuous on its domain. Note that this is a bit tricky, since <em>y</em> = 1/<em>x</em> is a
+  continuous function by this definition, since the place where it has a
+  discontinuity, at <em>x</em> = 0, is not in its domain. The fourth example in the
+  applet, the jump discontinuity, is not a continuous function, because <em>x</em> = 1
+  is in its domain (as indicated by the filled-in point on the graph) and there
+  is a discontinuity there. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Continuity: Informal Approach" />
+    <param name="FrameSize" value="640,580" />
+    <param name="Presentation" value="yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="Example1" value="1. Continuous; x^2" />
+    <param name="Example2" value="2. Also Continuous; sin(x)" />
+    <param name="Example3" value="3. Essential Discontinuity; 1/(x-1);;asymptote,1,0,1,1" />
+    <param name="Example4" value="4. Jump Discontinuity;(x&lt;1?1:2);;open,1,1;closed,1,2" />
+    <param name="Example5" value="5. Removeable Discontinuity;x(x-1)/(x-1);;open,1,1" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="grapherrors.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="ivt.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Slope Fields</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="polararea.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="euler.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Slope Fields</h2>
+<p></p>
+<p>If you haven't already, visit <a href="introdiffeq.html">Introduction to Differential Equations</a>. Slope fields provide a way to visualize first-order differential equations and get a feel for the family of solutions. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.DiffEq" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="500">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. dy/dx = x;x;0;0;-5,5,-5,5" />
+    <param name="Example2" value="2. dy/dx = y;y;0;0;-5,5,-5,5" />
+    <param name="Example3" value="3. dy/dx = x + y;x+y;0;0;-5,5,-5,5" />
+    <param name="Example4" value="4. dy/dx = x - y;x-y;0;0;-5,5,-5,5" />
+    <param name="Example5" value="5. dy/dx = x*y;x*y;0;0;-5,5,-5,5" />
+    <param name="Example6" value="5. dy/dx = x/y;x/y;0;0;-5,5,-5,5" />
+    <param name="ShowSlopeField" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the slope field for <em>dy/dx</em> = <em>x</em>. We know that the general solution to this differential equation is <em>y</em> = &frac12;<em>x</em>&sup2; + <em>C</em> and one of this family is shown in magenta. You can click-drag the magenta point to move the solution to other members of the family. The gray line segments in the background of the graph represent the slope field. The differential equation tells us the slope of a solution for any given point (<em>x</em>,<em>y</em>) on the plane, so one way to help visualize this is to draw small line segments at regular grid points, each segment having the appropriate slope at that point. In this example, the slope is the same as <em>x</em>, so the farther we get from the <em>y</em>-axis, the steeper the slope becomes and the line segments of the slope field are drawn with steeper slopes. Notice that the segment slopes are positive for <em>x</em>&gt;0 and are negative for <em>x</em>&lt;0, as you would expect. Also notice that, since the right-hand side of our example differential equation only has <em>x</em> in it and no <em>y</em>'s, the slopes shown in the slope field do not depend on <em>y</em>. This shows up as having vertical columns of slope segments all with the same slope, as seen in this example. Also notice that the slope field's general shape gives you some idea of the shape of the solution. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop-down menu, showing the differential equation <em>dy/dx</em> =<em> y</em>. The initial solution is the <em>x</em>-axis, but you can click/drag the magenta point to see other members of the solution family. What type of function do the solution curves look like? We will see on a later page how to find the solution and what its form looks like. Also notice that the right-hand side of this differential equation depends on only <em>y</em>, so that the slope field shows horizontal rows of identical slope segments.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing <em>dy/dx</em> =<em> x + y</em>. Drag the magenta point around to see various members of the solution family. In this example the slope depends on both <em>x</em> and <em>y</em>, so the slope field is more complicated than the previous examples. You can select the other examples from the drop down menu and explore their solution families. Note that for the fifth example, <em>dy/dx</em> =<em> x/ y</em>, some solutions look nice and smooth while other solutions look all jagged. The jagged solutions are not being graphed correctly, because of limitations in the graphing algorithm when the solution curve is not a function or when the slope field becomes nearly vertical (we will explore this issue more when we discuss Euler's method). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.DiffEq" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Slope Fields" />
+    <param name="FrameSize" value="600,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. dy/dx = x;x;0;0;-5,5,-5,5" />
+    <param name="Example2" value="2. dy/dx = y;y;0;0;-5,5,-5,5" />
+    <param name="Example3" value="3. dy/dx = x + y;x+y;0;0;-5,5,-5,5" />
+    <param name="Example4" value="4. dy/dx = x - y;x-y;0;0;-5,5,-5,5" />
+    <param name="Example5" value="5. dy/dx = x*y;x*y;0;0;-5,5,-5,5" />
+    <param name="Example6" value="5. dy/dx = x/y;x/y;0;0;-5,5,-5,5" />
+    <param name="ShowSlopeField" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="polararea.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="euler.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

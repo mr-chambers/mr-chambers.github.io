@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Alternating Series Test</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="ratiotest.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="powerseries.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Alternating Series Test</h2>
+<p></p>
+<p>The <strong>alternating series test</strong> is used when the terms of the underlying sequence alternate. Suppose we have a series <img src="assets/images/Eqn247.gif" alt="series" width="73" height="45" align="absmiddle" />where the <em>a<sub>n</sub></em> alternate positive and negative. If <em>a<sub>n</sub></em><sub>+1</sub> &lt; <em>a<sub>n</sub></em> (i.e., the terms get smaller) and if <img src="assets/images/Eqn262.gif" alt="lim n-&gt; inf a(n) = 0" width="66" height="29" /> then the series converges. If a series &Sigma; | <em>a<sub>n</sub></em> | converges then the series &Sigma;<em> a<sub>n</sub></em> converges and is said to <strong>converge absolutely</strong>. If  &Sigma; | <em>a<sub>n</sub></em> | diverges but &Sigma;<em> a<sub>n</sub></em> converges, then &Sigma;<em> a<sub>n</sub></em> is said to <strong>converge conditionally</strong>.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Series" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Example1" value="1. Alternating Harmonic;(-1)^(n-1)/n,a;;10;0,10,-1,1;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the series <img src="assets/images/Eqn263.gif" alt="alt harmonic" width="100" height="46" align="absmiddle" />, called the alternating harmonic series because its terms alternate sign: <img src="assets/images/Eqn264.gif" alt="alt harmonic" width="140" height="41" align="absmiddle" />. The harmonic series diverges, but maybe the minus signs change the behavior in this case. The alternating series test requires that the <em>a<sub>n</sub></em> alternate sign, get smaller and approach zero as <em>n</em> approaches infinity, which is true in this case. So this series does converge and is said to converge conditionally. While the harmonic series diverges, the alternating harmonic series has  enough negative numbers in it to counterbalance the growth, resulting in convergence. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Series" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Alternating Series Test" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Example1" value="1. Alternating Harmonic;(-1)^(n-1)/n,a;;10;0,10,-1,1;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="ratiotest.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="powerseries.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

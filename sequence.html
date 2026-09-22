@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Sequences</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="growthdecay.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="series.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Sequences</h2>
+<p></p>
+<p>A <strong>sequence</strong> is a set of ordered numbers. For example, the sequence 2, 4, 6, 8, ... has 2 as its first term, 4 as its second, etc. The <em>n</em>th term in a sequence is usually called <em>s<sub>n</sub></em>. The terms of a sequence may be arbitrary, or they may be defined by a formula, such as <em>s<sub>n</sub></em> = 2<em>n</em>. In general, <em>n</em> starts at 1 for sequences, but there are times when it is convenient for <em>n</em> to start at 0, in which case the first term is <em>s</em><sub>0</sub>. If we add up the first <em>n</em> terms of a sequence we get a <strong>partial sum</strong>, usually referred to as <em>S<sub>n</sub></em> (i.e., with a capital letter). </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Seq" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="500">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Arithmetic Sequence;2+3(n-1);10;0,10,0,30" />
+    <param name="Example2" value="2. Geometric Sequence;2^n;10;-1,11,-11,1100" />
+    <param name="Example3" value="3. Another Geometric Sequence;(1/2)^n;10;0,10,-0.1,1" />
+    <param name="Example4" value="4. Alternating Geometric Sequence;(-1/2)^n;10;0,10,-0.6,0.6" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the sequence defined by <em>s<sub>n</sub></em> = 2 + 3(<em>n</em> - 1). This is called an arithmetic sequence and each term of the sequence is found by adding a constant amount (e.g., 3 in this example) to the preceeding element. The general formula for an arithmetic sequence is <em>s<sub>n</sub></em> = s<sub>1</sub> + <em>d</em>(<em>n</em> - 1), where  s<sub>1</sub> is the first term and <em>d</em> is the common difference (i.e., the amount added to get the next term). The partial sum of the first 10 terms is shown in the upper left corner of the graph, and you can change the number of terms by moving the max <em>n</em> slider or typing in the max <em>n</em> input box.<br />
+    <br />
+    One of the issues that we are concerned with when working with sequences is what happens to the values of the terms when <em>n</em> heads to infinity. In other words, does <img src="assets/images/Eqn233.gif" alt="lim n-&gt;inf s(n)" width="40" height="29" align="absmiddle" /> have a value, or does <em>s<sub>n</sub></em> head off to infinity or jump around as <em>n </em>gets big? If there is a limit, we say that the sequence <strong>converges</strong> or is <strong>convergent</strong>. If this limit does not exist, the sequence <strong>diverges</strong> or is <strong>divergent</strong>. Obviously the arithmetic sequence diverges, because the terms keep getting bigger.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing a geometric sequence defined by <em>s<sub>n</sub></em> = 2<em><sup>n</sup></em>. In a geometric sequence each term is a constant multiple of the previous term (the multiple here is 2). The general form of a geometric sequence is <em>s<sub>n</sub></em> = <em>s</em><sub>1</sub><em>r</em><sup><em>n</em> - 1</sup>, where <em>r</em> is the common ratio (i.e., the amount that each term is multiplied by to get the next term). Obviously, <em>r</em> = 1 and <em>r</em> = 0 are not useful cases (both just give a constant value for all terms). It is clear from the graph that the example sequence is divergent, because the terms keep getting bigger. <br />
+    <br />
+  </li>
+  <li>Select the third example, showing another geometric sequence with a common ratio of 1/2. Does this one converge? The terms get closer and closer to zero, so this sequence does converge. Geometric sequences converge if the common ratio is between 0 and 1, and diverge if the common ratio is greater than 1.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing another geometric sequence with a negative common ratio. Note that the terms alternate on the positive and negative side of the axis. This sequence also converges towards 0, so we can extend our knowledge of geometric sequence convergence to say that the sequence converges if |<em>r</em>| &lt; 1.<br />
+    <br />
+  </li>
+  <li>You can experiment with your own sequences by typing in a rule, using <em>n</em> as the variable.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Seq" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Sequences" />
+    <param name="FrameSize" value="600,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Arithmetic Sequence;2+3(n-1);10;0,10,0,30" />
+    <param name="Example2" value="2. Geometric Sequence;2^n;10;-1,11,-11,1100" />
+    <param name="Example3" value="3. Another Geometric Sequence;(1/2)^n;10;0,10,-0.1,1" />
+    <param name="Example4" value="4. Alternating Geometric Sequence;(-1/2)^n;10;0,10,-0.6,0.6" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="growthdecay.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="series.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

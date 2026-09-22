@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Exponential Functions</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="power.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="trig.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Exponential Functions</span></h2>
+<p></p>
+<p></p>
+<p>Exponential  functions are somewhat special, in that their derivatives look a lot like the original function, as you have seen in previous examples. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseParameter" value="yes" />
+    <param name="Example1" value="1. An Exponential Function;k^x;-5,5,-5,5,1;parameter,5,1,5,4000" />
+    <param name="Example2" value="2. Another Exponential Function;k^x;-5,5,-5,5,1;parameter,5,0,5,5000" />
+    <param name="ShowFormula" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial example shows an exponential function with a base of <em>k</em>, a constant (initially 5 in the example). What does the derivative look like? It sort of looks like the original exponential function, but rising more steeply. Move the <em>k</em> slider around and notice what happens to the shape of the derivative. Are there some values of <em>k</em> for which the derivative rises less steeply than the original curve? What value of <em>k</em> makes the two curves look similar? You can get even closer to this magic value for k by setting <em>x</em> = 1 and then watching the value of <em>f </em>'(1) (shown in a box in the right hand graph) as you move the <em>k</em> slider. Since <em>f</em> (1) = <em>k</em>, when <em>f </em>' (1) = <em>k</em>, the two curves are identical. Once you get close using the <em>k</em> slider, you can also fine tune the value of <em>k</em> using the left and right arrow keys on your keyboard. You should find that for k &asymp; 2.718 the function and its derivative are the same. The exact anwer is <em>k</em> = <em>e</em>. In fact, you can type &quot;e&quot; into the <em>k</em> input box to make the curves the same. So, <img src="assets/images/Eqn48.gif" alt="(d/dx)e^x=e^x" width="66" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>What about when the base is a number other than <em>e</em>? It appears that the derivative is like the original exponential, but stretched or squished. In fact, that is what happens, and the shortcut is <img src="assets/images/Eqn49.gif" alt="(d/dx)k^x=ln(k)*k^x" width="101" height="41" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>What about for 0 &lt; <em>k</em> &lt; 1? Select the second example from the drop down menu. This is the same function, but now the <em>k</em> slider will let you select values from 0 to 5 (instead of just from 1 to 5, as in the previous example). What happens to the derivative curve? Why? What is the sign of the logarithm of a number between 0 and 1? The rule given above still works in this case.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Exponential Functions" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="Example1" value="1. An Exponential Function;k^x;-5,5,-5,5,1;parameter,5,1,5,4000" />
+    <param name="Example2" value="2. Another Exponential Function;k^x;-5,5,-5,5,1;parameter,5,0,5,5000" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseParameter" value="yes" />
+    <param name="ShowFormula" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="power.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="trig.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

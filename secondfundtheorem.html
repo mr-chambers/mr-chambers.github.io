@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Fundamental Theorem of Calculus</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="introdiffeq.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="definedasintegral.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Second Fundamental Theorem of Calculus</span></h2>
+<p></p>
+<p>We have seen the <strong>Fundamental Theorem of Calculus</strong>, which states: If <em>f</em> is continuous on the interval [<em>a</em>,<em>b</em>] then <img src="assets/images/Eqn118.gif" alt="FTC" width="164" height="34" align="absmiddle" />. In other words, the definite integral of a derivative gets us back to the original function. What if we instead change the order and take the derivative of a definite integral? If the limits are constant, the definite integral evaluates to a constant, and the derivative of a constant is zero, so that's not too interesting. If the definite integral represents an accumulation function, then we find what is sometimes referred to as the <strong>Second Fundamental Theorem of Calculus</strong>: <img src="assets/images/Eqn154.gif" alt="2nd ftc" width="142" height="41" align="absmiddle" />. In other words, the derivative of a simple accumulation function gets us back to the integrand, with just a change of variables (recall that we use <em>t</em> in the integral to distinguish it from the <em>x</em> in the limit). </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.SecondFundamentalTheorem" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Line;t;0;0;x;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example2" value="2. Sine;sin(t);0;0;x;-6.28,6.28,-2,2;-6.28,6.28,-2,2;-6.28,6.28,-2,2" />
+    <param name="Example3" value="3. A Line with different b;t;0;0;2x;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example4" value="4. A Line with yet a different b;t;0;0;x^2;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example5" value="5. A Line with a different a;t;0;2x;3x;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the graph of <em>f</em> (<em>t</em>) on the left, the graph of <img src="assets/images/Eqn155.gif" alt="accum" width="64" height="34" align="absmiddle" />in the center, and the graph of <img src="assets/images/Eqn156.gif" alt="deriv of int" width="96" height="41" align="absmiddle" />on the right.<em> a</em>(<em>x</em>) represents the lower limit (and is 0 in this example), while <em>b</em>(<em>x</em>) represents the upper limit (and is <em>x</em> in this example). Move the <em>x</em> slider and notice what happens to the left hand graph. As you change <em>x</em>, <em>b</em> changes (since it depends on <em>x</em>). The area is shown colored in (green for positive area, red for negative). The middle graph, of the accumulation function, then just graphs <em>x</em> versus the area (i.e., <em>y</em> is the area colored in the left graph). The middle graph also includes a tangent line at <em>x</em> and displays the slope of this line. The right hand graph plots this slope versus <em>x</em> and hence is the derivative of the accumulation function. Note that this graph looks just like the left hand graph, except that the variable is <em>x</em> instead of <em>t</em>. So you can find the derivative of an accumulation function by just replacing the variable in the integrand, as noted in the Second Fundamental Theorem of Calculus, above. Another way to think about this is to derive it using the Fundamental Theorem we saw earlier. If the antiderivative of <em>f</em> (<em>x</em>) is <em>F</em> (<em>x</em>), then <img src="assets/images/Eqn157.gif" alt="derivation of 2nd ftc" width="268" height="41" align="absmiddle" />. <em>F</em> (0) disappears because it is a constant, and the derivative of a constant is zero.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing sin(<em>t</em>) as the integrand. Move the <em>x</em> slider and note the area, that the middle graph plots this area versus <em>x</em>, and that the right hand graph plots the slope of the middle graph. Again, the right hand graph is the same as the left. <br />
+    <br />
+  </li>
+  <li>Select the third example. This goes back to the line on the left, but now the upper limit is 2<em>x</em>. Clearly the right hand graph no longer looks exactly like the left hand graph. What's going on? Move the <em>x</em> slider and notice what happens to <em>b</em>. Since the upper limit is not just <em>x</em> but 2<em>x</em>, <em>b</em> changes twice as fast as <em>x</em>, and more area gets shaded. Hence the middle parabola is steeper, and therefore the derivative is a line with steeper slope. How much steeper? We can use the derivation methodology from the first example to handle this case: <img src="assets/images/Eqn158.gif" alt="more complex 2nd ftc" width="304" height="41" align="absmiddle" />. Here the variable <em>t</em> in the integrand gets replaced with 2<em>x</em>, but there is an additional factor of 2 that comes from the chain rule when we take the derivative of<em> F </em>(2<em>x</em>). When evaluating the derivative of accumulation functions where the upper limit is not just a simple variable, we have to do a little more work.<br />
+    <br />
+  </li>
+  <li>Select the fourth example. This uses the line and <em>x</em>&sup2; as the upper limit. Move the <em>x</em> slider and notice that <em>b</em> always stays positive, as you would expect due to the <em>x</em>&sup2;. We can evaluate this case as follows: <img src="assets/images/Eqn159.gif" alt="more 2nd ftc" width="313" height="42" align="absmiddle" />. Again, we substitute the upper limit <em>x</em>&sup2; for <em>t</em> in the integrand, and multiple (because of the chain rule) by 2<em>x</em> (which is the derivative of <em>x</em>&sup2; ). <br />
+    <br />
+  </li>
+  <li>Select the fifth example. Now the lower limit has changed, too. Move the <em>x</em> slider and note that both <em>a</em> and <em>b</em> change as <em>x</em> changes. Again, we can handle this case: <img src="assets/images/Eqn160.gif" alt="2nd ftc" width="378" height="41" align="absmiddle" />. In this example, the lower limit is not a constant, so we wind up with two copies of the integrand in our result, subtracted from each other. The first copy has the upper limit substituted for <em>t</em> and is multiplied by the derivative of the upper limit (due to the chain rule), and the second copy has the lower limit substituted for <em>t</em> and is also multiplied by the derivative of the lower limit.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.SecondFundamentalTheorem" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Fundamental Theorem of Calculus" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. A Line;t;0;0;x;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example2" value="2. Sine;sin(t);0;0;x;-6.28,6.28,-2,2;-6.28,6.28,-2,2;-6.28,6.28,-2,2" />
+    <param name="Example3" value="3. A Line with different b;t;0;0;2x;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example4" value="4. A Line with yet a different b;t;0;0;x^2;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="Example5" value="5. A Line with a different a;t;0;2x;3x;-5,5,-5,5;-5,5,-5,5;-5,5,-5,5" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="introdiffeq.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="definedasintegral.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

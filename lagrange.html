@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Lagrange Remainder</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="taylor.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td>Next</td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Lagrange Remainder</h2>
+<p></p>
+<p>When using a Taylor polynomial of degree <em>n</em> centered at <em>c</em> to approximate the value of a function <em>f</em> at <em>x</em>, there is an error because the polynomial does not exactly mimic the function (unless, of course, <em>f</em> is a polynomial of degree less than or equal to <em>n</em>). We can bound this error using the Lagrange remainder (or Lagrange error bound). The remainder is: <img src="assets/images/Eqn283.gif" alt="lagrange remainder" width="153" height="44" align="absmiddle" /> where <em>M</em> is the maximum of the absolute value of the (<em>n</em> + 1)th derivative of <em>f</em> on the interval from <em>x</em> to <em>c</em>. The error is bounded by this remainder (i.e., the absolute value of the error is less than or equal to <em>R</em>). Note that <em>R</em> depends on how far <em>x</em> is away from <em>c</em>, how big <em>n</em> is, and on the characteristics of <em>f</em>. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.PowerSeries" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="500">
+    <param name="UseLoadButton" value="no" />
+    <param name="ShowF" value="yes" />
+    <param name="Example1" value="1. Exponential;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);e^x;3;0;1;20;-5,5,-1,9" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the Taylor polynomial with <em>n</em> = 3, <em>c</em> = 0 and <em>x</em> = 1 for <em>f</em> (<em>x</em>) = <em>e<sup>x</sup></em>. To compute the Lagrange remainder we need to know the maximum of the absolute value of the 4th derivative of <em>f</em> on the interval from 0 to 1. Since the 4th derivative of <em>e<sup>x</sup></em> is just <em>e<sup>x</sup></em>, and this is a monotonically increasing function, the maximum value occurs at <em>x</em> = 1 and is just <em>e</em>. So <img src="assets/images/Eqn284.gif" alt="remainder" width="160" height="41" align="absmiddle" />. Note in the applet that the actual error is about 0.052. The Lagrange remainder is a bound on the error, not the actual error itself. It just says that the error, whatever it is, will be less than the Lagrange remainder.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.PowerSeries" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Lagrange Remainder" />
+    <param name="FrameSize" value="600,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="ShowF" value="yes" />
+    <param name="Example1" value="1. Exponential;sum(n,0,nmax,Deriv(t,c,f(t),n)*(x-c)^n/n!);e^x;3;0;1;20;-5,5,-1,9" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="taylor.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td>Next</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

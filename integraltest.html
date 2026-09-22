@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Integral Test</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="series.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="comparisontest.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Integral Test</h2>
+<p></p>
+<p>The <strong>integral test</strong> provides another means to testing whether a series converges or diverges. Suppose we have a sequence defined by <em>a<sub>n</sub></em> = <em>f</em> (<em>n</em>), where <em>f</em> is some function, and we want to know whether the series<em> </em><img src="assets/images/Eqn240.gif" alt="series of f(n)" width="81" height="45" align="absmiddle" />converges or diverges. If <em>f</em> is positive, decreasing and continuous for <em>x</em> &gt; <em>c</em>, then if <img src="assets/images/Eqn241.gif" alt="integral" width="72" height="34" align="absmiddle" />converges the series also converges. If the integral diverges then so does the series. Hence if we can integrate <em>f</em>, and if there is some <em>c</em> for which <em>f</em> is positive, decreasing and continuous for <em>x</em> &gt; <em>c</em>, then we can use this test. <em>c</em> = 1 is the most commonly selected <em>c</em> to use, but depending on the function you may have to use a larger <em>c</em>. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Series" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;s&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="a(n)" />
+    <param name="Col2Title" value="&lt;html&gt;S&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="as(n)" />
+    <param name="Example1" value="1. Harmonic Series;1/n,s;;10;0,10,0,3;;;10,50,100,500,1000,5000;false" />
+    <param name="ShowGraph" value="yes" />
+    <param name="Example2" value="2. Divergent Series;2n/(n^2+1),s;;10;0,10,0,5;;;10,50,100,500,1000,5000;false" />
+    <param name="Example3" value="3. Convergent Series;e^(-n),s;;10;0,10,0,1;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the harmonic series. Note that the graph also shows a plot of <em>f</em> (<em>x</em>) = 1/<em>x</em> as a blue line. Since this is positive, decreasing and continuous, we can use the integral test. The integral can be evaluated by<img src="assets/images/Eqn242.gif" alt="integral of 1/x" width="213" height="41" align="absmiddle" />. Since ln <em>x</em> grows without bound, the last limit does not exist, so the harmonic series diverges.<br />
+    <br />
+  </li>
+  <li>Select the second example, where the series is <img src="assets/images/Eqn243.gif" alt="series" width="61" height="45" align="absmiddle" />. From looking at the table and the graph, it isn't quite clear whether this converges or not. The blue line becomes positive and decreasing for <em>x</em> &gt; 1, so we can use the integral test: <img src="assets/images/Eqn244.gif" alt="integral test" width="182" height="41" align="absmiddle" />, where we used the substitution <em>u</em> = <em>x</em>&sup2; + 1. The limit clearly doesn't exist, so this series diverges. <br />
+    <br />
+  </li>
+  <li>Select the third example, showing the series <img src="assets/images/Eqn245.gif" alt="exp series" width="44" height="45" align="absmiddle" />. From the graph and table it looks like this series does converge, but we can verify this with the integral test. Since e<em><sup>-x</sup></em> is simple to integrate and is positive, decreasing, and continuous for all <em>x</em>, we can use the integral test: <img src="assets/images/Eqn246.gif" alt="int" width="140" height="36" align="absmiddle" />. Since this limit is zero, due to the minus sign in the exponent, the series converges. Note that we used a lower limit of 0 here, instead of 1, just to make the evaluation of the integral a little bit easier. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Series" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Integral Test" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;s&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="a(n)" />
+    <param name="Col2Title" value="&lt;html&gt;S&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="as(n)" />
+    <param name="Example1" value="1. Harmonic Series;1/n,s;;10;0,10,0,3;;;10,50,100,500,1000,5000;false" />
+    <param name="ShowGraph" value="yes" />
+    <param name="Example2" value="2. Divergent Series;2n/(n^2+1),s;;10;0,10,0,5;;;10,50,100,500,1000,5000;false" />
+    <param name="Example3" value="3. Convergent Series;e^(-n),s;;10;0,10,0,1;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="series.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="comparisontest.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

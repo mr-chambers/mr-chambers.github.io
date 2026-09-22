@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Inverses</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="transform.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="hyperbolic.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Derivatives of Inverses</span></h2>
+<p></p>
+<p></p>
+<p></p>
+<p>If <em>y</em> = <em>f</em> (<em>x</em>), then the inverse relation is written as <em>y </em>= <em>f</em> <sup>-1</sup> (<em>x</em>). If the inverse is also a function, then we say that the function <em>f</em> is invertible. This applet explores the derivatives of invertible functions.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Inverse" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="800">
+    <param name="Example1" value="1. A Line;2x;0.5x;-5,5,-5,5;-5;5;1000;1" />
+    <param name="Example2" value="2. Another Line;3x;(1/3)x;-5,5,-5,5;-5;5;1000;1" />
+    <param name="Example3" value="3. A Parabola;x&gt;=0?x^2;sqrt(x);0,5,0,5;0;5;500;2" />
+    <param name="Example4" value="4. Exponential and Natural Logarithm;e^x;ln(x);-5,5,-5,5;-5;5;1000;0" />
+    <param name="Example5" value="5. Exponential and Common Logarithm;10^x;log10(x);-5,5,-5,5;-5;5;1000;0" />
+    <param name="Example6" value="6. Sin and Arcsin;sin(x);arcsin(x);-3.15,3.15,-3.15,3.15;-1.57;1.57;630;0" />
+    <param name="Example7" value="7. Cos and Arccos;cos(x);arccos(x);-3.15,3.15,-3.15,3.15;0;3.15;315;0" />
+    <param name="Example8" value="8. Tan and Arctan;tan(x);arctan(x);-6.28,6.28,-6.28,6.28;-1.57;1.57;315;0" />
+    <param name="Example9" value="9. Sec and Arcsec;sec(x);arcsec(x);-6.28,6.28,-6.28,6.28;-1.57;1.57;315;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a line, <em>y</em> = <em>f</em> (<em>x</em>) = 2<em>x</em> and its inverse, <em>y</em> = <em>f</em> <sup>-1</sup> (<em>x</em>) = 0.5<em>x</em>. The right-hand graph shows the derivatives of these two functions, which are constant functions. You can move the slider to move the x location of a point on <em>f</em> (<em>x</em>) (the purple graph). The coordinates of the purple point are (<em>x</em>, <em>f</em> (<em>x</em>)). There is also a point on the inverse, but it is the &quot;mirror point&quot; (i.e., the point with the reverse coordinates of the purple point). In other words, the coordinates of the blue point are (<em>f</em> (<em>x</em>),<em> x</em>). The values of the derivatives at these two points are shown in the upper right hand corner of the derivative graph, and are indicated by cross hairs on the derivative graphs. Since the functions are lines, the derivatives are horizontal lines and the derivatives are constant. What is the relationship between the two derivatives?<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing the line, <em>y</em> = <em>f</em> (<em>x</em>) = 3<em>x</em> and its inverse, <em>y</em> = <em>f</em> <sup>-1</sup> (<em>x</em>) = (1/3)*<em>x</em>. What is the relationship between the derivatives? You should have noticed that the derivatives at any point are reciprocals of one another. <br />
+    <br />
+  </li>
+  <li>Select the third example, showing half of a parabola and its inverse, the square root function. Does the reciprocal relationship still hold between the derivatives? Move the <em>x</em> slider and see if this is true (hint: integer values result in derivatives values that are easier to compute the reciprocals of in your head). This example also shows the tangent lines to the two points. It is important to note that the value of the derivative of the inverse is being evaluated at a different place than the derivative of the function, as shown by the crosshairs on the derivative graphs. If the derivative of the function is being evaluated at <em>x = a</em>, the derivative of the inverse is being evaluated at <em>x</em> = <em>f</em> (<em>a</em>). This gives us the general formula for the derivative of an invertible function: <img src="assets/images/Eqn63.gif" alt="derivative of inverse" width="145" height="46" align="absmiddle" />. This says that the derivative of the inverse of a function equals the reciprocal of the derivative of the function, evaluated at <em>f</em> (<em>x</em>).<br />
+    <br />
+  </li>
+  <li>Select the fourth example. This shows the exponential functions and its inverse, the natural logarithm. The derivative of the inverse (i.e., the derivative of the natural logarithm) is <img src="assets/images/Eqn64.gif" alt="derivative of ln(x)" width="82" height="41" align="absmiddle" />. Note that, because ln(<em>x</em>) is only defined for positive <em>x</em>, its derivative is also only defined for positive <em>x</em>.<br />
+    <br />
+  </li>
+  <li>Select the fifth example. This shows an exponential function with base 10 and its inverse, the common logarithm. The derivative of a logarithm to a base other than <em>e</em> is <img src="assets/images/Eqn65.gif" alt="derivative of logarithm" width="122" height="41" align="absmiddle" />, again with <em>x</em> &gt; 0.<br />
+    <br />
+  </li>
+  <li>Select the sixth example, showing a sine curve and its inverse, arcsin(<em>x</em>) (which is also written as sin<sup>-1</sup>(<em>x</em>)). Here, the range of the inverse is limited in order to make it a function, and the <em>x</em> slider is limited to this domain. You can explore the other examples, which show the inverses and derivatives of some of the other trigonometric functions (the graphing software currently doesn't support arccot and arccsc). The derivative of the inverse trigonometric function are:
+    <ol>
+      <li><img src="assets/images/Eqn66.gif" alt="derivative of arcsin" width="146" height="45" align="absmiddle" />.</li>
+      <li><img src="assets/images/Eqn67.gif" alt="deriv of arccos" width="149" height="45" align="absmiddle" /></li>
+      <li><img src="assets/images/Eqn68.gif" alt="deriv of arctan" width="136" height="41" align="absmiddle" /></li>
+      <li><img src="assets/images/Eqn69.gif" alt="deriv of arccot" width="137" height="41" align="absmiddle" /></li>
+      <li><img src="assets/images/Eqn70.gif" alt="deriv of arcsec" width="165" height="49" align="absmiddle" /></li>
+      <li><img src="assets/images/Eqn71.gif" alt="deriv of arccsc" width="165" height="49" align="absmiddle" /><br />
+        <br />
+      </li>
+    </ol>
+  </li>
+  <li>You can also explore on your own, but note that you need to enter both the function and its inverse, as the software is not smart enough to compute the inverse of a function. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Inverse" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Inverses" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. A Line;2x;0.5x;-5,5,-5,5;-5;5;1000;1" />
+    <param name="Example2" value="2. Another Line;3x;(1/3)x;-5,5,-5,5;-5;5;1000;1" />
+    <param name="Example3" value="3. A Parabola;x&gt;=0?x^2;sqrt(x);0,5,0,5;0;5;500;2" />
+    <param name="Example4" value="4. Exponential and Natural Logarithm;e^x;ln(x);-5,5,-5,5;-5;5;1000;0" />
+    <param name="Example5" value="5. Exponential and Common Logarithm;10^x;log10(x);-5,5,-5,5;-5;5;1000;0" />
+    <param name="Example6" value="6. Sin and Arcsin;sin(x);arcsin(x);-3.15,3.15,-3.15,3.15;-1.57;1.57;630;0" />
+    <param name="Example7" value="7. Cos and Arccos;cos(x);arccos(x);-3.15,3.15,-3.15,3.15;0;3.15;315;0" />
+    <param name="Example8" value="8. Tan and Arctan;tan(x);arctan(x);-6.28,6.28,-6.28,6.28;-1.57;1.57;315;0" />
+    <param name="Example9" value="9. Sec and Arcsec;sec(x);arcsec(x);-6.28,6.28,-6.28,6.28;-1.57;1.57;315;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="transform.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="hyperbolic.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Limit Comparison Test</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="comparisontest.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="ratiotest.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Limit Comparison Test</h2>
+<p></p>
+<p>The <strong>limit comparison test</strong> is similar to the comparison test in that you use another series to show the convergence or divergence of a desired series. Suppose we have two series <img src="assets/images/Eqn247.gif" alt="A(inf)" width="73" height="45" align="absmiddle" />and <img src="assets/images/Eqn248.gif" alt="b series" width="72" height="45" align="absmiddle" />, where <em>a<sub>n</sub></em> &gt;0 and <em>b<sub>n </sub></em>&gt; 0. If <img src="assets/images/Eqn251.gif" alt="limit comparison" width="74" height="45" align="absmiddle" />(i.e., if the ratio of the terms tends to a finite number as <em>n</em> goes to infinity), then both series converge or both series diverge. By picking a suitable <em>B</em>, usually a <em>p</em>-series, we can use this test to determine whether or not <em>A</em> converges.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Series" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Col2Title" value="&lt;html&gt;a&lt;sub&gt;n&lt;/sub&gt;/b&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="a(n)/b(n)" />
+    <param name="Example1" value="1. Compare to a harmonic series;(n+1)/(1-n+n^2),a;1/n,b;10;0,10,0,6;;;10,50,100,500,1000,5000;false" />
+    <param name="Example2" value="2. Compare to a geometric series;(n+1)/(n*2^n),a;1/(2^n),b;10;0,10,0,2;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the series <img src="assets/images/Eqn252.gif" alt="series" width="117" height="45" align="absmiddle" />. A useful way to pick a comparison series when the target series uses a rational expression is to divide the highest power of <em>n</em> in the numerator by the highest power of <em>n</em> in the denominator, which in this case yields <img src="assets/images/Eqn253.gif" alt="n/n^2 = 1/n" width="49" height="41" align="middle" />. The table shows the ratio <em>a<sub>n</sub></em>/<em>b<sub>n</sub></em>, which does seem to converge to 1. We can verify this: <img src="assets/images/Eqn254.gif" alt="limit" width="209" height="80" align="absmiddle" />. The limit comparison test says that in this case, both converge or both diverge. Since we know that the harmonic series diverges, <em>A</em> must also diverge.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing <img src="assets/images/Eqn255.gif" alt="series" width="92" height="45" align="absmiddle" />. Use the same guidelines as before, but include the exponential term also: <img src="assets/images/Eqn256.gif" alt="n/n*2^n = 1/2^n" width="72" height="41" align="middle" />. The limit of the ratio seems to converge to 1 (the &quot;undefined&quot; in the table is due to the <em>b</em> terms getting so small that the algorithm thinks it is dividing by 0), which we can verify: <img src="assets/images/Eqn257.gif" alt="limit" width="156" height="80" align="absmiddle" />. The limit comparison test says that in this case, both converge or both diverge. Since <img src="assets/images/Eqn258.gif" alt="1/2^n = (1/2)^n" width="70" height="49" align="middle" />, the <em>B</em> series is a geometric series with <em>r</em> = 1/2, which we know converges, so<em> A</em> also converges.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Series" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Limit Comparison Test" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Col1Title" value="&lt;html&gt;A&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col1Def" value="as(n)" />
+    <param name="Col2Title" value="&lt;html&gt;a&lt;sub&gt;n&lt;/sub&gt;/b&lt;sub&gt;n&lt;/sub&gt;&lt;/html&gt;" />
+    <param name="Col2Def" value="a(n)/b(n)" />
+    <param name="Example1" value="1. Compare to a harmonic series;(n+1)/(1-n+n^2),a;1/n,b;10;0,10,0,6;;;10,50,100,500,1000,5000;false" />
+    <param name="Example2" value="2. Compare to a geometric series;(n+1)/(n*2^n),a;1/(2^n),b;10;0,10,0,2;;;10,50,100,500,1000,5000;false" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="comparisontest.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="ratiotest.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

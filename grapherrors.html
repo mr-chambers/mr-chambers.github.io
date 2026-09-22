@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Graphing Issues</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="appletintro.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="informalcontinuity.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Graphing Issues</span></h2>
+<p>Graphing software, such as used on these web pages or on graphing calculators, have some limitations. This page explores some of these issues.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Example1" value="1. A Line;x;-5,5,-2,2" />
+    <param name="Example2" value="2. A Different Line;0.5x;-5,5,-5,5" />
+    <param name="Example3" value="3. A Hyperbola with a Fake Asymptote;(x-1)^(-1);-5,5,-5,5" />
+    <param name="Example4" value="4. A Hyperbola;1/(x-1);-5,5,-5,5" />
+    <param name="Example5" value="5. A Hyperbola with Asymptote;1/(x-1);-5,5,-5,5;asymptote,1,0,1,1" />
+    <param name="Example6" value="6. Endpoints;x&lt;1?-1:1;-5,5,-5,5;open,1,-1;closed,1,1" />
+    <param name="Example7" value="7. A Power Function;x^(1/3);-5,5,-5,5" />
+    <param name="Example8" value="8. A Sine Curve;sin(200x);-5,5,-5,5" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>Look at the first example, which shows the line <em>y</em> = <em>x</em>. Why doesn't the slope look like a 45&deg; line? The issue here is that the <em>x</em> and <em>y</em> axis scales are not the same. This would also cause circles to graph like ellipses. You can correct this on these applets by clicking the &quot;Equalize Axes&quot; button, which makes the scales the same. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This shows another line; click &quot;Equalize Axes&quot; to make sure the scales are the same. If you look very closely at the line, you may notice that it isn't quite smooth, looking like a stair case (with really small steps!). This is caused by the pixel nature of the display, and the fact that the graphing software doesn't recompute the graph for every pixel (it does it for every third pixel). 45&deg; lines look pretty smooth, but other angles may have more or less of these &quot;jaggies&quot;. <br />
+    <br />
+  </li>
+  <li>Select the third example. This shows a hyperbola defined as <img src="assets/images/Eqn34.gif" alt="y=(x-1)^-1" width="78" height="24" align="absmiddle" />. Notice that the graphing software has connected the left and right halves, which is not correct (there should be a vertical asymptote there). In this instance, the graphing software isn't smart enough to know that it shouldn't connect these parts. This is also common on graphing calculators.<br />
+    <br />
+  </li>
+  <li>Select the fourth example. This shows the same hyperbola, but defined as <img src="assets/images/Eqn35.gif" alt="y=1/(x-1)" width="60" height="41" align="absmiddle" />. This time, the graphing software is able to figure out that it shouldn't connect the two parts. You need to beware when graphing functions with vertical asymptotes and know whether what the graphing software shows you is correct or not.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing the same hyperbola. Now, there is a vertical asymptote drawn. This is not, in fact, done by the graphing software, as it doesn't really know about the vertical asymptote. It is added to the graph manually by the person (me) making the examples. Note that if you place the cursor in the function definition box and press Enter, the vertical asymptote goes away, because the software thinks you might have typed a new function definition and hence erases the vertical asymptote from the example. <br />
+    <br />
+  </li>
+  <li>Select the sixth example, showing a piecewise function with endpoints. Like for the last example, the graphing software is not smart enough to know where the endpoints are and whether they are open or closed. The endpoints shown are added manually by the example. If you click in the function definition box and press Enter, the endpoints go away. When you type your own piecewise function (or any function where endpoints are relevant), you will just see the graph stop.<br />
+    <br />
+  </li>
+  <li>Select the seventh example, showing a power function. Notice that the example shows a cube root and shows values for all real numbers as the domain. Some textbooks that delve into complex numbers will only show the positive half of this curve, as would be the case for a square root. Since these applets are aimed at real number calculus, I've chosen to graph both sides to match what students would see on a graphing calculator in real mode. If you edit the denominator in the function definition to be 2 instead of 3 and press Enter, you will see the graph of square root. Try other values for the denominator, both even and odd. Then try &quot;pi&quot;. Is the graph what you expected? Is pi even or odd? What the graphing software is actually doing is trying to turn the exponent into a rational fraction, reduce it to simplest terms, and then look at whether the numerator or denominator are even or odd to determine whether to graph the negative side or not. Pi is not a rational number, so the graphing software does not draw the negative side. Try 1001 for the denominator; what happens? Isn't 1001 odd, so shouldn't the negative side be drawn? This shows a limitation in the algorithm used by the graphing software to turn the exponent into a rational number; it gives up if the denominator is bigger than 1000. Try a denominator of 999.<br />
+    <br />
+  </li>
+  <li>Select the eighth example, a nice sine curve. Depending on your computer, the graph may show a nice sine curve, or a squiggly mess. If it shows a nice sine curve, what is its period? Does that match the period used in the definition? Try moving the slider; the cross hair should track the graph; why doesn't it? Try clicking the &quot;zoom in&quot; button, or drag a rectangle around one cycle to zoom in. What's going on? The problem is that the sine curve is wiggling faster than the number of samples used by the graphing software, hence the graph only shows samples of the curve, not the real curve (because it's period is so short, you would have to make xmin really close to xmax to see what the curve actually looks like). If your original graph looked like a nice slow sine curve, that's because the sample points of the actual fast wiggling curve just happen to line up to look like a regular sine curve. When you zoom in or change the xmin, the samples happen at different places and the graph looks totally different. You can also try clicking &quot;Restore limits&quot; to undo your zooming, then edit the number in the function definition to be smaller, press Enter, and see what the graph looks like. How much smaller do you have to make the number to get a nice looking sine curve?<br />
+    <p style="text-align: center;">
+      <applet
+    code="net.sourceforge.webcompmath.applets.Continuity"
+    codebase="./assets" archive="webcompmath.jar" height="40"
+    width="160">
+        <param name="LaunchButtonName" value="Launch Presentation" />
+        <param name="FrameTitle" value="Applet Introduction" />
+        <param name="FrameSize" value="640,580" />
+        <param name="Presentation" value="yes" />
+        <param name="UseMouseZoom" value="yes" />
+        <param name="UsePanner" value="yes" />
+        <param name="UseRestoreButton" value="yes" />
+        <param name="UseComputeButton" value="no" />
+        <param name="UseZoomButtons" value="yes" />
+        <param name="UseEqualizeButton" value="yes" />
+        <param name="UseSaveButton" value="yes" />
+        <param name="OptionalStars" value="yes" />
+        <param name="OptionalFunctions" value="yes" />
+        <param name="RationalExponents" value="yes" />
+        <param name="Factorials" value="yes" />
+        <param name="Example1" value="1. A Line;x;-5,5,-2,2" />
+        <param name="Example2" value="2. A Different Line;0.5x;-5,5,-5,5" />
+        <param name="Example3" value="3. A Hyperbola with a Fake Asymptote;(x-1)^(-1);-5,5,-5,5" />
+        <param name="Example4" value="4. A Hyperbola;1/(x-1);-5,5,-5,5" />
+        <param name="Example5" value="5. A Hyperbola with Asymptote;1/(x-1);-5,5,-5,5;asymptote,1,0,1,1" />
+        <param name="Example6" value="6. Endpoints;x&lt;1?-1:1;-5,5,-5,5;open,1,-1;closed,1,1" />
+        <param name="Example7" value="7. A Power Function;x^(1/3);-5,5,-5,5" />
+        <param name="Example8" value="8. A Sine Curve;sin(600x);-5,5,-5,5" />
+        <param name="UseLoadButton" value="no" />
+      </applet>
+    </p>
+  </li>
+</ol>
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+        This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="appletintro.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="informalcontinuity.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

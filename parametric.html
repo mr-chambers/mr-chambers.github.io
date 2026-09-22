@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Parametric Derivatives</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="lhopitals.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="polar.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Parametric Derivatives</span></h2>
+<p></p>
+<p>We have seen curves defined using functions, such as <em>y</em> = <em>f</em> (<em>x</em>). We can define more complex curves that represent relationships between <em>x</em> and <em>y</em> that are not definable by a function using parametric equations. Parametric curves are defined using two separate functions, <em>x</em>(<em>t</em>) and <em>y</em>(<em>t</em>), each representing its respective coordinate and depending on a new parameter, <em>t</em>. As <em>t</em> varies, so do the <em>x</em> and <em>y</em> coordinates of points on the curve. A curve such as <em>y</em> = <em>x</em>&sup2; can be represented parametrically by <em>x</em>(<em>t</em>) = <em>t</em> and <em>y</em>(<em>t</em>) =<em> t</em>&sup2;. More complex curves involve more complex functions for <em>x</em>(<em>t</em>). </p>
+<p>To find the rate of change of <em>y</em> with respect to <em>x</em> for a parametric curve (i.e., the first derivative with respect to <em>x</em>), and to find the derivative of this (i.e., the second derivative), use the following formulas:</p>
+<p align="center"> <img src="assets/images/Eqn97.gif" alt="parametric 1st deriv" width="60" height="80" align="absmiddle" /> and <img src="assets/images/Eqn98.gif" alt="parametric 2nd deriv" width="105" height="84" align="absmiddle" />.</p>
+<p>Note that both of these derivatives are defined in terms of the parameter, <em>t</em>. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.ParamDeriv" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="560">
+    <param name="Example1" value="1. A Circle;cos(t);sin(t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example2" value="2. Also A Circle;cos(2t);sin(2t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example3" value="3. A Line;2-3t;-1+6t;-5,5,-5,5;0;1;100;invoke;0" />
+    <param name="Example4" value="4. An Ellipse;1/2*cos(t);sin(t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example5" value="5. A Lissajous Figure;cos(3t);sin(5t);-2,2,-2,2;0;6.28;100;invoke;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a graph of a circle defined parametrically (if the circle looks squished, click Equalize Axes). In this case, <em>x</em>(<em>t</em>) = cos(<em>t</em>) and <em>y</em>(<em>t</em>) = sin(<em>t</em>). Move the <em>t</em> slider, which changes the value of the <em>t</em> parameter. Changing <em>t</em> changes the values of <em>x</em>(<em>t</em>) and <em>y</em>(<em>t</em>), which are the coordinates of a point on the curve (the magenta dot). As you change <em>t</em>, the dot traces out the curve. The limit control panel now has some additional fields on it to specify the minimum and maximum values of <em>t</em> used in drawing the curve (tmin and tmax), plus the number of intervals into which this is divided (tintervals; making this smaller results in a courser graph). The graph also displays the value of <em>dy/dx</em>, which is just the slope of the tangent line at the point corresponding to the current value of <em>t</em>. This is computed using the formula above as: <img src="assets/images/Eqn101.gif" alt="param deriv" width="133" height="41" align="absmiddle" />. The graph also shows the value of the second derivative, computed using the formula above as <img src="assets/images/Eqn102.gif" alt="param 2nd deriv" width="148" height="44" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This is also a circle, with the definition <em>x</em>(<em>t</em>) = cos(2<em>t</em>) and <em>y</em>(<em>t</em>) = sin(2<em>t</em>). Move the <em>t</em> slider and notice what happens. What difference does that multiple of 2 inside the sine and cosine functions make? How does the graph change? How does the position of the point vary with <em>t</em>? How will the derivatives change? Parametric curves can retrace themselves, unlike curves defined using <em>y</em> = <em>f</em> (<em>x</em>). <br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu. This shows a straight line. Only part of the line is showing, due to setting tmin = 0 and tmax = 1. As you would expect, <em>dy/dx</em> is constant, based on using the formulas above: <img src="assets/images/Eqn103.gif" alt="param deriv of line" width="90" height="41" align="absmiddle" /><br />
+    .</li>
+  <li>Select the fourth example from the drop down menu. This shows an ellipse, which is just a slight modification of the equations for a circle. Can you compute the derivatives?<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing a Lissajous figure. In this case, the multiple of <em>t</em> inside the sine function is different from the one inside the cosine function. Move the <em>t</em> slider and see if you can understand why this curve comes out the way it does.<br />
+    <br />
+  </li>
+  <li>You can try your own examples by typing different functions of <em>t</em> for <em>x</em>(<em>t</em>) and <em>y</em>(<em>t</em>) and setting tmin and tmax to appropriate values.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.ParamDeriv" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Parametric Derivatives" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. A Circle;cos(t);sin(t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example2" value="2. Also A Circle;cos(2t);sin(2t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example3" value="3. A Line;2-3t;-1+6t;-5,5,-5,5;0;1;100;invoke;0" />
+    <param name="Example4" value="4. An Ellipse;1/2*cos(t);sin(t);-2,2,-2,2;0;6.28;100;invoke;0" />
+    <param name="Example5" value="5. A Lissajous Figure;cos(3t);sin(5t);-2,2,-2,2;0;6.28;100;invoke;0" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="lhopitals.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="polar.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

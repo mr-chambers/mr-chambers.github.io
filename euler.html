@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>euler's Method</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="slopefields.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="separationofvariables.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Euler's Method</h2>
+<p></p>
+<p>How can one draw a solution for a differential equation? If you can solve the differential equation exactly, then you can just graph a solution through a particular point. However, many differential equations cannot be solved exactly, so we need a numerical method to sketch a solution. Euler's method is one such technique.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.DiffEq" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="500">
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. dy/dx = x;x;0;0;-1,5,-1,5;0;0;1" />
+    <param name="ShowSlopeField" value="yes" />
+    <param name="ShowEuler" value="yes" />
+    <param name="Example2" value="2. dy/dx = y*sin(x);y*sin(x);3;4;-1,10,-1,6;0;0;1" />
+    <param name="Example3" value="3. dy/dx = 1/y;1/y;1;0.1;-10,10,-10,10;0;0;1" />
+    <param name="Example4" value="4. dy/dx = -1/y;-1/y;1;0.5;-1,10,-3,3;0;0;1" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows the slope field for <em>dy/dx</em> = <em>x</em>. To sketch a solution curve, Euler's method starts at a given point (the magenta point in this example). You then compute the slope at this point (zero in this case), then move along a line with this slope for a specific amount of <em>x</em> (called <em>deltaT</em> in this applet, and set to 1 for this example). To see this, click the Next button at the bottom of the applet. You should see a magenta line segment going from (0,0) to (1,0). Euler's method then repeats the process by finding the slope at this new location (the new slope is 1), then moving along a line with slope of 1 for 1 unit of <em>x</em>. Click Next to see the second segment. Euler's method then repeats this process of finding a slope and sketching a segment to a new point to draw out the curve. You can see an animated version of this process by clicking the Start button. This will draw 10 segments, then reset. You can Pause at any time and use the Next and Prev buttons. There are also two choice options, one which controls looping (set to Play Once by default) and the other which controls the animation speed (set to Slow by default). <br />
+    <br />
+    Notice that the magenta curve drawn by Euler's method is roughly the same shape as the blue solution, but isn't very good. We can improve this by changing the <em>deltaT</em> value to use smaller<em> x</em> steps. Edit the <em>delta</em><em>T</em> to be 0.5 instead of 5, then rerun the animation (or click Next a few times to draw part of the curve). The curve drawn with Euler's method is much closer. Try 0.1 for <em>deltaT</em>, but you will need to click Zoom In to see the magenta curve, since only 10 segments are drawn. Now the curve is much closer to the blue solution. Note that the blue curve is actually drawn with a different algorithm (4th order Runge-Kutta), so it is also an approximation to the real curve, but generally a more accurate one that Euler's method. Euler's method can also be used to extend the curve in the negative <em>x</em> direction, using the same basic idea.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing <em>dy/dx</em> =<em> y </em>sin(<em>x</em>). Click Next 10 times or click Start to draw the curve using Euler's method. Note that with a step size of 1, the Euler curve gets close to the <em>x</em>-axis, where the slope is very shallow, and then gets &quot;stuck&quot; there. Change <em>deltaT</em> to 0.5 and notice that now the curve doesn't stray so far and comes back up. One of the difficulties with numerical methods is that they can sometimes get stuck near certain values when the step size is too large. Note that if you zoom out, the blue curve abruptly ends; this is an artifact of the algorithm used to graph the solution.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing <em>dy/dx</em> =1/ <em>y</em>. We will find out later that the solution family is <em>x</em> = <em>y</em>&sup2;/2 +<em> C</em>, which look like parabolas opening up towards the right (i.e., these are not functions). Click Next and watch what happens. Here, the slope is very steep near the starting point, so the Euler curve takes off too fast. Changing the step size to 0.5 improves things, but still causes problems. Like example 2, where the slope was very shallow, here a very steep slope causes trouble for the algorithm. You may also notice that the blue curve doesn't look much like a parabola, either. We will look at this issue in the next example.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing <em>dy/dx</em> =-1/ <em>y</em>. The solutions will be parabolas opening in the opposite direction. Obviously the blue curve is really having troubles! Click Next to look at the first Euler segment. Since the slope at the starting point is negative, the first segment slopes down. Click Next again and you can see the problem. The slope is positive so the next segment steps back up, but the real curve should keep going down and to the left! The problem is that Euler's methods steps along the <em>x</em> axis, assuming it is graphing a function. Here, the solution is not a function so the numerical methods get very confused. Click Next a few more times to see the curve jump up and down everytime it cross the <em>x</em>-axis. This is the source for the jagged curves you have seen on some differential equation graphs where the solution is not a function.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.DiffEq" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Euler's Method" />
+    <param name="FrameSize" value="600,500" />
+    <param name="Presentation" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. dy/dx = x;x;0;0;-1,5,-1,5;0;0;1" />
+    <param name="ShowSlopeField" value="yes" />
+    <param name="ShowEuler" value="yes" />
+    <param name="Example2" value="2. dy/dx = y*sin(x);y*sin(x);3;4;-1,10,-1,6;0;0;1" />
+    <param name="Example3" value="3. dy/dx = 1/y;1/y;1;0.1;-10,10,-10,10;0;0;1" />
+    <param name="Example4" value="4. dy/dx = -1/y;-1/y;1;0.5;-1,10,-3,3;0;0;1" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="slopefields.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="separationofvariables.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

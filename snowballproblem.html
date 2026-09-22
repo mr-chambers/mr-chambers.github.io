@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Related Rates: Melting a Snowball</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="evt.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="lhopitals.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Related Rates: Melting a Snowball</span></h2>
+<p>Another application of the derivative is in finding how fast something changes. For example, suppose you have a spherical snowball with a 70cm radius and it is melting such that the radius shrinks at a constant rate of 2 cm per minute. How fast is the volume of the snowball shrinking? </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.SnowballProblem" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="600">
+    <param name="Example1" value="1. r(t) = 70 - 2t, substituted;4/3*pi*(70-2*t)^3;70-2*t;0;invoke;invoke" />
+    <param name="Example2" value="2. r(t) = 70 - 2t, not substituted;4/3*pi*(r(t))^3;70-2*t;0;invoke;invoke" />
+    <param name="Example3" value="3. r'=-3 when r=20;4/3*pi*(r(t))^3;70*exp(-3*t/20);0;invoke;invoke" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows an image of the snowball with an initial radius of 70 cm. One approach to finding the rate at which the volume changes is to figure out an equation for the volume, plug into that a formula for how the radius changes with time, thus giving a formula for how the volume changes with time. We know that the volume of a sphere is given by <img src="assets/images/Eqn84.gif" alt="volume of sphere" width="66" height="41" align="absmiddle" />. Since the snowball starts out with a radius of 70 cm and shrinks by 2 cm per minute, then <img src="assets/images/Eqn85.gif" alt="radius" width="70" height="18" align="bottom" />, where <em>t</em> is the time in minutes since the snowball started melting. If we substitute <em>r</em> into the formula for <em>V</em> we get <img src="assets/images/Eqn86.gif" alt="v substituted" width="116" height="41" align="absmiddle" />. You can see this expression displayed in the applet. Taking the derivative with respect to <em>t</em> we get <img src="assets/images/Eqn87.gif" alt="v'" width="141" height="29" />, which is also displayed by the applet (although in unsimplified form). We can now plug in any value of <em>t</em> we want, to find out the rate of change of the volume. On the applet, click the Start button. This runs an animation that changes <em>t</em> from 0 to 35 (when the snowball is gone). The top graph is <em>V</em>(<em>t</em>) and the bottom graph is <em>V</em> ' (<em>t</em>). Also shown on the graphs are the values of <em>V</em>(<em>t</em>), <em>r</em>(<em>t</em>), <em>V</em> ' (<em>t</em>) and<em> r</em>' (<em>t</em>). Notice that in this example,<em> r</em>' (<em>t</em>) is constant. If we wanted to find the rate at which the volume is changing when the snowball has a radius of 20 cm, we could just plug 20 in for <em>r</em> in the formula for <em>r</em> and solve for <em>t</em> (finding that <em>t</em> = 25 when <em>r</em> = 20), then plug <em>t</em> into the formula for <em>V</em> '. On the applet, you could also run the animation (set the rate to Slow instead of Moderate), watch the value of <em>r</em>, and click the Pause button when <em>r</em> = 20 or is close to it. You can then type in different values for <em>t</em> until you find one that makes <em>r</em> = 20, and look at the value of <em>V</em> ' that is displayed.<br />
+    <br />
+  </li>
+  <li>Another approach is to take the derivative of the volume formula <strong>before</strong> plugging in the formula for <em>r</em>. Select the second example from the drop down menu at the top. Here, we treat both <em>V</em> and <em>r</em> as functions of <em>t</em>, so the formula for the volume becomes <img src="assets/images/Eqn88.gif" alt="volume as function of r(t)" width="113" height="41" align="absmiddle" />. The derivative of this, with respect to <em>t</em> and using the chain rule, becomes. <img src="assets/images/Eqn89.gif" alt="deriv of v(t)" width="149" height="29" />. Both of these are displayed in the applet (again, with the derivative not being simplified). Suppose that we wanted to find<em> V </em>' when <em>r</em> = 20, instead of at a specific time. This formula is actually more useful, since we can plug in 20 for <em>r</em>(<em>t</em>) and -2 for <em>r</em>'(<em>t</em>), without even needing to know <em>t</em>. <br />
+    <br />
+  </li>
+  <li>Select the third example. What happens if we still want to find<em> V </em>' when <em>r</em> = 20, but now all we know about <em>r</em> ' is that it equals -3 when <em>r</em> = 20? In other words, we no longer know the formula for <em>r</em> (<em>t</em>). Can we still answer this question? Yes, if we use the formula for <em>V</em> ' (<em>t</em>) that we found in the previous step, which doesn't depend on us knowing the formula for <em>r</em>. All we need is to plug in a value for <em>r</em> and the corresponding value for <em>r</em> '. To find this solution graphically, set the animation speed to Slow (instead of Moderate), then Start it running. Watch the displayed value for <em>r</em>, and click Pause when <em>r</em> is about 20. You can then type in values for <em>t</em> until you get <em>r</em> = 20 (hint: try <em>t</em> = 8.35175311). Then you can read off the value for <em>V</em> ' on the display. These types of problems are called <strong>related rates</strong> problems because you know a rate and want to find another rate that is related to it.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.SnowballProblem" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Related Rates: Melting a Snowball" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. r(t) = 70 - 2t, substituted;4/3*pi*(70-2*t)^3;70-2*t;0;invoke;invoke" />
+    <param name="Example2" value="2. r(t) = 70 - 2t, not substituted;4/3*pi*(r(t))^3;70-2*t;0;invoke;invoke" />
+    <param name="Example3" value="3. r'=-3 when r=20;4/3*pi*(r(t))^3;70*exp(-3*t/20);0;invoke;invoke" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="evt.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="lhopitals.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

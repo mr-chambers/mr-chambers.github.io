@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Antiderivatives from Slope</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="inttheorems.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="accumulation.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Antiderivatives from Slope and the Indefinite Integral</h2>
+<p></p>
+<p>We have seen that the definite integral of a derivative gets us back to the original function. In other words, if <em>f</em> ' is the derivative of <em>f</em>, then <em>f</em> is an<strong> antiderivative</strong> of <em>f</em> '. For example, if <em>f</em> (<em>x</em>) = <em>x</em>&sup2; then <em>f</em> '(<em>x</em>) = 2<em>x</em>. So an antiderivative of 2<em>x</em> is <em>x</em>&sup2;. But, since the derivative of a constant is zero, <em>x</em>&sup2; + 1 is also an antiderivative of 2<em>x</em>, and so is <em>x</em>&sup2; + <em>C</em>, where <em>C</em> is a constant. Hence the general antiderivative of a function is a family of functions, which all differ by a constant. This applet explores finding the antiderivative graphically, thinking of the integrand as representing the slope of the antiderivative. The notation for the general antiderivative of a function, <em>g</em>, is <img src="assets/images/Eqn130.gif" alt="indefinite integral" width="60" height="29" align="absmiddle" />, called the indefinite integral because there are no limits. Using our example from above, we would write <img src="assets/images/Eqn131.gif" alt="indefinite integral example" width="102" height="29" align="absmiddle" />. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Integration" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Constant Slope;2;0;0;-4,4,-4,4;0" />
+    <param name="ShowCombo" value="no" />
+    <param name="Example2" value="2. Different Slopes;(x&lt;0?-1:1);0;0;-4,4,-4,4" />
+    <param name="Example3" value="3. Changing Slope;(x&lt;1?1:-x+2);0;0;-4,4,-4,4" />
+    <param name="Example4" value="4. Changing Slope, Revisited;(x&lt;1?x:-x+2);0;0;-4,4,-4,4" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph on the left of the integrand <em>f</em> ' (<em>x</em>) = 2, a constant function. On the right is the graph of the antiderivative, <img src="assets/images/Eqn132.gif" alt="int(2)=2x+C" width="96" height="29" align="absmiddle" />. Think of the graph on the left (the integrand) as representing the slope of the graph on the right (the antiderivative). Note that since the left-hand graph is constant, so is the slope of the right hand graph, and we get a line with slope 2. Move the <em>C</em> slider; what happens to the graph? If you work backwards, thinking that the graph on the left is the derivative of the graph on the right, you see why changing <em>C</em> has no effect on the left-hand graph.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. Now the integrand changes value from -1 to 1 at <em>x</em> = 0. The antiderivative on the right therefore changes slope from -1 to 1 at <em>x</em> = 0. Move the <em>x</em> slider, causing a crosshair to move on the left-hand graph (it's hard to see on this example) and a point and a black tangent line to move on the right-hand graph. You can see from the tangent line that the slope of the antiderivative changes. <br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu. In this example, the integrand function changes from a constant value of 1 to a downward sloping line at <em>x</em> = 1. Move the <em>x</em> slider and watch what happens to the tangent line on the antiderivative graph. It starts out with a slope of 1, but then the tangent line's slope decreases to zero. Where does this happen on the left-hand graph? What happens if you move the <em>x</em> slider past this point? Think about the graph of the integrand as telling you the slope of the antiderivative at any given <em>x</em> value. The result is a family of antiderivatives, and the specific member of this family that is graphed depends on the value of <em>C</em> (move the <em>C</em> slider to change the graph to a different member of the family). <br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing an integrand made up of two lines. Move the <em>x</em> slider to observe how the value of the integrand (on the left) tells you the slope of the antiderivative (on the right). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Integration" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Antiderivatives From Slope" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="ShowCombo" value="no" />
+    <param name="Example1" value="1. Constant Slope;2;0;0;-4,4,-4,4;0" />
+    <param name="Example2" value="2. Different Slopes;(x&lt;0?-1:1);0;0;-4,4,-4,4" />
+    <param name="Example3" value="3. Changing Slope;(x&lt;1?1:-x+2);0;0;-4,4,-4,4" />
+    <param name="Example4" value="4. Changing Slope, Revisited;(x&lt;1?x:-x+2);0;0;-4,4,-4,4" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="inttheorems.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="accumulation.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

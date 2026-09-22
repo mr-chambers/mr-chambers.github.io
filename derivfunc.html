@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Derivative function</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="derivpoint.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="derivtable.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Derivative Function</span></h2>
+<p></p>
+<p></p>
+<p>We defined the derivative at a point. If we take the collection of all the
+  derivatives of all the points of a function, we wind up with a new function.
+  This derivative function tells us the value of the derivative for any point
+  on the original function. We define the <em>derivative function</em> as:</p>
+<p align="center"><img alt="def. of deriv. function"
+src="assets/images/Eqn18.gif" align="middle" /></p>
+<p>This definition yields a function. When we evaluate the derivative
+  function for a given <i>x</i> value, we get a number which is the derivative
+  at a point (i.e., the rate of change of <i>f</i>, or the slope of the graph
+  of <i>f</i> ). If <i>y</i> = <i>f</i> (<i>x</i>), an alternate notation for
+  the derivative function is <img alt="dy/dx" src="assets/images/Eqn22.gif"
+align="middle" />, which is reminiscent of the difference quotient &quot;change in <i>y</i> over change in <i>x</i>.&quot; A third notation uses <img alt="d/dx"
+src="assets/images/Eqn23.gif" align="middle" /> as a derivative operator, as in <img alt="d/dx" src="assets/images/Eqn23.gif" align="middle" /> <i>f</i> (<i>x</i>). This is different from operators like + and -, which take numbers
+  and give a number as the result; <img alt="d/dx"
+src="assets/images/Eqn23.gif" align="middle" />takes a function and gives a new
+  function (the derivative) as a result. When evaluating a derivative function
+  at a specific point, such as <i>x</i> = 2, you use either <i>f</i> <i>'</i> (2) or <img alt="dy/dx at x=2" src="assets/images/Eqn24.gif"
+align="middle" />.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;-5,5,-5,5,1" />
+    <param name="Example2" value="2. Sine Curve;sin(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. Exponential;2^x;-5,5,-5,5,1" />
+    <param name="Example4" value="4. Hyperbola; 1/x;-5,5,-5,5,1" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a parabola on the left and the derivative
+    function of the parabola on the right. At the bottom of the applet is a
+    slider which controls the <i>x</i> coordinate, which is displayed in an
+    input box next to the slider. On the left-hand graph is a red line which
+    represents the tangent line at the <i>x</i> coordinate. Move the slider
+    and note that the tangent lines moves so that it is always tangent to the
+    parabola at the <i>x</i> coordinate specified by the slider. At the
+    bottom left-hand corner of the function graph is a box that gives the
+    value of the function, <i>f</i> (<i>x</i>).<br />
+    <br />
+  </li>
+  <li>Now look at the right graph, which shows the derivative function, <i>f
+    '</i> (<i>x</i>). First, look at the red tangent line; what is its
+    slope? Its slope must be the derivative at the current <i>x</i> coordinate, so that must also be the value of the derivative function for
+    that <i>x</i> coordinate. This slope is shown in a box at the lower
+    left-hand corner of the derivative graph. The point on the graph of the
+    derivative function is also noted by a red crosshair.<br />
+    <br />
+  </li>
+  <li>Click in the &quot;x=&quot; box and replace its contents with 0. Now drag the
+    slider to the right. Notice that, as the slope of the red tangent line
+    increases, the derivative function also increases. Drag the slider to the
+    left past 0. Note that as the slope of the red tangent line becomes more
+    negative, so does the derivative function. The derivative function tells
+    you the rate of change of <i>f</i> for any given <i>x</i>, which is
+    equivalent to telling you the slope of the graph of <i>f</i> for any
+    given <i>x</i>. <br />
+    <br />
+  </li>
+  <li>When the derivative is positive, the function is increasing. When the
+    derivative is negative, the function is decreasing. Hence the derivative
+    tells you something about the original function. What happens when the
+    derivative is 0? Where does this happen in this example? Why is the
+    derivative 0 at that point?<br />
+    <br />
+  </li>
+  <li>Notice also that the derivative function looks like a straight line. Do
+    you think this will always be the case, or is this due to some special
+    property of parabolas?<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu, showing a sine
+    function. What does the derivative function look like? Drag the slider,
+    watch the slope of the red tangent line, and see if you can relate the
+    slope of the tangent line to the value of the derivative function. Is the
+    derivative 0 at any points? What characterizes those points?<br />
+    <br />
+  </li>
+  <li>Select the third example, showing an exponential function. What does
+    the derivative function look like? Drag the slider, watch the slope of
+    the red tangent line, and see if you can relate the slope of the tangent
+    line to the value of the derivative function. Note that for the
+    exponential function, its derivative function is never negative (i.e.,
+    the right-hand graph never drops below the <i>x</i>-axis). Why? What is
+    it about the exponential function's graph that means the derivative is
+    never negative?<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a hyperbola. What does the
+    derivative function look like? Drag the slider, watch the slope of the
+    red tangent line, and see if you can relate the slope of the tangent line
+    to the value of the derivative function. Note that for this hyperbola,
+    its derivative function is never positive (i.e., the right-hand graph
+    never rises above the <i>x</i>-axis). Why? What is it about the
+    hyperbola's graph that means the derivative is never positive? <br />
+    <br />
+  </li>
+  <li>What happens at <i>x</i> = 0 for the hyperbola? Why is the derivative
+    undefined? What is the slope of the tangent line (is there a tangent
+    line)?<br />
+    <br />
+  </li>
+  <li>You can also type your own function definition into the &quot;f(x)=&quot; box to
+    see what the derivative of other functions look like. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Instantaneous Velocity" />
+    <param name="FrameSize" value="800,600" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;-5,5,-5,5,1" />
+    <param name="Example2" value="2. Sine Curve;sin(x);-5,5,-5,5,1" />
+    <param name="Example3" value="3. Exponential;2^x;-5,5,-5,5,1" />
+    <param name="Example4" value="4. Hyperbola; 1/x;-5,5,-5,5,1" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="derivpoint.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="derivtable.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

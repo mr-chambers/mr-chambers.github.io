@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Table View of Derivative</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="derivfunc.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="secondderiv.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">A Tabular View of the Derivative</span></h2>
+<p></p>
+<p></p>
+<p></p>
+<p>We have looked at the derivative function from a graphical point of view.
+  Let's now look at approximating the derivative function using a table of
+  values. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.DerivTable" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="130" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;0;1" />
+    <param name="Example2" value="2. Parabola with a wider step size;x^2;0;2" />
+    <param name="Example3" value="3. A line;2*x-1;0;1" />
+    <param name="Example4" value="4. A horizontal line;2;0;1" />
+    <param name="Example5" value="5. An exponential;3^x;0;1" />
+    <param name="Example6" value="6. A hyperbola;1/x;1;1" />
+    <param name="Example7" value="7. A sine curve;sin(x);0;1" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a table that represents selected values of a function.
+    The first row shows a selection of <i>x</i> values, while the second row
+    shows the corresponding values for <i>f</i> (<i>x</i>). The third row
+    shows estimated values for the derivative. These are computed from the
+    pair of <i>x</i> values and the pair of <i>y</i> = <i>f</i> (<i>x</i>)
+    values above each estimate from the difference quotient <img
+    alt="(y2-y1)/(x2-x1)" src="assets/images/Eqn19.gif" align="middle" />. Note
+    that this is only an estimate for the derivative, as this is calculating
+    the average rate of change on the interval, not the instantaneous rate of
+    change. But, since we only have selected values for <i>x</i> and <i>f</i> (<i>x</i>), that's the best we can do just using the data in the table.
+    For example, the first derivative estimate is computed as <img
+    alt="(1-0)/(1-0)=1" src="assets/images/Eqn20.gif" align="middle" /> and the
+    next value is <img alt="(4-1)/(2-1)=3" src="assets/images/Eqn21.gif"
+    align="middle" />. Can you calculate some of the other values for the
+    estimated derivative, using the data in the table?<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This is the same
+    function, but now the <i>x</i> intervals are farther apart. The
+    derivative is still estimated using the difference quotient, but in this
+    example the denominator is 2 instead of 1.<br />
+    <br />
+  </li>
+  <li>Select the third example, a linear function. Compute one or two
+    derivative estimates and check that your calculations match those in the
+    table. What do you notice about the derivative?<br />
+    <br />
+  </li>
+  <li>Select the fourth example, a constant function. Why is the derivative
+    always 0?<br />
+    <br />
+  </li>
+  <li>Select the fifth example, an exponential function. Does there seem to
+    be some relationship between the derivative and the value of the
+    function? We will return to this in the future.<br />
+    <br />
+  </li>
+  <li>Select the sixth example, a hyperbola. Why are the derivative estimates
+    negative?<br />
+    <br />
+  </li>
+  <li>Select the seventh example, a sine curve. Does it make sense for the values of the derivative to change around like they seem to do? Is there an upper and lower bound on the values of the derivative function?<br />  
+    <br />
+  </li>
+  <li>You can make your own example by typing a function definition into the
+    &quot;f(x)=&quot; box. You can also select the starting <i>x</i> value and the step
+    size between <i>x</i> values. </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.DerivTable" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Derivative Table" />
+    <param name="FrameSize" value="800,260" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;0;1" />
+    <param name="Example2" value="2. Parabola with a wider step size;x^2;0;2" />
+    <param name="Example3" value="3. A line;2*x-1;0;1" />
+    <param name="Example4" value="4. A horizontal line;2;0;1" />
+    <param name="Example5" value="5. An exponential;3^x;0;1" />
+    <param name="Example6" value="6. A hyperbola;1/x;1;1" />
+    <param name="Example7" value="7. A sine curve;sin(x);0;1" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="derivfunc.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="secondderiv.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

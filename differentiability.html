@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Differentiability</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="secondderivtable.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="twicediff.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Differentiability</span></h2>
+<p></p>
+<p>A function <i>f</i> is said to be differentiable at <i>a</i> if the
+  limit of the difference quotient exists (i.e., if <img src="assets/images/Eqn17.gif" alt="deriv. at a point"
+align="absmiddle" /> exists). The applet and explorations on this page look at what this means.</p>
+<p>&nbsp;</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.SecantTangent" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Jump Discontinuity;x&lt;1?x:x+1;-1,3,-1,3,1,2;open,1,1;closed,1,2" />
+    <param name="Example2" value="2. A Displaced Point;x&lt;&gt;1?x:2;-1,3,-1,3,1,2;open,1,1;closed,1,2" />
+    <param name="Example3" value="3. A Missing Point;x&lt;&gt;1?x;-1,3,-1,3,1,2;open,1,1" />
+    <param name="Example4" value="4. Hyperbola; 1/(x-1);-3,5,-3,5,1,2;asymptote,1,0,1,1" />
+    <param name="Example5" value="5. Absolute Value;abs(x-1)+1;-1,3,-1,3,1,2" />
+    <param name="Example6" value="6. A Cusp;x^(2/3);-2,2,-2,2,0,1" />
+    <param name="Example7" value="7. A Vertical Tangent;x^(1/3);-2,2,-2,2,0,1" />
+    <param name="ShowTangentSlope" value="no" />
+    <param name="ShowTangentLine" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a line with a jump discontinuity. What is the derivative of this function for <em>x</em> = 1? Slowly drag the green dot towards the red dot. What happens to the slope of the green secant line? Why? Now drag the green dot to the left of the red dot, then slowly drag it back towards the red dot. Now what happens to the slope of the secant line? Dragging the green dot from the right towards the red dot is like starting <em>h</em> out bigger than zero and making it smaller. If this limit exists, it is called the right-hand derivative and is defined as <img src="assets/images/Eqn29.gif" alt="right hand derivative" width="133" height="41" align="absmiddle" />. Note the + on the zero, which tells you this is a right-hand limit. Similarly, dragging the green dot from the left towards the red dot is like starting <em>h</em> out negative and then making it approach zero. If this limit exists it is called the left-hand derviative and is defined as <img src="assets/images/Eqn30.gif" alt="left hand derivative" width="132" height="41" align="absmiddle" />. In this example, the function has a right-hand derivative at <em>x</em> = 1, which equals 1 (i.e., the slope of the line to the right), but the left-hand derivative is undefined, because it approaches infinity as <em>h</em> approaches zero. So this function is not differentiable at <em>x</em> = 1. This is true for all jump discontinuities.<br />
+    <br />
+  </li>
+  <li>Select the second example from the drop-down menu. This shows a line with a point displaced (it's in the same place as the red dot). What is the derivative of this function for <em>x</em> = 1? Slowly drag the green dot towards the red dot. What happens to the slope of the green secant line? Now move the green dot to the left of the red dot and slowly drag it back. What happens to the slope? In this case, neither the left-hand derivative or the right-hand derivative exist (both go to infinity), so the function is not differentiable at <em>x</em> = 1.<br />
+    <br />
+  </li>
+  <li>Select the third example, which shows a line with a point missing. What is the derivative of this function for <em>x</em> = 1? In this case, the function isn't defined at <em>x</em> = 1, so in a sense it isn't &quot;fair&quot; to ask whether the function is differentiable there. A function is not differentable for input values that are not in its domain.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a hyperbola with a vertical asymptote. What is the derivative of this function for <em>x</em> = 1? Like the previous example, the function isn't defined at <em>x</em> = 1, so the function is not differentiable there. These examples illustrate that a function is not differentiable where it does not exist or where it is discontinuous.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing the absolute value function (shifted up and to the right for clarity). What is the derivative at <em>x</em> = 1? This time, the function does exist for <em>x</em> = 1 and it is continuous there. Drag the green dot towards the red dot from the right and then from the left. What happens in each case to the slope of the green secant line? In this example, both the left-hand and right-hand derivatives exist, but they are different. When this happens, the general derivative does not exist (remember, a general limit exists only if the left-hand limit and the right-hand limit both exist and are the same), so the function is not differentiable at <em>x</em> = 1. Corners like this are places where the slope changes abruptly and cause the left-hand and right-hand derivatives to be different.<br />
+    <br />
+  </li>
+  <li>Select the sixth example. This shows a power function with a cusp, a very pointy piece of a graph. It is continuous at <em>x</em> = 0. Is there a derivative at <em>x</em> = 0? Drag the green dot from the left and from the right towards the red dot and notice the slope. Like corners, cusps can cause the slope to change abruptly, hence the function is not differentiable at <em>x</em> = 0.<br />
+    <br />
+  </li>
+  <li>Select the seventh example, showing the cube root function. It, too, is continuous at <em>x</em> = 0, but is it differentiable there? Drag the green dot towards the red. It looks like the slope gets pretty big near the red dot. You can get closer by typing an <em>x</em> value in the input box, like 0.00001. In fact, the cube root function has a vertical tangent at <em>x</em> = 0, which means that the limit in the derivative is undefined at this point. Hence this function is not differentiable at <em>x</em> = 0. More generally, functions are not differentiable where they have vertical tangents.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.SecantTangent" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Differentiability" />
+    <param name="FrameSize" value="640,580" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. A Jump Discontinuity;x&lt;1?x:x+1;-1,3,-1,3,1,2;open,1,1;closed,1,2" />
+    <param name="Example2" value="2. A Displaced Point;x&lt;&gt;1?x:2;-1,3,-1,3,1,2;open,1,1;closed,1,2" />
+    <param name="Example3" value="3. A Missing Point;x&lt;&gt;1?x;-1,3,-1,3,1,2;open,1,1" />
+    <param name="Example4" value="4. Hyperbola; 1/(x-1);-3,5,-3,5,1,2;asymptote,1,0,1,1" />
+    <param name="Example5" value="5. Absolute Value;abs(x-1)+1;-1,3,-1,3,1,2" />
+    <param name="Example6" value="6. A Cusp;x^(2/3);-2,2,-2,2,0,1" />
+    <param name="Example7" value="7. A Vertical Tangent;x^(1/3);-2,2,-2,2,0,1" />
+    <param name="ShowTangentSlope" value="no" />
+    <param name="ShowTangentLine" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="secondderivtable.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="twicediff.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

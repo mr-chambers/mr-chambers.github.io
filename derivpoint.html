@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Derivative at a Point</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="instantvel.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="derivfunc.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Derivative at a Point</span></h2>
+<p></p>
+<p>We can generalize the concept of average velocity to any function, not
+  just to a position versus time function. We can define the <em>average rate
+  of change</em> of a function, <i>f</i>, on an interval from <i>a</i> to <i>a</i> + <i>h</i> as <img alt="f(a+h)-f(a)/h" src="assets/images/Eqn16.gif"
+align="middle" />. This ration is called the <em>difference quotient</em> and
+  is the change in the output of the function divided by the change in the
+  input. We can similarly extend the concept of instantaneous velocity to the <em>instantaneous rate of change</em> of a function by taking the limit of
+  the difference qoutient as <i>h</i> approaches 0. Specifically, we define the
+  rate of change of function <i>f</i> at <i>a</i>, called the derivative of <i>f</i> at <i>a</i> and written <i>f '</i> (<i>a</i>), as:</p>
+<p align="center"><img alt="deriv. at a point" src="assets/images/Eqn17.gif"
+align="middle" />.</p>
+<p>The function <i>f</i> is said to be differentiable at <i>a</i> if this
+  limit exists.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.SecantTangent" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;0,2,-2,4,1,1.9" />
+    <param name="Example2" value="2. Sine Curve;sin(x);0,6.28,-1.5,1.5,3.14159,6" />
+    <param name="Example3" value="3. Exponential;2^x;-1.5,1.5,-0.5,2.5,0,1" />
+    <param name="Example4" value="4. Hyperbola; 1/x;-1,3,-2,4,1,2" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet initially shows a parabola. What is the derivative of this
+    function at <i>x</i> = 1? The green line represents a secant connecting
+    the points (1,1) and (1.9,3.61). The slope of this secant line is the
+    average rate of change of the function over the interval from 1 to 1.9.
+    As you drag the green dot towards the red dot, you are essentially
+    decreasing <i>h</i> in the difference quotient, so the slope of the
+    secant line approaches the derivative at 1. The red line is tangent to
+    the curve at <i>x</i> = 1 and hence the slope of the red line is the
+    derivative at 1. <br />
+    <br />
+  </li>
+  <li>Click the zoom in button. What happens to the shape of the parabola
+    curve? Zoom in a few more times. How does the black parabola curve look,
+    relative to the red tangent line? As you zoom in on a point of a function
+    where there is a derivative, the curve of the function will look more and
+    more like a straight line, in particular like the tangent line. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. This example shows a
+    sine curve with the horizontal axis in radians. What is the derivative of
+    this function at <i>x</i> = &pi;? Drag the green dot and notice how the
+    slope of the secant line changes, approaching the slope of the tangent
+    line. Hence the derivative of sin(<i>x</i>) at &pi; is -1. <br />
+    <br />
+  </li>
+  <li>Click the zoom in button a few times. Notice that the sine curve looks
+    more and more like the straight tangent line.<br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu. This shows an
+    exponential function. What is the derivative at <i>x</i> = 0? Dragging
+    the green dot, or looking at the slope of the red tangent line provides
+    the answer. Zooming in makes the curve look like the tangent line.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, a hyperbola. What is the derivative at <i>x</i> = 1? Dragging the green dot, or looking at the slope of the red
+    tangent line provides the answer. Zooming in makes the curve look like
+    the tangent line.<br />
+    <br />
+  </li>
+  <li>You can also enter your own function into the &quot;f(x)=&quot; box.</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.SecantTangent" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Instantaneous Velocity" />
+    <param name="FrameSize" value="640,580" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Example1" value="1. A Parabola;x^2;0,2,-2,4,1,1.9" />
+    <param name="Example2" value="2. Sine Curve;sin(x);0,6.28,-1.5,1.5,3.14159,6" />
+    <param name="Example3" value="3. Exponential;2^x;-1.5,1.5,-0.5,2.5,0,1" />
+    <param name="Example4" value="4. Hyperbola; 1/x;-1,3,-2,4,1,2" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="instantvel.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="derivfunc.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

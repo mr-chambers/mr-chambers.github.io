@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Informal Limits</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="ivt.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="limitsfail.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Limits: An Informal View</span></h2>
+<p></p>
+<p>A function <i>f </i>can have a specific value for an input. For example,
+  if <i>f </i>(<i>x</i>) = 0.5<i>x</i> then <i>f </i>(5) = 2.5. For continuous
+  functions like this one, as <i>x</i> approaches 5, the output value of <i>f </i>approaches 2.5. For some other functions, however, we can extend this
+  concept to cases where the function is not continuous or even has no value.
+  Informally, we say that if <i>f </i>(<i>x</i>) approaches <i>L</i> as <i>x</i> approaches <i>c</i>, then <i>L</i> is called the limit. We write
+  this mathematically as <img alt="Limit x-&gt;c f(x) = L"
+src="assets/images/Eqn1.gif" align="middle" />.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="420" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="SliderStep" value="400" />
+    <param name="XTick" value="c" />
+    <param name="YTick" value="L" />
+    <param name="Example1" value="1. A Nice Line;0.5x;-2,2,-2,2,0;xtick,1;ytick,0.5" />
+    <param name="Example2"
+value="2. A Line With a Displaced Point;x&lt;&gt;1?0.5x:1.5;-2,2,-2,2,0;open,1,0.5;closed,1,1.5;xtick,1;ytick,0.5" />
+    <param name="Example3"
+value="3. A Line With a Missing Point;x&lt;&gt;1?0.5x;-2,2,-2,2,0;open,1,0.5;xtick,1;ytick,0.5" />
+    <param name="Example4" value="4. Sin(x)/x;sin(x)/x;-2,2,-2,2,1;open,0,1" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first graph show the line used in the example above. Is the limit <i>L</i> = 0.5 when <i>c</i> = 1 ? In other words, does <i>f </i>(<i>x</i>) approach 0.5 as <i>x</i> approaches 1? Move the <i>x</i> slider so that <i>x</i> gets closer and closer to 1. For this example,
+    the limit does equal 0.5. In fact, <i>f </i>(1) = 0.5 in this case, but
+    as we will see, this does not need to be the case. <br />
+    <br />
+  </li>
+  <li>Select the second example. This is just like the first case, except
+    that one point has moved. Is the limit still <i>L</i> = 0.5 when <i>c</i> = 1 ? In other words, does <i>f </i>(<i>x</i>) approach 0.5 as <i>x</i> approaches 1? Move the <i>x</i> slider so that <i>x</i> gets closer and
+    closer to 1. For this example, the limit still equals 0.5. As <i>x</i> gets closer and closer to <i>c</i> = 1, <i>f </i>(<i>x</i>) gets closer
+    and closer to <i>L</i> = 0.5. The limit is <strong>not</strong> 1.5, even
+    though that is the value of the function at <i>x</i> = 1. Instead, the
+    limit is the output value that is <em>approached</em> as the input value <em>approaches</em> 1. For functions that are continuous around the point
+    of interest, as in the first example, it is easy to find the limit; you
+    just evaluate the function at the specific input, because  the
+    output value it approaches is the same as the function's output value at
+    that point. But for cases like this second example, there still is a
+    limit but it happens to be different than the value of the function.<br />
+    <br />
+  </li>
+  <li>Select the third example. This is like the previous two cases, but
+    there is now a point missing. Is the limit still <i>L</i> = 0.5 when <i>c</i> = 1 ? In other words, does <i>f </i>(<i>x</i>) approach 0.5 as <i>x</i> approaches 1? Move the <i>x</i> slider so that <i>x</i> gets
+    closer and closer to 1. For this example, the limit still equals 0.5. As <i>x</i> approaches <i>c</i> = 1, <i>f </i>(<i>x</i>) approaches <i>L</i> = 0.5. Even though the function has no value at all at <i>x</i> = 1,
+    there is still a valid limit there, as the function does approach a
+    specific output value.<br />
+    <br />
+  </li>
+  <li>Select the fourth example. This is a more complex function, but this
+    example is similar to the previous one with a missing point. What is the
+    limit when <i>c</i> = 0 ? In other words, what value does <i>f </i>(<i>x</i>) approach as <i>x</i> approaches 0? Move the <i>x</i> slider so that <i>x</i> gets closer and closer to 0. For this example,
+    the limit equals 1. As <i>x</i> gets closer and closer to <i>c</i> = 0, <i>f </i>(<i>x</i>) gets closer and closer to <i>L</i> = 1. Even though
+    the function has no value at all at <i>x</i> = 0, there is still a valid
+    limit there, as the function does approach a specific value.
+    Mathematically, we would write <img alt="lim x-&gt;0 sin(x)/x = 1"
+    src="assets/images/Eqn2.gif" align="middle" />.</li>
+</ol>
+<p>Limits are part of the foundation of the theory of calculus. They can also
+  make the informal definition of continuity more formal.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Informal Limits" />
+    <param name="FrameSize" value="640,600" />
+    <param name="Presentation" value="yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="XTick" value="c" />
+    <param name="YTick" value="L" />
+    <param name="Example1" value="1. A Nice Line;0.5x;-2,2,-2,2,0;xtick,1;ytick,0.5" />
+    <param name="Example2"
+value="2. A Line With a Displaced Point;x&lt;&gt;1?0.5x:1;-2,2,-2,2,0;open,1,0.5;closed,1,1;xtick,1;ytick,0.5" />
+    <param name="Example3"
+value="3. A Line With a Missing Point;x&lt;&gt;1?0.5x;-2,2,-2,2,0;open,1,0.5;xtick,1;ytick,0.5" />
+    <param name="Example4" value="4. Sin(x)/x;sin(x)/x;-2,2,-2,2,1;open,0,1" />
+    <param name="SliderStep" value="400" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="ivt.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="limitsfail.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

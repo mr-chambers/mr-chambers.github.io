@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Accumulation Functions</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="antislope.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="basicantiderivs.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Accumulation Functions</h2>
+<p></p>
+<p>On the previous page we looked at antiderivatives from the point of view of slope (i.e., the integrand of an integral tells us the slope of the antiderivative). We can also look at the antiderivative from the point of view of a Riemann sum. A definite integral has a specific value when the limits of integration are both constants. If one of the limits depends on a variable, then the definite integral becomes a function of that variable, where the output value of this new function for a given input value of the variable is the output value of the definite integral with that input value substituted for the variable in the limit. For example, <img src="assets/images/Eqn133.gif" alt="def int" width="172" height="34" align="absmiddle" /> show the evaluation of a definite integral via the Fundamental Theorem of Calculus with constant limits, resulting in a constant value. The | notation says to evaluate the expression to the left of the bar at the upper limit, and subtract from that the value of the expression using the lower limit. But, the definite integral <img src="assets/images/Eqn135.gif" alt="accum func" width="173" height="34" align="absmiddle" /> has a variable in its upper limit, so using the Fundamental Theorem results in a function as the result. Hence we can think about antiderivatives as being functions that add up area under a curve from some given point. You may have asked yourself, &quot;Where did the<em> C</em> go?&quot; If we use <em>x</em>&sup2; + <em>C</em> as the antiderivative in our first example above, we get <img src="assets/images/Eqn136.gif" alt="def int" width="282" height="36" align="absmiddle" />, in which the <em>C</em>'s cancel out. This always happens, so it is common not to bother writing them down when evaluating a definite integral using the Fundamental Theorem. You may also have asked, &quot;Why <em>t</em> as the integration variable?&quot; This is because the integration variable (i.e., the <em>t</em> in <em>dt</em>) is only related to the integrand and not to any other part of the expression in which an integral is used. Here I used separate variables to make it clear that the <em>t</em> and the <em>x</em> are different. If I had written <img src="assets/images/Eqn137.gif" alt="accum" width="54" height="34" align="absmiddle" />instead, it still means the same thing, because the <em>x</em> in the integrand and the <em>dx</em>, and the <em>x</em> in the upper limit, are <strong>different</strong> <em>x</em>'s. Since this is confusing, it is generally clearer to use different variables for the integrand and the limits when writing out the integral for an assumulation function.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Integration" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Constant Slope;2;0;0;-4,4,-4,4;1" />
+    <param name="ShowCombo" value="no" />
+    <param name="Example2" value="2. Different Slopes;(x&lt;0?-1:1);0;0;-4,4,-4,4" />
+    <param name="Example3" value="3. Changing Slope;(x&lt;1?1:-x+2);0;0;-4,4,-4,4" />
+    <param name="Example4" value="4. Changing Slope, Revisited;(x&lt;1?x:-x+2);0;0;-4,4,-4,4" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph on the left of the integrand <em>f</em> ' (<em>x</em>) = 2, a constant function. On the right is the graph of the antiderivative, <img src="assets/images/Eqn138.gif" alt="accum" width="44" height="34" align="absmiddle" />. Think of the graph on the right (the antiderivative) as representing the area under the graph on the left (the integrand) from 0 to <em>x</em>. Move the <em>x</em> slider to the right to see the area in green, and the height of the dot on the antiderivative graph, which are the same. In other words, the antiderivative/accumulation function on the right graphs the area under the curve on the left. Note that since the left-hand graph is constant, the area increases linearly with <em>x</em>, so the antiderivative is a line. If you move the <em>x</em> slider so that <em>x</em> &lt; 0, the area becomes negative and is shown in red (for this applet, green area is positive and red area is negative). Move the<em> C </em>slider; what happens to the graph? The accumulation function <img src="assets/images/Eqn138.gif" alt="accum" width="44" height="34" align="absmiddle" />will be zero when <em>x</em> = 0, so specifying a specific value for <em>C</em> is like picking what <em>f</em> (0) will be and adding it to the accumulation function. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. Now the integrand changes value from -1 to 1 at <em>x</em> = 0. Move the <em>x</em> slider and note the area on the left and the value of the accumulation function/antiderivative on the right. The antiderivative on the right  changes  from -1 to 1 at <em>x</em> = 0, because the area under the integrand graph switches from positive (above the <em>x</em> axis) to negative (below the <em>x</em> axis).  If you move the <em>x</em> slider so that <em>x</em> &lt; 0, the area is still positive (green); why?<br />
+    <br />
+  </li>
+  <li>Select the third example from the drop down menu. In this example, the integrand function changes from a constant value of 1 to a downward sloping line at <em>x</em> = 1. Move the <em>x</em> slider and watch what happens to the area on the integrand graph. It starts out increasing at a constant rate, but then the increase in area drops to zero and turns negative. Where does this happen on the right-hand graph? <br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing an integrand made up of two lines. Move the <em>x</em> slider to observe how the area under the integrand (on the left) tells you the value of the antiderivative (on the right). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Integration" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Accumulation Functions" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="ShowCombo" value="no" />
+    <param name="Example1" value="1. Constant Slope;2;0;0;-4,4,-4,4;1" />
+    <param name="Example2" value="2. Different Slopes;(x&lt;0?-1:1);0;0;-4,4,-4,4" />
+    <param name="Example3" value="3. Changing Slope;(x&lt;1?1:-x+2);0;0;-4,4,-4,4" />
+    <param name="Example4" value="4. Changing Slope, Revisited;(x&lt;1?x:-x+2);0;0;-4,4,-4,4" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="antislope.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="basicantiderivs.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

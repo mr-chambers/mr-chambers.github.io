@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Curve Analysis: Basic</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="meanvalue.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="curveanalysisspecial.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Curve Analysis: Basic</span></h2>
+<p></p>
+<p></p>
+<p>One application of derivatives is in analyzing the behavior of curves that represent functions. This apple will explore the basics of a variety of different properties and concepts.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="350" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="Example1" value="1. A Cubic;1/5*(x^3-9x)" />
+    <param name="RationalExponents" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The initial example shows a cubic, <img src="assets/images/Eqn81.gif" alt="cubic" width="120" height="41" align="absmiddle" />in the left-hand graph. Where is this function increasing? We say that a function is <strong>increasing</strong> on a closed interval if for all pairs of points <em>a</em> and <em>b</em> in the interval, <em>a</em> &gt; <em>b</em> implies <em>f</em> (<em>a</em>) &gt; <em>f </em>(<em>b</em>). In other words, as you move along the graph from left to right, you go &quot;up hill.&quot; <strong>Decreasing</strong> is defined in a similar manner. You can also figure this out from the derivative (shown in the center graph), since when the function is increasing, the derivative is positive and when the function is decreasing, the derivative is negative. Move the slider and watch the slope of the tangent line on the graph at the right. When the slope is positive, the function is increasing and the derivative is positive. When the slope is negative, the function is decreasing and the derivative is negative. The function shown is increasing on the interval (-&infin;,-3] and on [3,&infin;), which can also be written as  -&infin; &lt; <em>x</em> &le; -3 and3 &ge; <em>x</em> &infin;. It is decreasing on the interval [-3,3].<br />
+    <br />
+  </li>
+  <li>What happens at those points on the curve where the derivative is zero? A point in the domain of a function is called a <strong>critical point</strong> if the first derivative is zero or is undefined. On this graph, there are two critical points at <em>x</em> = -3 and <em>x</em> = 3.<br />
+    <br />
+  </li>
+  <li>Critical points are candidates for local (also called relative) extrema. A function <em>f</em> (x) has a <strong>local minimum</strong> at <em>x</em> = <em>c</em> if <em>f</em> (<em>c</em>) is less than or equal to the value of <em>f</em> for points near <em>c</em>. A <strong>local maximum</strong> is defined in a similar manner. Note that <em>x</em> = -3 is the location of a local maximum and <em>x</em> = 3 is a local minimum. You can also determine these using the first derivative test by finding the critical points for the function (i.e., where the first derivative is zero or undefined), then looking to see if the derivative changes sign. Note that at <em>x</em> = -3, the first derivative is zero and it changes sign from being negative on the left to being positive on the right. This means that <em>x</em> = -3 is the location of a local maximum. At <em>x</em> = 3, the derivative is also zero, but here the derivative changes from negative on the left to positive on the right, so <em>x</em> = 3 is the location of a local maximum. Note that a point that is either a maximum or minimum is called an <strong>extremum</strong>, and the plurals of these are <strong>maxima</strong>, <strong>minima</strong>, and <strong>extrema</strong>.<br />
+    <br />
+  </li>
+  <li>Concavity describes the way that a curve bends. A function <em>f</em> is<strong> concave up</strong> on an open interval if <em>f</em> ' is increasing and <strong>concave down</strong> if <em>f</em> ' is decreasing. This also means that it is concave up if the second derivative <em>f</em> '' is positive and is concave down if the second derivative is negative. An <strong>inflection point</strong> is where the function has a tangent and the concavity changes. In the example shown, the function is concave down on the interval  (-&infin;,0) and concave up on (0,&infin;). There is an inflection point at the origin. in this case. Notice that you can see this behavior by looking at the graph of the second derivative (on the right-hand graph). When the function is concave up, the second derivative is positive, when the function is concave down the second derivative is negative, and where the second derivative is zero there is an inflection point.<br />
+    <br />
+  </li>
+  <li>The second derivative can also be useful in determining whether a critical point is a maximum or a minimum. At <em>x</em> = -3, the second derivative is negative, meaning that the function is concave down, so this is a local maximum (i.e., the top of a concave down hump). At <em>x</em> = 3, the second derivative is positive, meaning that the function is concave up, so this is a local minimum (i.e., the bottom of a concave up valley). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Derivatives" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Curve Analysis: Basic" />
+    <param name="FrameSize" value="800,600" />
+    <param name="SecondDerivative" value="Yes" />
+    <param name="Presentation" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="Example1" value="1. A Cubic;1/5*(x^3-9x)" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="meanvalue.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="curveanalysisspecial.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

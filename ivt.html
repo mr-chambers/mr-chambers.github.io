@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Intermediate Value Therem</title>
+<link type="text/css" href="style.css" rel="stylesheet" /></head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="informalcontinuity.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="informallimits.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Intermediate Value Theorem</span></h2>
+<p>A function that is continuous on an interval has no gaps and hence cannot
+  &quot;skip over&quot; values.  If a function is continuous on a closed interval from <i>x = a</i> to <i>x = b</i>, then it has an output value for each <em>x</em> between <i>a</i> and <i>b</i>. In fact, it takes on all the output values between <i>f </i>(<i>a</i>) and <i>f </i>(<i>b</i>); it cannot skip any of them. More
+  formally, the Intermediate Value Theorem says:</p>
+<p>Let <i>f </i> be a continuous function on a
+  closed interval [<i>a,b</i>]. If <i>k</i> is a number between <i>f </i>(<i>a</i>) and <i>f </i>(<i>b</i>), then there exists at least one number <i>c</i> in [<i>a,b</i>] such that <i>f </i>(<i>c</i>) = <i>k</i>.</p>
+<p>The following applet will help understand what this means. We will look at
+  the interval [0,2] for several functions.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="420" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="XInputName" value="c" />
+    <param name="MovingXLabel" value="c" />
+    <param name="MovingYLabel" value="k" />
+    <param name="SliderStep" value="600" />
+    <param name="Example1"
+value="1. Continuous; x&gt;=0 &amp; x&lt;= 2?x^2;-2,4,-2,4,0;yinput,1;closed,0,0;closed,2,4" />
+    <param name="Example2"
+value="2. Also Continuous; x&gt;=0 &amp; x&lt;= 2?2sin(2x);-2,4,-2,4,0;yinput,1;closed,0,0;closed,2,-1.513605" />
+    <param name="Example3"
+value="3. Essential Discontinuity; x&gt;=0 &amp; x&lt;= 2?1/(x-1);-2,4,-2,4,0;yinput,0.5;asymptote,1,0,1,1;closed,0,-1;closed,2,1" />
+    <param name="Example4"
+value="4. Jump Discontinuity;x&gt;=0 &amp; x&lt;= 2?(x&lt;1?x:x+1);-2,4,-2,4,0;yinput,1.5;open,1,1;closed,1,2;closed,0,0;closed,2,3" />
+    <param name="Example5"
+value="5. Removeable Discontinuity;x&gt;=0 &amp; x&lt;= 2?x(x-1)/(x-1);-2,4,-2,4,0;yinput,1;open,1,1;closed,0,0;closed,2,2" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first graph shown, a piece of a parabola, is continuous on [0,2].
+    If <i>k</i> = 1, is there some input value of <i>c</i> that will make <i>f </i>(<i>c</i>) = <i>k</i> ? Move the <i>c</i> slider, or type a
+    guess into the input box for <i>c</i>, so that the crosshair is
+    horizontally at the same level as <i>y = k</i> = 1. Of course, the answer is that <i>c</i> = 1. Note that for any <i>k</i> from 0 to 4 (which are just the
+    values of <i>f </i>(0) and <i>f </i>(2) ) there is some <i>c</i> that
+    will give you this value out of the function. <br />
+    <br />
+  </li>
+  <li>Select the second example. This piece of a stretched sine curve is also
+    continuous on [0,2]. If <i>k</i> = 1, is there some input value of <i>c</i> that will make <i>f </i>(<i>c</i>) = <i>k</i> ? Move the <i>c</i> slider, or type a guess into the input box for <i>c</i> to find a <em>c</em> that makes <em>y</em> = <em>k</em> = 1. In
+    this case, there are two possible answers for <i>c</i> that work. This is
+    okay, as the Intermediate Value Theorem only says that there will be at
+    least one <i>c</i>, not that there will be exactly one.<br />
+    <br />
+  </li>
+  <li>Select the third example. This function has a vertical asymptote at <i>x</i> = 1 and so is <strong>not</strong> continuous. If <i>k</i> =
+    0.5, is there some input value of <i>c</i> that will make <i>f </i>(<i>c</i>) = <i>k</i> ? Move the <i>c</i> slider, or type a guess
+    into the input box for <i>c</i> . In this case nothing works. The
+    discontinuity allows the function to &quot;skip over&quot; <i>y</i> = 0.5, and in
+    fact skips over all the output values between -1 and 1. <br />
+    <br />
+  </li>
+  <li>Select the fourth example. This function jumps from 1 to 2 at <i>x</i> = 1, called a jump discontinuity and so is <strong>not</strong> continuous. If <i>k</i> = 1.5, is there some input value of <i>c</i> that
+    will make <i>f </i>(<i>c</i>) = <i>k</i> ? Move the <i>c</i> slider, or
+    type a guess into the input box for <i>c</i>. In this case nothing works.
+    The discontinuity allows the function to &quot;skip over&quot; <i>y</i> = 1.5. <br />
+    <br />
+  </li>
+  <li>Select the fifth example. This function has a hole in it at <i>x</i> =
+    1, called a removable discontinuity and so is <strong>not</strong> continuous. If <i>k</i> = 1, is there some input value of <i>c</i> that
+    will make <i>f </i>(<i>c</i>) = <i>k</i> ? Move the <i>c</i> slider, or
+    type a guess into the input box for <i>c</i> . In this case nothing
+    works. The discontinuity allows the function to &quot;skip over&quot; <i>y</i> = 1. </li>
+</ol>
+<p>As you have just seen, the Intermediate Value Theorem only holds for
+  continuous functions. Discontinuities allow a function to &quot;skip over&quot;
+  values.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Intermediate Value Theorem" />
+    <param name="FrameSize" value="640,600" />
+    <param name="Presentation" value="yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="XInputName" value="c" />
+    <param name="MovingXLabel" value="c" />
+    <param name="MovingYLabel" value="k" />
+    <param name="SliderStep" value="600" />
+    <param name="Example1"
+value="1. Continuous; x&gt;=0 &amp; x&lt;= 2?x^2;-2,4,-2,4,0;yinput,1;closed,0,0;closed,2,4" />
+    <param name="Example2"
+value="2. Also Continuous; x&gt;=0 &amp; x&lt;= 2?2sin(2x);-2,4,-2,4,0;yinput,1;closed,0,0;closed,2,-1.513605" />
+    <param name="Example3"
+value="3. Essential Discontinuity; x&gt;=0 &amp; x&lt;= 2?1/(x-1);-2,4,-2,4,0;yinput,0.5;asymptote,1,0,1,1;closed,0,-1;closed,2,1" />
+    <param name="Example4"
+value="4. Jump Discontinuity;x&gt;=0 &amp; x&lt;= 2?(x&lt;1?x:x+1);-2,4,-2,4,0;yinput,1.5;open,1,1;closed,1,2;closed,0,0;closed,2,3" />
+    <param name="Example5"
+value="5. Removeable Discontinuity;x&gt;=0 &amp; x&lt;= 2?x(x-1)/(x-1);-2,4,-2,4,0;yinput,1;open,1,1;closed,0,0;closed,2,2" />
+    <param name="MovingYInput" value="k" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="informalcontinuity.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="informallimits.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

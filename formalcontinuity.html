@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Continuity: Formal Approach</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="formallimits.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="avevel.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Continuity: Formal Approach</span></h2>
+<p>Now that we have a formal definition of limits, we can use this to define
+  continuity more formally. We can define continuity at a point on a function
+  as follows:</p>
+<p align="center">The function <i>f</i> is continuous at <i>x</i> = <i>c</i> if <i>f</i> (<i>c</i>) is defined and if <img alt="def. of continuity"
+src="assets/images/Eqn10.gif" align="middle" />.</p>
+<p>In other words, a function is continuous at a point if the function's
+  value at that point is the same as the limit at that point. We can use this
+  definition of continuity at a point to define continuity on an interval as
+  being continuous at every point in the interval. </p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="400" width="480">
+    <param name="UseMouseZoom"
+value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="Factorials" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Example1" value="1. Continuous; x^2;-5,5,-5,5,1" />
+    <param name="Example2" value="2. Also Continuous; sin(x);-5,5,-5,5,1" />
+    <param name="Example3"
+value="3. Essential Discontinuity; 1/(x-1);-5,5,-5,5,1;asymptote,1,0,1,1" />
+    <param name="Example4"
+value="4. Jump Discontinuity;(x&lt;1?1:2);-5,5,-5,5,1;open,1,1;closed,1,2" />
+    <param name="Example5"
+value="5. Removeable Discontinuity;x(x-1)/(x-1);-5,5,-5,5,1;open,1,1" />
+    <param name="Example6"
+value="6. Another Discontinuity;x&lt;&gt;1?x:2;-5,5,-5,5,1;open,1,1;closed,1,2" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The first graph shown, a simple parabola. Move the slider to pick an <i>x</i> value. Notice that the value of the function, given by <i>y</i> =, is the same as the limit at that point. So the function is continuous
+    at that <i>x</i> value. Since this is true for any <i>x</i> value that
+    you pick, the function is continuous everywhere. <br />
+    <br />
+  </li>
+  <li>Select the second example from the drop down menu. The sine curve has
+    more wiggles in it, but it is still continuous. Move the slider to pick
+    an <i>x</i> value. Like the previous example, everywhere you look the
+    output value of the function is the same as the limit, so this function
+    is also continuous everywhere.<br />
+    <br />
+  </li>
+  <li>Select the third example. This function has a vertical asymptote at <i>x</i> = 1. Is the function continuous at <i>x</i> = 1? Since the
+    function isn't even defined there, the answer is no. The formal
+    definition of continuity requires that the function be defined at the <i>x</i> value in question.<br />
+    <br />
+  </li>
+  <li>Select the fourth example. This function jumps from 1 to 2 at <i>x</i> = 1. Notice that <i>f</i> (1) = 2, but the limit at <i>x</i> = 1 does not
+    exist (because the left-hand and right-hand limits are different). Hence
+    this function is not continuous at at <i>x</i> = 1.<br />
+    <br />
+  </li>
+  <li>Select the fifth example. This function has a hole in it at x = 1. This
+    time, the limit is defined at <i>x</i> = 1 (and is 1), but the function
+    does not have a value there, so it is not continuous at <i>x</i> = 1.<br />
+    <br />
+  </li>
+  <li>Select the sixth example. This function has a displaced point at x = 1.
+    This time, the limit is defined at <i>x</i> = 1 (and is 1), the function
+    does have a value there (<i>f</i> (1) = 2), but the limit and the
+    function's value are different, so again it is not continuous at <i>x</i> = 1.<br />
+  </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.Continuity" codebase="./assets"
+archive="webcompmath.jar" height="40" width="160">
+    <param
+name="LaunchButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Continuity: Formal Approach" />
+    <param name="FrameSize" value="640,580" />
+    <param name="Presentation" value="yes" />
+    <param name="UseMouseZoom" value="yes" />
+    <param name="UsePanner" value="yes" />
+    <param name="UseRestoreButton" value="yes" />
+    <param name="UseComputeButton" value="no" />
+    <param name="UseZoomButtons" value="yes" />
+    <param name="UseEqualizeButton" value="yes" />
+    <param name="UseSaveButton" value="yes" />
+    <param name="OptionalStars" value="yes" />
+    <param name="OptionalFunctions" value="yes" />
+    <param name="RationalExponents" value="yes" />
+    <param name="Example1" value="1. Continuous; x^2;-5,5,-5,5,1" />
+    <param name="Example2" value="2. Also Continuous; sin(x);-5,5,-5,5,1" />
+    <param name="Example3"
+value="3. Essential Discontinuity; 1/(x-1);-5,5,-5,5,1;asymptote,1,0,1,1" />
+    <param name="Example4"
+value="4. Jump Discontinuity;(x&lt;1?1:2);-5,5,-5,5,1;open,1,1;closed,1,2" />
+    <param name="Example5"
+value="5. Removeable Discontinuity;x(x-1)/(x-1);-5,5,-5,5,1;open,1,1" />
+    <param name="Example6"
+value="6. Another Discontinuity;x&lt;&gt;1?x:2;-5,5,-5,5,1;open,1,1;closed,1,2" />
+    <param name="Factorials" value="yes" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="formallimits.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="avevel.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

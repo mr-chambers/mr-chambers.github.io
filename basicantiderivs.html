@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Basic Antiderivatives</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="accumulation.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="introdiffeq.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2>Basic Antiderivatives</h2>
+<p></p>
+<p>We have seen that the general antiderivative of a derivative of a function is just the function, plus a constant. Hence we can evaluate integrals where the integrand is one of the derivatives that we already know.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Integration" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="400" width="640">
+    <param
+name="UseRestoreButton" value="yes" />
+    <param name="UseLoadButton" value="no" />
+    <param name="Example1" value="1. Zero;0;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example2" value="2. Constant;2;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example3" value="3. Line;x;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example4" value="4. Parabola;x^2;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example5" value="5. Cubic;x^3;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example6" value="6. Hyperbola;1/x;0;0;-4,4,-4,4;0;(x&gt;0?numInt(t,1,x,f(t),100) + c:numInt(t,-1,x,f(t),100) + c);1" />
+    <param name="Example7" value="7. Exponential;e^x;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example8" value="8. Cosine;cos(x);0;0;-6.28,6.28,-2,2;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example9" value="9. Sine;sin(x);0;0;-6.28,6.28,-2,2;1;numInt(t,0,x,f(t),100) + c;0" />
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a graph on the left of a constant integrand equal to 0. Moving the <em>x</em> slider shows that no area gets accumulated. Alternatively, use the choice box to select &quot;Slope&quot; to examine this example (and other examples) from the slope perspective. From the slope point of view, the slope is always zero, so the antiderivative must be a horizontal line. Move the <em>C</em> slider to see other members of this family. Using the indefinite integral notation, we say that <img src="assets/images/Eqn139.gif" alt="antideriv of 0 is C" width="65" height="29" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the second example, showing a constant integrand equal to 2. Moving the <em>x</em> slider shows that area gets added linearly. From the slope perspective, the slope is constant, which we know is a line. So <img src="assets/images/Eqn140.gif" alt="antideriv of 2 is 2x+C" width="96" height="29" align="absmiddle" />. More generally, where <em>k</em> is a constant, <img src="assets/images/Eqn141.gif" alt="antideriv of k = kx+c" width="93" height="29" align="absmiddle" />. In this applet, positive area is shown as green, negative area as red.<br />
+    <br />
+  </li>
+  <li>Select the third example, showing a line as the integrand. Move the <em>x</em> slider to see area accumulated. In particular, set <em>x</em> = 1. What is the value of the antiderivative? Since it isn't 1, the antiderivative can't just be <em>x</em>&sup2;, but rather must be <img src="assets/images/Eqn142.gif" alt="antideriv x = (x^2)/2+c" width="96" height="44" align="absmiddle" />. You can check this by finding the derivative of the right-hand side of this equation, and you do get just <em>x</em>.<br />
+    <br />
+  </li>
+  <li>Select the fourth example, showing a parabola. Again, set <em>x</em> = 1 and note the value of the antiderivative. Since it isn't 1, the antiderivative can't just be <em>x</em>&sup3;, but rather must be <img src="assets/images/Eqn143.gif" alt="antideriv x^2=(x^3)/3+c" width="102" height="44" align="absmiddle" /> . You can check this by finding the derivative of the right-hand side of this equation, and you do get just<em> x</em>&sup2;.<br />
+    <br />
+  </li>
+  <li>Select the fifth example, showing a cubic. Can you figure out what the antiderivative is? You may have noticed the pattern, which gives us a general formula for the antiderivative of a power function: <img src="assets/images/Eqn144.gif" alt="antideriv of power func" width="116" height="44" align="absmiddle" />. Try finding the derivative of the right-hand side, to see that you do get the integrand.<br />
+    <br />
+  </li>
+  <li>Select the sixth example, showing a hyperbola 1/<em>x</em> (or <em>x</em><sup>-1</sup>). The power function rule we just looked at doesn't work in this case, because then the denominator on the right-hand side would be zero, and dividing by zero yields an undefined result. Move the <em>x</em> slider to see that the slope of the graphed antiderivative does match the value of the integrand (this example is best viewed from the slope perspective). What function has a derivative of 1/<em>x</em>? You may recall that it is ln(<em>x</em>). But, this example is slightly different because 1/<em>x</em> can take on both positive and negative values. Hence the rule is <img src="assets/images/Eqn145.gif" alt="antideriv 1/x = ln|x|+c" width="112" height="41" align="absmiddle" />, where the absolute value gives us the proper curve on the negative side. If you look at things from the area perspective and move the <em>x</em> slider, you may notice that the area seems to start and end at 1 instead of 0. Because the integrand is not defined at <em>x</em> = 0, we can't use an accumulation function from 0 to graph the antiderivative. Instead, we use an accumulation function with a lower limit of 1 (and the software handles a negative <em>x</em> differently, too). Right now, we don't know how to evaluate a definite integral on an interval where the integrand goes to infinity; we will revisit this topic later. The software uses numerical methods to compute the antiderivate graph as an accumulation function and it, too, has troubles with infinity.<br />
+    <br />
+  </li>
+  <li>Select the seventh example, showing an exponential function. Since we know that the derivative of e<sup><em>x</em></sup> is just e<sup><em>x</em></sup>, we might guess that the antiderivative of e<sup><em>x</em></sup> is e<sup><em>x</em></sup>. While the graph looks like it has the right shape, it seems shifted down. This is because the antiderivative is graphed as the accumulation function <img src="assets/images/Eqn146.gif" alt="accum" width="46" height="34" align="absmiddle" />, which is zero for <em>x</em> = 0. So our accumulation function gives us an antiderivative of e<sup><em>x</em></sup> - 1. Since we then add a constant <em>C</em> to this result, and -1 is also a constant, we can combine the -1 and the <em>C</em> into just a <em>C</em>, since this is an arbitrary constant. So the rule becomes <img src="assets/images/Eqn147.gif" alt="antideriv e^x = e^x+c" width="94" height="29" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the eigth example, showing cosine. The antiderivative looks like sine, and since we know that the derivative of sin(<em>x</em>) is cos(<em>x</em>), the rule for the antiderivative is <img src="assets/images/Eqn148.gif" alt="antideriv cos x = sin x +c" width="128" height="29" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>Select the ninth example, showing sine (note that you may have to scroll in the example menu box to find the ninth example). The antiderivative looks like cosine, but upside down and shifted up. Since we know that the derivative of cos(<em>x</em>) is -sin(<em>x</em>), the derivative of -cos(<em>x</em>) is sin(<em>x</em>), so we would expect that the antiderivative of sine to look like -cosine. The shift comes from the graphing software using the accumulation function <img src="assets/images/Eqn149.gif" alt="accum" width="61" height="34" align="absmiddle" />, so again, the graphed antiderivative must cross the <em>x</em> axis at the origin. As with the exponential function example, we ignore this +1 shift, since it is just a constant added on, and write the rule as <img src="assets/images/Eqn150.gif" alt="antideriv sin x = -cos x +c" width="142" height="29" align="absmiddle" />.<br />
+    <br />
+  </li>
+  <li>You can try entering your own functions for the integrand, particularly ones that are the derivative of some known function. You can try the sum of two functions, and you will find that the definite integral property of sums and differences holds for general antiderivatives, too. In other words, <img src="assets/images/Eqn151.gif" alt="antideriv sum" width="285" height="29" align="absmiddle" />. If you play around with products, quotients, and compositions of functions, you'll discover that, just like derivatives, we need more complex rules. Be careful of functions with vertical asymptotes, like sec(<em>x</em>)tan(<em>x</em>) (where we know that the derivative of sec(<em>x</em>) is this function, so this function's antiderivative must be sec(<em>x</em>) + <em>C</em>). If you try this, you'll get a good graph as long as you don't cross one of the asymptotes. Once the graph crosses an asymptote, the graphing software gets confused, because it has a hard time evaluating the accumulation function when that function goes to infinity). </li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Integration" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Basic Antiderivatives" />
+    <param name="FrameSize" value="800,500" />
+    <param name="Presentation" value="yes" />
+    <param name="Example1" value="1. Zero;0;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example2" value="2. Constant;2;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example3" value="3. Line;x;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example4" value="4. Parabola;x^2;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example5" value="5. Cubic;x^3;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example6" value="6. Hyperbola;1/x;0;0;-4,4,-4,4;0;(x&gt;0?numInt(t,1,x,f(t),100) + c:numInt(t,-1,x,f(t),100) + c);1" />
+    <param name="Example7" value="7. Exponential;e^x;0;0;-4,4,-4,4;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example8" value="8. Cosine;cos(x);0;0;-6.28,6.28,-2,2;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="Example9" value="9. Sine;sin(x);0;0;-6.28,6.28,-2,2;1;numInt(t,0,x,f(t),100) + c;0" />
+    <param name="UseLoadButton" value="no" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="accumulation.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="introdiffeq.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Average Velocity</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+</head>
+<body>
+<table
+style="text-align: left; background-color: rgb(51, 102, 255); width: 100%;">
+  <tbody>
+    <tr>
+      <td
+        style="background-color: rgb(51, 102, 255); text-align: center;"><h1>Calculus
+          Applets</h1></td>
+      <td><table
+        style="text-align: left; margin-left: auto; margin-right: 0px; background-color: rgb(255, 255, 255);"
+        border="1" cellpadding="2">
+          <tbody>
+            <tr>
+              <td><a href="formalcontinuity.html">Prev</a></td>
+              <td><a href="index.html">Home</a></td>
+              <td><a href="instantvel.html">Next</a></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+  </tbody>
+</table>
+<h2><span id="title">Average Velocity and Speed</span></h2>
+<p>Let's take a look at average velocity. If you recall from earlier
+  mathematics studies, <em>average</em> <em>velocity</em> is just net distance
+  traveled divided by time. For example, if an object is tossed into the air we
+  might find the following data for the height in feet, <i>y</i>, of the object
+  as a function of the time in seconds, <i>t</i>, where <i>t</i> = 0 is when
+  the object is released upward.</p>
+<table border="1" align="center" cellpadding="5">
+  <caption>
+  </caption>
+  <tbody>
+    <tr>
+      <td align="center">t (sec)</td>
+      <td align="center">0</td>
+      <td align="center">1</td>
+      <td align="center">2</td>
+      <td align="center">3</td>
+      <td align="center">4</td>
+      <td align="center">5</td>
+      <td align="center">6</td>
+    </tr>
+    <tr>
+      <td align="center">y (feet)</td>
+      <td align="center">6</td>
+      <td align="center">90</td>
+      <td align="center">142</td>
+      <td align="center">162</td>
+      <td align="center">150</td>
+      <td align="center">106</td>
+      <td align="center">30</td>
+    </tr>
+  </tbody>
+</table>
+<p>This table says that the object was 6 feet above the ground when released,
+  90 feet after 1 second, etc. How fast was it traveling? We can divide the net
+  distanced traveled by the time to compute the velocity. For example, over the
+  first second the average velocity is <img alt="(90-6)/(1-0)=84 ft/sec"
+src="assets/images/Eqn11.gif" align="middle" />. Over the last second, the
+  average velocity is <img alt="(30-106)/(6-5)=-76 ft/sec"
+src="assets/images/Eqn12.gif" align="middle" />. Note that velocity can be
+  negative to indicate downward motion (positive velocity is upward motion in
+  this problem). <em>Speed</em> is just the magnitude of the velocity (i.e.,
+  the absolute value, in our one-dimensional example). We can also compute the
+  average velocity over the entire interval as <img alt="(30-6)/(6-0)=4 ft/sec"
+src="assets/images/Eqn13.gif" align="middle" />.</p>
+<p>Now, what if we wanted to know the velocity at a specific time, say at <i>t</i> = 1? Clearly there is some velocity, as the object is moving, but to
+  compute velocity we need a ratio of distance traveled to time spent
+  traveling. We could find the average velocity over the interval from 1 to 2
+  seconds, which is just <img alt="(142-90)/(2-1)=52 ft/sec"
+src="assets/images/Eqn14.gif" align="middle" />. But this isn't quite right, as
+  the object does seem to be speeding up. If we had another measurement of
+  height at a time closer to 1 than 2 seconds, we could get a better estimate
+  of the instantaneous velocity at <i>t</i> = 1. The following applet
+  illustrates this.</p>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.calculus.Velocitytable" codebase="./assets"
+archive="webcompmath.jar,calculus.jar" height="150" width="300">
+  </applet>
+</p>
+<p>Try the following:</p>
+<ol>
+  <li>The applet shows a subset of the table from above. At the bottom is a
+    value, <i>h</i>, with an input box and a slider to control it. The first
+    row of the table show the time at 1 second and the time at 1 + <i>h</i> seconds. The second row shows the height at these two times, while the
+    third row computes the average velocity over this interval. Note that the
+    initial view of the applet, with <i>h</i> = 1, just shows the average
+    velocity between 1 and 2 seconds, as we computed above.<br />
+    <br />
+  </li>
+  <li>Move the slider to make <i>h</i> smaller. You are essentially picking a
+    smaller interval, so the average velocity should be a better
+    approximation to the instantaneous velocity at <i>t</i> = 1. Keep making <i>h</i> smaller and smaller. What is happening to the velocity? Is it
+    approaching some number?<br />
+    <br />
+  </li>
+  <li>Make the velocity 0 by moving the slider all the way to the left. What
+    happens to the velocity? Why?<br />
+    <br />
+  </li>
+  <li>Type in 0.001 for <i>h</i> and press Enter. Then try 0.0001, etc. What
+    number is the velocity approaching as <i>h</i> approaches 0?<br />
+    <br />
+  </li>
+  <li>Note that if you set <i>h</i> less than or equal to 0.000000001, round
+    off errors start causing problems</li>
+</ol>
+<p style="text-align: center;">
+  <applet
+code="net.sourceforge.webcompmath.applets.LaunchButtonApplet"
+codebase="./assets" archive="webcompmath.jar,calculus.jar" height="40"
+width="160">
+    <param name="Presentation" value="yes" />
+    <param name="Class"
+value="net.sourceforge.webcompmath.calculus.Velocitytable" />
+    <param name="ButtonName" value="Launch Presentation" />
+    <param name="FrameTitle" value="Average Velocity" />
+    <param name="FrameSize" value="350,250" />
+  </applet>
+</p>
+<p> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /> </a> <br />
+  This work by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Thomas S. Downey</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>.
+<table style="text-align: left; margin-left: auto; margin-right: 0px;"
+border="1" cellpadding="2">
+  <tbody>
+    <tr>
+      <td><a href="formalcontinuity.html">Prev</a></td>
+      <td><a href="index.html">Home</a></td>
+      <td><a href="instantvel.html">Next</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
