@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lotka-Volterra Predator-Prey Phase Space Lab</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            obsidian: '#0a0c10',
+            cardBg: '#121620',
+            preyCyan: '#00f3ff',
+            predMagenta: '#ff0055',
+            eqGold: '#ffcc00',
+            accentViolet: '#9d4edd',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0a0c10;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Glassmorphism panel style */
+    .glass-panel {
+      background: rgba(18, 22, 32, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-panel-glow {
+      background: rgba(18, 22, 32, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      box-shadow: 0 0 25px rgba(0, 243, 255, 0.08);
+    }
+
+    /* Custom range sliders styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 6px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+      border: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background: #00f3ff;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -6px;
+      box-shadow: 0 0 10px #00f3ff;
+      transition: transform 0.1s ease, background-color 0.2s ease;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 15px #00f3ff;
+    }
+
+    /* Magenta thumb variant */
+    .slider-magenta::-webkit-slider-thumb {
+      background: #ff0055 !important;
+      box-shadow: 0 0 10px #ff0055 !important;
+    }
+    .slider-magenta::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 15px #ff0055 !important;
+    }
+
+    /* Gold thumb variant */
+    .slider-gold::-webkit-slider-thumb {
+      background: #ffcc00 !important;
+      box-shadow: 0 0 10px #ffcc00 !important;
+    }
+
+    /* Violet thumb variant */
+    .slider-violet::-webkit-slider-thumb {
+      background: #9d4edd !important;
+      box-shadow: 0 0 10px #9d4edd !important;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0c10;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 243, 255, 0.4);
+    }
+
+    /* Dynamic Canvas Glowing Overlay */
+    .canvas-container {
+      position: relative;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .canvas-container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.05);
+      border-radius: 0.75rem;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between text-slate-200 antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- HEADER BAR -->
+  <header class="border-b border-slate-800/80 bg-obsidian/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="relative flex items-center justify-center w-9 h-9 rounded-lg bg-slate-900 border border-cyan-500/40 shadow-[0_0_12px_rgba(0,243,255,0.25)]">
+          <svg class="w-5 h-5 text-cyan-400 animate-spin" style="animation-duration: 12s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v3m0 12v3M3 12h3m12 0h3" />
+          </svg>
+          <div class="absolute w-2 h-2 rounded-full bg-magenta-500 shadow-[0_0_8px_#ff0055]"></div>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-wider text-white flex items-center gap-2">
+            LOTKA-VOLTERRA <span class="text-xs px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-500/30 font-mono">PHASE LAB</span>
+          </h1>
+          <p class="text-xs text-slate-400">Interactive Predator-Prey Dynamical System Simulator</p>
+        </div>
+      </div>
+
+      <!-- Live Readout / System Badges -->
+      <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+        <div class="px-2.5 py-1 rounded-md bg-slate-900/80 border border-slate-800 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-400">RK4 INTEGRATOR</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-md bg-slate-900/80 border border-slate-800 flex items-center gap-1.5">
+          <span class="text-slate-400">INVARIANT V:</span>
+          <span id="headerVValue" class="text-yellow-400 font-semibold">0.0000</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-md bg-slate-900/80 border border-slate-800 flex items-center gap-1.5">
+          <span class="text-slate-400">FPS:</span>
+          <span id="fpsCounter" class="text-cyan-400 font-semibold">60</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+
+    <!-- LEFT COLUMN: Canvases (8 Cols) -->
+    <section class="lg:col-span-8 flex flex-col gap-6">
+
+      <!-- PHASE PORTRAIT CANVAS CONTAINER -->
+      <div class="glass-panel rounded-xl p-4 flex flex-col gap-3 relative">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm font-semibold tracking-wide text-cyan-400 flex items-center gap-1.5 uppercase font-mono">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18" />
+              </svg>
+              Phase Space Portrait (x vs y)
+            </h2>
+            <span class="text-xs text-slate-400 hidden sm:inline">(Click canvas to spawn orbit)</span>
+          </div>
+
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <div class="flex items-center gap-1 text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#00f3ff] inline-block shadow-[0_0_6px_#00f3ff]"></span>
+              <span>Prey (x)</span>
+            </div>
+            <div class="flex items-center gap-1 text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ff0055] inline-block shadow-[0_0_6px_#ff0055]"></span>
+              <span>Predator (y)</span>
+            </div>
+            <div class="flex items-center gap-1 text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ffcc00] inline-block shadow-[0_0_6px_#ffcc00]"></span>
+              <span>Equilibrium</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Canvas Frame -->
+        <div class="canvas-container bg-[#0a0c10] w-full aspect-[4/3] sm:aspect-[16/10] relative cursor-crosshair">
+          <canvas id="phaseCanvas" class="w-full h-full block"></canvas>
+          
+          <!-- Hover Info Tooltip Badge overlay -->
+          <div id="canvasHoverTooltip" class="absolute top-3 left-3 pointer-events-none hidden bg-slate-950/90 border border-cyan-500/30 rounded-lg p-2 font-mono text-xs shadow-lg backdrop-blur-md transition-opacity">
+            <div class="text-cyan-400 font-semibold mb-0.5">POSITION READOUT</div>
+            <div class="text-slate-300">x (Prey): <span id="hoverXVal" class="text-white">0.00</span></div>
+            <div class="text-slate-300">y (Predator): <span id="hoverYVal" class="text-white">0.00</span></div>
+            <div class="text-yellow-400">V Energy: <span id="hoverVVal">0.00</span></div>
+          </div>
+
+          <!-- Canvas Controls Overlay -->
+          <div class="absolute bottom-3 right-3 flex items-center gap-2">
+            <button id="resetViewBtn" title="Reset View Bounds" class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-700/80 text-slate-300 hover:text-cyan-400 hover:border-cyan-500/50 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIME SERIES CANVAS CONTAINER -->
+      <div class="glass-panel rounded-xl p-4 flex flex-col gap-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h2 class="text-sm font-semibold tracking-wide text-cyan-400 flex items-center gap-1.5 uppercase font-mono">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            Synchronized Population Dynamics (x, y vs Time t)
+          </h2>
+          <div id="timeReadout" class="text-xs font-mono text-slate-400">
+            t = <span id="timeVal" class="text-cyan-300">0.00</span>s
+          </div>
+        </div>
+
+        <div class="canvas-container bg-[#0a0c10] w-full h-44 sm:h-52 relative">
+          <canvas id="timeCanvas" class="w-full h-full block"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: Controls Sidebar (4 Cols) -->
+    <section class="lg:col-span-4 flex flex-col gap-5">
+
+      <!-- PRESETS CONTAINER -->
+      <div class="glass-panel rounded-xl p-4">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 font-mono flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          Preset Scenarios
+        </h3>
+        <div class="grid grid-cols-2 gap-2">
+          <button data-preset="balanced" class="preset-btn px-2.5 py-2 rounded-lg bg-slate-900 border border-cyan-500/30 text-xs text-left hover:bg-cyan-950/40 hover:border-cyan-400 transition flex flex-col">
+            <span class="font-semibold text-cyan-300">Balanced Orbit</span>
+            <span class="text-[10px] text-slate-400">Stable, centered cycle</span>
+          </button>
+          <button data-preset="boombust" class="preset-btn px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700/60 text-xs text-left hover:bg-cyan-950/40 hover:border-cyan-400 transition flex flex-col">
+            <span class="font-semibold text-magenta-400 text-pink-400">Boom & Bust</span>
+            <span class="text-[10px] text-slate-400">High amplitude loop</span>
+          </button>
+          <button data-preset="extinction" class="preset-btn px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700/60 text-xs text-left hover:bg-cyan-950/40 hover:border-cyan-400 transition flex flex-col">
+            <span class="font-semibold text-amber-400">Near Extinction</span>
+            <span class="text-[10px] text-slate-400">Deep bottleneck dip</span>
+          </button>
+          <button data-preset="equilibrium" class="preset-btn px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700/60 text-xs text-left hover:bg-cyan-950/40 hover:border-cyan-400 transition flex flex-col">
+            <span class="font-semibold text-yellow-300">Equilibrium Point</span>
+            <span class="text-[10px] text-slate-400">Stationary center x*, y*</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MODEL PARAMETERS PANEL -->
+      <div class="glass-panel rounded-xl p-4 flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            System Parameters
+          </h3>
+          <span class="text-[11px] font-mono text-cyan-400/80">dx/dt & dy/dt</span>
+        </div>
+
+        <!-- Math Equations Preview -->
+        <div class="p-2.5 rounded-lg bg-slate-950/90 border border-slate-800 font-mono text-xs text-slate-300 space-y-1">
+          <div class="flex items-center justify-between">
+            <span><span class="text-cyan-400">dx/dt</span> = <span id="mathAlpha" class="text-cyan-300">α</span>x - <span id="mathBeta" class="text-pink-400">β</span>xy</span>
+            <span class="text-[10px] text-slate-500">(Prey)</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span><span class="text-pink-500">dy/dt</span> = <span id="mathDelta" class="text-purple-400">δ</span>xy - <span id="mathGamma" class="text-amber-300">γ</span>y</span>
+            <span class="text-[10px] text-slate-500">(Predator)</span>
+          </div>
+        </div>
+
+        <!-- Sliders -->
+        <div class="space-y-3.5 text-xs font-mono">
+          <!-- Alpha (Prey Growth Rate) -->
+          <div>
+            <div class="flex justify-between mb-1">
+              <label for="alphaSlider" class="text-slate-300 font-semibold flex items-center gap-1">
+                <span>α</span> <span class="text-slate-400 font-normal text-[11px]">(Prey growth)</span>
+              </label>
+              <span id="alphaVal" class="text-cyan-400 font-bold">0.67</span>
+            </div>
+            <input type="range" id="alphaSlider" min="0.10" max="2.00" step="0.01" value="0.67">
+          </div>
+
+          <!-- Beta (Predation Rate) -->
+          <div>
+            <div class="flex justify-between mb-1">
+              <label for="betaSlider" class="text-slate-300 font-semibold flex items-center gap-1">
+                <span>β</span> <span class="text-slate-400 font-normal text-[11px]">(Predation rate)</span>
+              </label>
+              <span id="betaVal" class="text-pink-400 font-bold">0.25</span>
+            </div>
+            <input type="range" id="betaSlider" class="slider-magenta" min="0.01" max="0.50" step="0.005" value="0.25">
+          </div>
+
+          <!-- Gamma (Predator Death Rate) -->
+          <div>
+            <div class="flex justify-between mb-1">
+              <label for="gammaSlider" class="text-slate-300 font-semibold flex items-center gap-1">
+                <span>γ</span> <span class="text-slate-400 font-normal text-[11px]">(Predator death)</span>
+              </label>
+              <span id="gammaVal" class="text-amber-400 font-bold">0.80</span>
+            </div>
+            <input type="range" id="gammaSlider" class="slider-gold" min="0.10" max="2.00" step="0.01" value="0.80">
+          </div>
+
+          <!-- Delta (Predator Reproduction) -->
+          <div>
+            <div class="flex justify-between mb-1">
+              <label for="deltaSlider" class="text-slate-300 font-semibold flex items-center gap-1">
+                <span>δ</span> <span class="text-slate-400 font-normal text-[11px]">(Predator growth)</span>
+              </label>
+              <span id="deltaVal" class="text-purple-400 font-bold">0.15</span>
+            </div>
+            <input type="range" id="deltaSlider" class="slider-violet" min="0.01" max="0.50" step="0.005" value="0.15">
+          </div>
+        </div>
+
+        <!-- Calculated Equilibrium Point Box -->
+        <div class="p-2.5 rounded-lg bg-cyan-950/20 border border-cyan-500/20 flex items-center justify-between text-xs font-mono">
+          <span class="text-slate-400">Equilibrium Point (x*, y*):</span>
+          <span id="eqPointReadout" class="text-yellow-400 font-bold">(5.33, 2.68)</span>
+        </div>
+      </div>
+
+      <!-- SIMULATION CONTROLS & TOGGLES -->
+      <div class="glass-panel rounded-xl p-4 space-y-4">
+        
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-3 gap-2">
+          <button id="playPauseBtn" class="px-3 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-[0_0_15px_rgba(0,243,255,0.4)]">
+            <svg id="playIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pauseIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            <span id="playPauseLabel">PAUSE</span>
+          </button>
+
+          <button id="stepBtn" class="px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-cyan-400 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1 transition">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            STEP
+          </button>
+
+          <button id="clearBtn" class="px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-pink-500 text-pink-400 text-xs font-semibold flex items-center justify-center gap-1 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            CLEAR
+          </button>
+        </div>
+
+        <!-- Simulation Speed & Integration Settings -->
+        <div class="space-y-2 text-xs font-mono pt-2 border-t border-slate-800">
+          <div class="flex justify-between items-center">
+            <label for="speedSlider" class="text-slate-300">Simulation Speed:</label>
+            <span id="speedVal" class="text-cyan-400 font-bold">5x</span>
+          </div>
+          <input type="range" id="speedSlider" min="1" max="20" step="1" value="5">
+
+          <div class="flex justify-between items-center pt-1">
+            <label for="dtSlider" class="text-slate-300">RK4 Step Size (dt):</label>
+            <span id="dtVal" class="text-cyan-400 font-bold">0.015</span>
+          </div>
+          <input type="range" id="dtSlider" min="0.002" max="0.05" step="0.001" value="0.015">
+        </div>
+
+        <!-- Visual Toggles -->
+        <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-2 border-t border-slate-800">
+          <label class="flex items-center gap-2 cursor-pointer bg-slate-900/60 p-2 rounded-lg border border-slate-800 hover:border-slate-700">
+            <input type="checkbox" id="toggleVectorField" checked class="accent-cyan-400 rounded">
+            <span class="text-slate-300">Vector Field</span>
+          </label>
+
+          <label class="flex items-center gap-2 cursor-pointer bg-slate-900/60 p-2 rounded-lg border border-slate-800 hover:border-slate-700">
+            <input type="checkbox" id="toggleTrails" checked class="accent-cyan-400 rounded">
+            <span class="text-slate-300">Motion Blur</span>
+          </label>
+
+          <label class="flex items-center gap-2 cursor-pointer bg-slate-900/60 p-2 rounded-lg border border-slate-800 hover:border-slate-700">
+            <input type="checkbox" id="toggleMultiMode" class="accent-cyan-400 rounded">
+            <span class="text-slate-300">Multi-Orbit</span>
+          </label>
+
+          <label class="flex items-center gap-2 cursor-pointer bg-slate-900/60 p-2 rounded-lg border border-slate-800 hover:border-slate-700">
+            <input type="checkbox" id="toggleFlowParticles" checked class="accent-cyan-400 rounded">
+            <span class="text-slate-300">Flow Particles</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- CONSERVED INVARIANT V METRICS CARD -->
+      <div class="glass-panel rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-xs font-mono">
+          <span class="text-slate-400 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Conserved Quantity V(x,y):
+          </span>
+          <span id="vDriftVal" class="text-emerald-400 font-bold">ΔV = 0.00000</span>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-400 leading-tight">
+          V(x,y) = δx - γ ln(x) + βy - α ln(y)
+        </div>
+
+        <!-- Stability Bar -->
+        <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800 relative">
+          <div id="vStabilityBar" class="h-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-400 w-full transition-all duration-300"></div>
+        </div>
+        <div class="flex justify-between text-[10px] font-mono text-slate-500">
+          <span>RK4 Precision Drift</span>
+          <span id="vErrorPercent">0.00% Error</span>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-obsidian py-3 px-4 text-center text-xs text-slate-500 font-mono">
+    Lotka-Volterra Predator-Prey Phase Portrait • Built with HTML5 Canvas & Fourth-Order Runge-Kutta (RK4) Integration
+  </footer>
+
+
+  <!-- JAVASCRIPT SIMULATION LOGIC -->
+  <script>
+    // --- APP STATE & PARAMETERS ---
+    const params = {
+      alpha: 0.67,  // Prey growth rate
+      beta: 0.25,   // Predation rate
+      gamma: 0.80,  // Predator death rate
+      delta: 0.15,  // Predator reproduction rate
+      dt: 0.015,    // Integration step size
+      speed: 5,     // Steps per frame
+    };
+
+    let isRunning = true;
+    let showVectorField = true;
+    let showTrails = true;
+    let multiMode = false;
+    let showFlowParticles = true;
+
+    // Canvas references & contexts
+    const phaseCanvas = document.getElementById('phaseCanvas');
+    const phaseCtx = phaseCanvas.getContext('2d');
+    const timeCanvas = document.getElementById('timeCanvas');
+    const timeCtx = timeCanvas.getContext('2d');
+
+    // Bounds in Phase Space
+    let xMax = 16.0;
+    let yMax = 10.0;
+    const margin = { left: 45, right: 20, top: 25, bottom: 35 };
+
+    // Trajectory Storage
+    let trajectories = [];
+    const colorPalette = [
+      '#00f3ff', // Cyan
+      '#ff0055', // Neon Magenta
+      '#39ff14', // Neon Green
+      '#ffcc00', // Gold
+      '#bc13fe', // Purple
+      '#00d2ff'  // Light Blue
+    ];
+
+    // Field particle vectors for motion effect
+    let fieldParticles = [];
+    const NUM_FIELD_PARTICLES = 75;
+
+    // Performance & Timing Metrics
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let fps = 60;
+
+    // --- MATHEMATICAL MODEL ENGINE ---
+    
+    // Differential Equations: dx/dt and dy/dt
+    function dx_dt(x, y, p = params) {
+      return p.alpha * x - p.beta * x * y;
+    }
+
+    function dy_dt(x, y, p = params) {
+      return p.delta * x * y - p.gamma * y;
+    }
+
+    // Conserved Invariant: V(x,y) = delta*x - gamma*ln(x) + beta*y - alpha*ln(y)
+    function calculateV(x, y, p = params) {
+      if (x <= 1e-6 || y <= 1e-6) return 0;
+      return p.delta * x - p.gamma * Math.log(x) + p.beta * y - p.alpha * Math.log(y);
+    }
+
+    // Equilibrium Point: (x* = gamma/delta, y* = alpha/beta)
+    function getEquilibrium(p = params) {
+      return {
+        x: p.gamma / p.delta,
+        y: p.alpha / p.beta
+      };
+    }
+
+    // 4th-Order Runge-Kutta Numerical Integration Step
+    function rk4Step(x, y, dt, p = params) {
+      // k1
+      const k1x = dx_dt(x, y, p);
+      const k1y = dy_dt(x, y, p);
+
+      // k2
+      const x_k2 = x + 0.5 * dt * k1x;
+      const y_k2 = y + 0.5 * dt * k1y;
+      const k2x = dx_dt(x_k2, y_k2, p);
+      const k2y = dy_dt(x_k2, y_k2, p);
+
+      // k3
+      const x_k3 = x + 0.5 * dt * k2x;
+      const y_k3 = y + 0.5 * dt * k2y;
+      const k3x = dx_dt(x_k3, y_k3, p);
+      const k3y = dy_dt(x_k3, y_k3, p);
+
+      // k4
+      const x_k4 = x + dt * k3x;
+      const y_k4 = y + dt * k3y;
+      const k4x = dx_dt(x_k4, y_k4, p);
+      const k4y = dy_dt(x_k4, y_k4, p);
+
+      // Combine weights
+      const nextX = x + (dt / 6) * (k1x + 2 * k2x + 2 * k3x + k4x);
+      const nextY = y + (dt / 6) * (k1y + 2 * k2y + 2 * k3y + k4y);
+
+      // Safeguard against non-positive populations
+      return {
+        x: Math.max(1e-4, nextX),
+        y: Math.max(1e-4, nextY)
+      };
+    }
+
+    // --- TRAJECTORY CLASS ---
+    class Trajectory {
+      constructor(x0, y0, color) {
+        this.x = x0;
+        this.y = y0;
+        this.color = color || colorPalette[trajectories.length % colorPalette.length];
+        this.history = []; // [{x, y, t, v}]
+        this.time = 0;
+        this.initialV = calculateV(x0, y0);
+        this.maxHistory = 1200;
+        
+        // Push initial state
+        this.addPoint(this.x, this.y);
+      }
+
+      addPoint(x, y) {
+        const v = calculateV(x, y);
+        this.history.push({ x, y, t: this.time, v });
+        if (this.history.length > this.maxHistory) {
+          this.history.shift();
+        }
+      }
+
+      step(dt, stepsMultiplier) {
+        for (let i = 0; i < stepsMultiplier; i++) {
+          const next = rk4Step(this.x, this.y, dt);
+          this.x = next.x;
+          this.y = next.y;
+          this.time += dt;
+          this.addPoint(this.x, this.y);
+        }
+      }
+
+      getCurrentV() {
+        return calculateV(this.x, this.y);
+      }
+    }
+
+    // --- FIELD PARTICLES FOR QUIVER FLOW ---
+    function initFieldParticles() {
+      fieldParticles = [];
+      for (let i = 0; i < NUM_FIELD_PARTICLES; i++) {
+        fieldParticles.push({
+          x: Math.random() * xMax,
+          y: Math.random() * yMax,
+          life: Math.random() * 100,
+          maxLife: 60 + Math.random() * 80
+        });
+      }
+    }
+
+    function updateFieldParticles() {
+      if (!showFlowParticles) return;
+      for (let p of fieldParticles) {
+        const step = rk4Step(p.x, p.y, params.dt * 2);
+        p.x = step.x;
+        p.y = step.y;
+        p.life++;
+
+        // Reset if out of bounds or expired life
+        if (p.x > xMax * 1.2 || p.y > yMax * 1.2 || p.x < 0 || p.y < 0 || p.life >= p.maxLife) {
+          p.x = Math.random() * xMax;
+          p.y = Math.random() * yMax;
+          p.life = 0;
+          p.maxLife = 60 + Math.random() * 80;
+        }
+      }
+    }
+
+    // --- COORDINATE CONVERSION HELPERS ---
+    function toScreenX(x, width) {
+      return margin.left + (x / xMax) * (width - margin.left - margin.right);
+    }
+
+    function toScreenY(y, height) {
+      return height - margin.bottom - (y / yMax) * (height - margin.top - margin.bottom);
+    }
+
+    function toMathX(screenX, width) {
+      const plotWidth = width - margin.left - margin.right;
+      return Math.max(0.01, ((screenX - margin.left) / plotWidth) * xMax);
+    }
+
+    function toMathY(screenY, height) {
+      const plotHeight = height - margin.top - margin.bottom;
+      return Math.max(0.01, ((height - margin.bottom - screenY) / plotHeight) * yMax);
+    }
+
+    // High-DPI Canvas Scaler
+    function resizeCanvas(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const displayWidth = rect.width;
+      const displayHeight = rect.height;
+
+      if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+        canvas.width = displayWidth * dpr;
+        canvas.height = displayHeight * dpr;
+      }
+      return { width: displayWidth, height: displayHeight, dpr };
+    }
+
+    // --- RENDERING PHASE PORTRAIT CANVAS ---
+    function renderPhasePortrait() {
+      const { width, height, dpr } = resizeCanvas(phaseCanvas);
+      phaseCtx.save();
+      phaseCtx.scale(dpr, dpr);
+
+      // Clear or trailing motion blur
+      if (showTrails) {
+        phaseCtx.fillStyle = 'rgba(10, 12, 16, 0.35)';
+        phaseCtx.fillRect(0, 0, width, height);
+      } else {
+        phaseCtx.fillStyle = '#0a0c10';
+        phaseCtx.fillRect(0, 0, width, height);
+      }
+
+      // 1. Draw Grid Lines & Axis Ticks
+      drawGridAndAxes(phaseCtx, width, height);
+
+      // 2. Draw Vector Quiver Field
+      if (showVectorField) {
+        drawQuiverField(phaseCtx, width, height);
+      }
+
+      // 3. Draw Field Flow Particles
+      if (showFlowParticles) {
+        drawFlowParticles(phaseCtx, width, height);
+      }
+
+      // 4. Draw Trajectory Orbits
+      trajectories.forEach((traj) => {
+        drawTrajectory(phaseCtx, traj, width, height);
+      });
+
+      // 5. Draw Equilibrium Point Marker
+      drawEquilibriumMarker(phaseCtx, width, height);
+
+      phaseCtx.restore();
+    }
+
+    function drawGridAndAxes(ctx, width, height) {
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px "JetBrains Mono", monospace';
+
+      const numTicksX = 8;
+      const numTicksY = 6;
+
+      // Vertical grid lines
+      for (let i = 0; i <= numTicksX; i++) {
+        const xVal = (xMax / numTicksX) * i;
+        const sx = toScreenX(xVal, width);
+        ctx.beginPath();
+        ctx.moveTo(sx, margin.top);
+        ctx.lineTo(sx, height - margin.bottom);
+        ctx.stroke();
+
+        ctx.fillText(xVal.toFixed(1), sx - 10, height - margin.bottom + 16);
+      }
+
+      // Horizontal grid lines
+      for (let j = 0; j <= numTicksY; j++) {
+        const yVal = (yMax / numTicksY) * j;
+        const sy = toScreenY(yVal, height);
+        ctx.beginPath();
+        ctx.moveTo(margin.left, sy);
+        ctx.lineTo(width - margin.right, sy);
+        ctx.stroke();
+
+        ctx.fillText(yVal.toFixed(1), margin.left - 30, sy + 4);
+      }
+
+      // Axis borders
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.strokeRect(margin.left, margin.top, width - margin.left - margin.right, height - margin.top - margin.bottom);
+
+      // Axis Labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.fillText('PREY POPULATION (x) →', width / 2 - 50, height - 8);
+
+      ctx.save();
+      ctx.translate(14, height / 2 + 50);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('PREDATOR POPULATION (y) →', 0, 0);
+      ctx.restore();
+    }
+
+    function drawQuiverField(ctx, width, height) {
+      const cols = 22;
+      const rows = 16;
+      const xStep = xMax / cols;
+      const yStep = yMax / rows;
+
+      ctx.lineWidth = 1;
+
+      for (let i = 0.8; i < cols; i++) {
+        for (let j = 0.8; j < rows; j++) {
+          const x = i * xStep;
+          const y = j * yStep;
+
+          const dx = dx_dt(x, y);
+          const dy = dy_dt(x, y);
+          const mag = Math.sqrt(dx * dx + dy * dy);
+
+          if (mag < 1e-5) continue;
+
+          // Normalized directional vector
+          const ndx = dx / mag;
+          const ndy = dy / mag;
+
+          const sx = toScreenX(x, width);
+          const sy = toScreenY(y, height);
+
+          // Arrow length mapping
+          const arrowLen = 14;
+          const ex = sx + ndx * arrowLen;
+          const ey = sy - ndy * arrowLen; // invert y for canvas screen coords
+
+          // Opacity scaled by velocity magnitude
+          const alpha = Math.min(0.45, 0.08 + (mag / 12) * 0.35);
+          ctx.strokeStyle = `rgba(0, 243, 255, ${alpha})`;
+          ctx.fillStyle = `rgba(0, 243, 255, ${alpha})`;
+
+          // Line stem
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(ex, ey);
+          ctx.stroke();
+
+          // Tiny arrowhead
+          const angle = Math.atan2(-ndy, ndx);
+          const headLen = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(ex, ey);
+          ctx.lineTo(ex - headLen * Math.cos(angle - Math.PI / 6), ey - headLen * Math.sin(angle - Math.PI / 6));
+          ctx.lineTo(ex - headLen * Math.cos(angle + Math.PI / 6), ey - headLen * Math.sin(angle + Math.PI / 6));
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawFlowParticles(ctx, width, height) {
+      ctx.fillStyle = 'rgba(0, 243, 255, 0.3)';
+      for (let p of fieldParticles) {
+        const sx = toScreenX(p.x, width);
+        const sy = toScreenY(p.y, height);
+        
+        // Fade in/out by life
+        const progress = p.life / p.maxLife;
+        const alpha = Math.sin(progress * Math.PI) * 0.4;
+        ctx.fillStyle = `rgba(0, 243, 255, ${alpha})`;
+        
+        ctx.beginPath();
+        ctx.arc(sx, sy, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawTrajectory(ctx, traj, width, height) {
+      if (traj.history.length < 2) return;
+
+      // Draw Orbit Path Line with Canvas Glow
+      ctx.save();
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = traj.color;
+      ctx.strokeStyle = traj.color;
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      for (let i = 0; i < traj.history.length; i++) {
+        const pt = traj.history[i];
+        const sx = toScreenX(pt.x, width);
+        const sy = toScreenY(pt.y, height);
+
+        if (i === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw Current Trajectory Head (Particle)
+      const head = traj.history[traj.history.length - 1];
+      const headSx = toScreenX(head.x, width);
+      const headSy = toScreenY(head.y, height);
+
+      // Outer Glowing Ring
+      ctx.save();
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = traj.color;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(headSx, headSy, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = traj.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(headSx, headSy, 8, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawEquilibriumMarker(ctx, width, height) {
+      const eq = getEquilibrium();
+      const sx = toScreenX(eq.x, width);
+      const sy = toScreenY(eq.y, height);
+
+      const pulse = 1 + 0.15 * Math.sin(Date.now() / 250);
+
+      ctx.save();
+      ctx.shadowBlur = 16 * pulse;
+      ctx.shadowColor = '#ffcc00';
+
+      // Outer Target Halo Ring
+      ctx.strokeStyle = 'rgba(255, 204, 0, 0.8)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 8 * pulse, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Crosshairs
+      ctx.beginPath();
+      ctx.moveTo(sx - 12, sy); ctx.lineTo(sx + 12, sy);
+      ctx.moveTo(sx, sy - 12); ctx.lineTo(sx, sy + 12);
+      ctx.stroke();
+
+      // Center Gold Dot
+      ctx.fillStyle = '#ffcc00';
+      ctx.beginPath();
+      ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Text Badge
+      ctx.fillStyle = '#ffcc00';
+      ctx.font = 'bold 10px "JetBrains Mono", monospace';
+      ctx.fillText(`E(${eq.x.toFixed(2)}, ${eq.y.toFixed(2)})`, sx + 12, sy - 10);
+
+      ctx.restore();
+    }
+
+    // --- RENDERING TIME SERIES CANVAS ---
+    function renderTimeSeriesChart() {
+      const { width, height, dpr } = resizeCanvas(timeCanvas);
+      timeCtx.save();
+      timeCtx.scale(dpr, dpr);
+
+      timeCtx.fillStyle = '#0a0c10';
+      timeCtx.fillRect(0, 0, width, height);
+
+      if (trajectories.length === 0 || trajectories[0].history.length < 2) {
+        timeCtx.restore();
+        return;
+      }
+
+      // Active trajectory to plot
+      const traj = trajectories[trajectories.length - 1];
+      const history = traj.history;
+
+      const padLeft = 45;
+      const padRight = 20;
+      const padTop = 15;
+      const padBottom = 25;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      // Determine time window (last N points or last 250 steps)
+      const windowSize = 350;
+      const displayData = history.slice(-windowSize);
+
+      // Y-axis range max based on current xMax/yMax
+      const maxYVal = Math.max(xMax, yMax) * 1.1;
+
+      // 1. Draw Grid Lines
+      timeCtx.lineWidth = 1;
+      timeCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      for (let i = 0; i <= 4; i++) {
+        const yVal = (maxYVal / 4) * i;
+        const sy = padTop + chartH - (yVal / maxYVal) * chartH;
+        timeCtx.beginPath();
+        timeCtx.moveTo(padLeft, sy);
+        timeCtx.lineTo(width - padRight, sy);
+        timeCtx.stroke();
+
+        timeCtx.fillStyle = '#64748b';
+        timeCtx.font = '10px "JetBrains Mono", monospace';
+        timeCtx.fillText(yVal.toFixed(0), padLeft - 28, sy + 3);
+      }
+
+      // X-Axis Border
+      timeCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      timeCtx.strokeRect(padLeft, padTop, chartW, chartH);
+
+      // 2. Draw Prey Curve x(t) [Electric Cyan]
+      timeCtx.save();
+      timeCtx.shadowBlur = 10;
+      timeCtx.shadowColor = '#00f3ff';
+      timeCtx.strokeStyle = '#00f3ff';
+      timeCtx.lineWidth = 2;
+      timeCtx.beginPath();
+
+      for (let i = 0; i < displayData.length; i++) {
+        const sx = padLeft + (i / (windowSize - 1)) * chartW;
+        const sy = padTop + chartH - (displayData[i].x / maxYVal) * chartH;
+        if (i === 0) timeCtx.moveTo(sx, sy);
+        else timeCtx.lineTo(sx, sy);
+      }
+      timeCtx.stroke();
+      timeCtx.restore();
+
+      // 3. Draw Predator Curve y(t) [Neon Magenta]
+      timeCtx.save();
+      timeCtx.shadowBlur = 10;
+      timeCtx.shadowColor = '#ff0055';
+      timeCtx.strokeStyle = '#ff0055';
+      timeCtx.lineWidth = 2;
+      timeCtx.beginPath();
+
+      for (let i = 0; i < displayData.length; i++) {
+        const sx = padLeft + (i / (windowSize - 1)) * chartW;
+        const sy = padTop + chartH - (displayData[i].y / maxYVal) * chartH;
+        if (i === 0) timeCtx.moveTo(sx, sy);
+        else timeCtx.lineTo(sx, sy);
+      }
+      timeCtx.stroke();
+      timeCtx.restore();
+
+      // 4. Synchronized Current Time Cursor Bar
+      if (displayData.length > 0) {
+        const lastIdx = displayData.length - 1;
+        const lastSx = padLeft + (lastIdx / (windowSize - 1)) * chartW;
+
+        timeCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        timeCtx.setLineDash([3, 3]);
+        timeCtx.beginPath();
+        timeCtx.moveTo(lastSx, padTop);
+        timeCtx.lineTo(lastSx, padTop + chartH);
+        timeCtx.stroke();
+        timeCtx.setLineDash([]);
+
+        // Live head indicators
+        const lastPt = displayData[lastIdx];
+        const headXsy = padTop + chartH - (lastPt.x / maxYVal) * chartH;
+        const headYsy = padTop + chartH - (lastPt.y / maxYVal) * chartH;
+
+        timeCtx.fillStyle = '#00f3ff';
+        timeCtx.beginPath(); timeCtx.arc(lastSx, headXsy, 4, 0, Math.PI * 2); timeCtx.fill();
+
+        timeCtx.fillStyle = '#ff0055';
+        timeCtx.beginPath(); timeCtx.arc(lastSx, headYsy, 4, 0, Math.PI * 2); timeCtx.fill();
+      }
+
+      timeCtx.restore();
+    }
+
+    // --- UI READOUTS & STATE SYNCHRONIZATION ---
+    function updateUIReadouts() {
+      // Equilibrium point
+      const eq = getEquilibrium();
+      document.getElementById('eqPointReadout').textContent = `(${eq.x.toFixed(2)}, ${eq.y.toFixed(2)})`;
+
+      // Equations Math preview update
+      document.getElementById('mathAlpha').textContent = params.alpha.toFixed(2);
+      document.getElementById('mathBeta').textContent = params.beta.toFixed(2);
+      document.getElementById('mathGamma').textContent = params.gamma.toFixed(2);
+      document.getElementById('mathDelta').textContent = params.delta.toFixed(2);
+
+      // Trajectory metrics
+      if (trajectories.length > 0) {
+        const active = trajectories[trajectories.length - 1];
+        const currentV = active.getCurrentV();
+        const initV = active.initialV;
+        const vDrift = Math.abs(currentV - initV);
+
+        document.getElementById('headerVValue').textContent = currentV.toFixed(4);
+        document.getElementById('timeVal').textContent = active.time.toFixed(2);
+        document.getElementById('vDriftVal').textContent = `ΔV = ${vDrift.toFixed(5)}`;
+
+        // Relative error percentage
+        const errPct = initV !== 0 ? (vDrift / Math.abs(initV)) * 100 : 0;
+        document.getElementById('vErrorPercent').textContent = `${errPct.toFixed(3)}% Drift`;
+
+        // Update stability bar width/color
+        const bar = document.getElementById('vStabilityBar');
+        const health = Math.max(0, 100 - errPct * 50);
+        bar.style.width = `${health}%`;
+      }
+    }
+
+    // Adapt Viewport Max Bounds depending on parameters and trajectories
+    function autoAdjustBounds() {
+      const eq = getEquilibrium();
+      let maxX = Math.max(16, eq.x * 2.2);
+      let maxY = Math.max(10, eq.y * 2.2);
+
+      trajectories.forEach((t) => {
+        t.history.forEach((pt) => {
+          if (pt.x * 1.25 > maxX) maxX = pt.x * 1.25;
+          if (pt.y * 1.25 > maxY) maxY = pt.y * 1.25;
+        });
+      });
+
+      xMax = maxX;
+      yMax = maxY;
+    }
+
+    // --- INTERACTION & EVENT LISTENERS ---
+
+    // Click Phase Space Canvas to Spawn Orbit Initial Condition
+    phaseCanvas.addEventListener('click', (e) => {
+      const rect = phaseCanvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      const mathX = toMathX(clickX, rect.width);
+      const mathY = toMathY(clickY, rect.height);
+
+      if (!multiMode) {
+        trajectories = [];
+      }
+
+      const newTraj = new Trajectory(mathX, mathY);
+      trajectories.push(newTraj);
+      autoAdjustBounds();
+    });
+
+    // Hover tooltip crosshairs
+    phaseCanvas.addEventListener('mousemove', (e) => {
+      const rect = phaseCanvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      if (mouseX >= margin.left && mouseX <= rect.width - margin.right &&
+          mouseY >= margin.top && mouseY <= rect.height - margin.bottom) {
+
+        const mathX = toMathX(mouseX, rect.width);
+        const mathY = toMathY(mouseY, rect.height);
+        const vVal = calculateV(mathX, mathY);
+
+        document.getElementById('hoverXVal').textContent = mathX.toFixed(2);
+        document.getElementById('hoverYVal').textContent = mathY.toFixed(2);
+        document.getElementById('hoverVVal').textContent = vVal.toFixed(4);
+
+        const tooltip = document.getElementById('canvasHoverTooltip');
+        tooltip.classList.remove('hidden');
+      } else {
+        document.getElementById('canvasHoverTooltip').classList.add('hidden');
+      }
+    });
+
+    phaseCanvas.addEventListener('mouseleave', () => {
+      document.getElementById('canvasHoverTooltip').classList.add('hidden');
+    });
+
+    // Slider Bindings
+    function bindSlider(id, targetParam, readoutId, formatter = (v) => parseFloat(v).toFixed(2)) {
+      const slider = document.getElementById(id);
+      slider.addEventListener('input', (e) => {
+        params[targetParam] = parseFloat(e.target.value);
+        document.getElementById(readoutId).textContent = formatter(e.target.value);
+        autoAdjustBounds();
+      });
+    }
+
+    bindSlider('alphaSlider', 'alpha', 'alphaVal');
+    bindSlider('betaSlider', 'beta', 'betaVal', (v) => parseFloat(v).toFixed(3));
+    bindSlider('gammaSlider', 'gamma', 'gammaVal');
+    bindSlider('deltaSlider', 'delta', 'deltaVal', (v) => parseFloat(v).toFixed(3));
+    bindSlider('speedSlider', 'speed', 'speedVal', (v) => `${v}x`);
+    bindSlider('dtSlider', 'dt', 'dtVal', (v) => parseFloat(v).toFixed(3));
+
+    // Play / Pause Toggle
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const playPauseLabel = document.getElementById('playPauseLabel');
+
+    function togglePlayPause() {
+      isRunning = !isRunning;
+      if (isRunning) {
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        playPauseLabel.textContent = 'PAUSE';
+      } else {
+        pauseIcon.classList.add('hidden');
+        playIcon.classList.remove('hidden');
+        playPauseLabel.textContent = 'PLAY';
+      }
+    }
+    playPauseBtn.addEventListener('click', togglePlayPause);
+
+    // Step Single Forward
+    document.getElementById('stepBtn').addEventListener('click', () => {
+      isRunning = false;
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      playPauseLabel.textContent = 'PLAY';
+
+      trajectories.forEach((t) => t.step(params.dt, params.speed));
+      updateUIReadouts();
+    });
+
+    // Clear Trajectories
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      trajectories = [];
+      const eq = getEquilibrium();
+      trajectories.push(new Trajectory(eq.x * 1.3, eq.y * 1.3));
+      autoAdjustBounds();
+    });
+
+    // Reset View Button
+    document.getElementById('resetViewBtn').addEventListener('click', autoAdjustBounds);
+
+    // Toggles
+    document.getElementById('toggleVectorField').addEventListener('change', (e) => showVectorField = e.target.checked);
+    document.getElementById('toggleTrails').addEventListener('change', (e) => showTrails = e.target.checked);
+    document.getElementById('toggleMultiMode').addEventListener('change', (e) => multiMode = e.target.checked);
+    document.getElementById('toggleFlowParticles').addEventListener('change', (e) => showFlowParticles = e.target.checked);
+
+    // Preset Scenario Selector
+    const presetConfigs = {
+      balanced: { alpha: 0.67, beta: 0.25, gamma: 0.80, delta: 0.15, x0: 7.0, y0: 4.0 },
+      boombust: { alpha: 1.20, beta: 0.20, gamma: 1.00, delta: 0.10, x0: 22.0, y0: 12.0 },
+      extinction: { alpha: 1.00, beta: 0.15, gamma: 1.20, delta: 0.08, x0: 30.0, y0: 16.0 },
+      equilibrium: { alpha: 0.67, beta: 0.25, gamma: 0.80, delta: 0.15, useEq: true }
+    };
+
+    document.querySelectorAll('.preset-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-preset');
+        const config = presetConfigs[key];
+        if (!config) return;
+
+        // Apply sliders & params
+        params.alpha = config.alpha;
+        params.beta = config.beta;
+        params.gamma = config.gamma;
+        params.delta = config.delta;
+
+        document.getElementById('alphaSlider').value = config.alpha;
+        document.getElementById('alphaVal').textContent = config.alpha.toFixed(2);
+
+        document.getElementById('betaSlider').value = config.beta;
+        document.getElementById('betaVal').textContent = config.beta.toFixed(3);
+
+        document.getElementById('gammaSlider').value = config.gamma;
+        document.getElementById('gammaVal').textContent = config.gamma.toFixed(2);
+
+        document.getElementById('deltaSlider').value = config.delta;
+        document.getElementById('deltaVal').textContent = config.delta.toFixed(3);
+
+        trajectories = [];
+        const eq = getEquilibrium();
+        const startX = config.useEq ? eq.x : config.x0;
+        const startY = config.useEq ? eq.y : config.y0;
+
+        trajectories.push(new Trajectory(startX, startY));
+        autoAdjustBounds();
+      });
+    });
+
+    // --- MAIN ANIMATION LOOP ---
+    function animate(currentTime) {
+      // Calculate FPS
+      const delta = currentTime - lastTime;
+      frameCount++;
+      if (delta >= 1000) {
+        fps = Math.round((frameCount * 1000) / delta);
+        document.getElementById('fpsCounter').textContent = fps;
+        frameCount = 0;
+        lastTime = currentTime;
+      }
+
+      // Physics Integration Step if running
+      if (isRunning) {
+        trajectories.forEach((t) => {
+          t.step(params.dt, params.speed);
+        });
+        updateFieldParticles();
+      }
+
+      // Render Both Canvases
+      renderPhasePortrait();
+      renderTimeSeriesChart();
+
+      // Update UI numeric readouts
+      updateUIReadouts();
+
+      requestAnimationFrame(animate);
+    }
+
+    // --- INITIALIZATION ON WINDOW LOAD ---
+    window.addEventListener('load', () => {
+      initFieldParticles();
+
+      // Initialize default trajectory (Balanced scenario start)
+      const eq = getEquilibrium();
+      trajectories.push(new Trajectory(eq.x * 1.3, eq.y * 1.3));
+      autoAdjustBounds();
+
+      // Start animation loop
+      requestAnimationFrame(animate);
+    });
+
+    // Window Resize Handler
+    window.addEventListener('resize', () => {
+      autoAdjustBounds();
+    });
+  </script>
+</body>
+</html>
