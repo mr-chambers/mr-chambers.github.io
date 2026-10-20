@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AP Calculus BC: Solids of Revolution Visualizer</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Math & 3D Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+  
+  <!-- KaTeX for crisp LaTeX math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    canvas {
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased overflow-x-hidden">
+
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-sky-500/20 text-sky-400 rounded-lg border border-sky-500/30">
+          <i data-lucide="rotate-3d" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight flex items-center gap-2">
+            AP Calculus BC <span class="text-xs px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono">Solids of Revolution</span>
+          </h1>
+          <p class="text-xs text-slate-400">Interactive Washer/Disk & Cylindrical Shells Explorer</p>
+        </div>
+      </div>
+
+      <!-- Presets Dropdown / Buttons -->
+      <div class="flex items-center gap-2 flex-wrap text-xs">
+        <span class="text-slate-400 font-medium">Presets:</span>
+        <button onclick="applyPreset(1)" class="px-2.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <span>1. x-Axis Washer</span>
+        </button>
+        <button onclick="applyPreset(2)" class="px-2.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <span>2. y-Axis Washer (dy)</span>
+        </button>
+        <button onclick="applyPreset(3)" class="px-2.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <span>3. y = -1 Off-Axis</span>
+        </button>
+        <button onclick="applyPreset(4)" class="px-2.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <span>4. x = 2 Off-Axis Shell</span>
+        </button>
+      </div>
+
+      <!-- View Mode Buttons -->
+      <div class="flex items-center bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs">
+        <button id="view2dBtn" onclick="setViewMode('2d')" class="px-3 py-1 rounded-md transition font-medium">2D Region</button>
+        <button id="viewSplitBtn" onclick="setViewMode('split')" class="px-3 py-1 rounded-md transition font-medium bg-sky-600 text-white shadow">Split View</button>
+        <button id="view3dBtn" onclick="setViewMode('3d')" class="px-3 py-1 rounded-md transition font-medium">3D Solid</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
+
+    <!-- Controls Sidebar -->
+    <aside class="lg:col-span-4 flex flex-col gap-4">
+      
+      <!-- Function & Boundary Controls -->
+      <div class="glass-panel p-4 rounded-xl space-y-4">
+        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-2">
+          <i data-lucide="function-square" class="w-4 h-4 text-sky-400"></i> Region & Functions
+        </h2>
+
+        <div class="space-y-3 text-xs">
+          <div>
+            <label class="block text-slate-300 font-medium mb-1">Top Curve / Right Boundary f(x):</label>
+            <div class="relative">
+              <input type="text" id="funcF" value="sqrt(x)" onchange="updateParameters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-sky-500">
+              <span class="absolute right-2.5 top-2.5 text-cyan-400 font-bold">• f(x)</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-300 font-medium mb-1">Bottom Curve / Left Boundary g(x):</label>
+            <div class="relative">
+              <input type="text" id="funcG" value="x^2" onchange="updateParameters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-emerald-500">
+              <span class="absolute right-2.5 top-2.5 text-emerald-400 font-bold">• g(x)</span>
+            </div>
+          </div>
+
+          <!-- Integration Bounds -->
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-slate-300 font-medium mb-1">Lower Bound a:</label>
+              <input type="number" id="boundA" value="0" step="0.1" onchange="updateParameters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 font-mono focus:outline-none focus:border-sky-500">
+            </div>
+            <div>
+              <label class="block text-slate-300 font-medium mb-1">Upper Bound b:</label>
+              <input type="number" id="boundB" value="1" step="0.1" onchange="updateParameters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 font-mono focus:outline-none focus:border-sky-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel p-4 rounded-xl space-y-4">
+        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-2">
+          <i data-lucide="axis-3d" class="w-4 h-4 text-amber-400"></i> Axis & Integration Method
+        </h2>
+
+        <div class="space-y-3 text-xs">
+          <!-- Axis Type Toggle -->
+          <div>
+            <label class="block text-slate-300 font-medium mb-1.5">Axis Orientation:</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="axisHorizBtn" onclick="setAxisType('horizontal')" class="px-3 py-2 rounded-lg border border-slate-700 text-center font-medium bg-sky-600/30 border-sky-500 text-sky-200">
+                Horizontal (y = k)
+              </button>
+              <button id="axisVertBtn" onclick="setAxisType('vertical')" class="px-3 py-2 rounded-lg border border-slate-700 text-center font-medium bg-slate-800 text-slate-400">
+                Vertical (x = h)
+              </button>
+            </div>
+          </div>
+
+          <!-- Axis Location Slider -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label id="axisValLabel" class="text-slate-300 font-medium">Axis Location (k = 0):</label>
+              <span id="axisValDisp" class="font-mono text-amber-400 font-bold">y = 0.0</span>
+            </div>
+            <input type="range" id="axisValSlider" min="-5" max="5" step="0.25" value="0" oninput="updateParameters()" class="w-full accent-amber-500">
+          </div>
+
+          <!-- Method Selection -->
+          <div class="pt-2">
+            <label class="block text-slate-300 font-medium mb-1.5">Integration Method:</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="methodWasherBtn" onclick="setMethod('washer')" class="px-3 py-2.5 rounded-lg border border-slate-700 text-center font-medium bg-sky-600/30 border-sky-500 text-sky-200 flex flex-col items-center gap-1">
+                <i data-lucide="disc" class="w-4 h-4 text-sky-400"></i>
+                <span>Washer / Disk</span>
+              </button>
+              <button id="methodShellBtn" onclick="setMethod('shell')" class="px-3 py-2.5 rounded-lg border border-slate-700 text-center font-medium bg-slate-800 text-slate-400 flex flex-col items-center gap-1">
+                <i data-lucide="cylinder" class="w-4 h-4 text-amber-400"></i>
+                <span>Cylindrical Shells</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel p-4 rounded-xl space-y-4">
+        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i> Slice & Revolution Controls
+        </h2>
+
+        <div class="space-y-4 text-xs">
+          <!-- Representative Slice Location -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label id="sliceLabel" class="text-slate-300 font-medium">Representative Slice:</label>
+              <span id="sliceValDisp" class="font-mono text-emerald-400 font-bold">x = 0.50</span>
+            </div>
+            <input type="range" id="sliceSlider" min="0" max="1" step="0.01" value="0.5" oninput="updateParameters()" class="w-full accent-emerald-500">
+          </div>
+
+          <!-- Revolution Angle Slider & Auto Play -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-slate-300 font-medium">Revolution Angle (&theta;):</label>
+              <span id="angleValDisp" class="font-mono text-sky-400 font-bold">360&deg;</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="range" id="angleSlider" min="0" max="360" step="5" value="360" oninput="updateParameters()" class="w-full accent-sky-500">
+              <button id="playBtn" onclick="togglePlayAnimation()" class="p-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white transition shrink-0" title="Play/Pause Sweep">
+                <i data-lucide="play" id="playIcon" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Riemann Sum Approximation -->
+          <div class="pt-2 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-slate-300 font-medium flex items-center gap-1.5">
+                <input type="checkbox" id="riemannToggle" onchange="updateParameters()" class="rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-sky-500">
+                Riemann Sum Approximation
+              </label>
+              <span id="riemannNDisp" class="font-mono text-purple-400 font-bold">N = 10</span>
+            </div>
+            <div>
+              <input type="range" id="riemannNSlider" min="1" max="50" step="1" value="10" oninput="updateParameters()" class="w-full accent-purple-500">
+            </div>
+          </div>
+
+          <!-- Unfold Shell Control (Active only in Shell mode) -->
+          <div id="unfoldContainer" class="pt-2 border-t border-slate-800 hidden">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-amber-300 font-medium flex items-center gap-1">
+                <i data-lucide="unfold-horizontal" class="w-3.5 h-3.5"></i> Unfold Representative Shell:
+              </label>
+              <span id="unfoldValDisp" class="font-mono text-amber-400 font-bold">0%</span>
+            </div>
+            <input type="range" id="unfoldSlider" min="0" max="1" step="0.01" value="0" oninput="updateParameters()" class="w-full accent-amber-500">
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <section class="lg:col-span-8 flex flex-col gap-4">
+      
+      <!-- Canvas Container -->
+      <div id="canvasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[500px] lg:h-[580px]">
+        
+        <!-- 2D Canvas Panel -->
+        <div id="panel2D" class="glass-panel rounded-xl p-3 flex flex-col relative overflow-hidden">
+          <div class="flex justify-between items-center px-1 pb-2 border-b border-slate-800 shrink-0">
+            <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="line-chart" class="w-4 h-4 text-cyan-400"></i> 2D Region & Representative Slice
+            </span>
+            <span id="sliceInfo2D" class="text-[11px] font-mono text-slate-400">dx slice</span>
+          </div>
+          <div class="relative flex-1 w-full mt-2 rounded-lg bg-slate-950 overflow-hidden border border-slate-800">
+            <canvas id="canvas2D" class="w-full h-full block"></canvas>
+            <!-- 2D Overlay legend -->
+            <div class="absolute bottom-2 left-2 bg-slate-900/90 border border-slate-800 p-2 rounded-md text-[10px] space-y-1 font-mono">
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span> f(x) Top/Right</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> g(x) Bottom/Left</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-amber-500 inline-block"></span> Axis of Rotation</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D WebGL Canvas Panel -->
+        <div id="panel3D" class="glass-panel rounded-xl p-3 flex flex-col relative overflow-hidden">
+          <div class="flex justify-between items-center px-1 pb-2 border-b border-slate-800 shrink-0">
+            <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="box" class="w-4 h-4 text-purple-400"></i> 3D Revolved Solid View
+            </span>
+            <div class="flex items-center gap-2">
+              <button onclick="reset3DCamera()" class="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white text-[11px] flex items-center gap-1">
+                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset View
+              </button>
+            </div>
+          </div>
+          <div class="relative flex-1 w-full mt-2 rounded-lg bg-slate-950 overflow-hidden border border-slate-800">
+            <div id="container3D" class="w-full h-full block"></div>
+            
+            <!-- 3D Controls overlay instructions -->
+            <div class="absolute top-2 right-2 bg-slate-900/80 border border-slate-800 px-2 py-1 rounded text-[10px] text-slate-400 pointer-events-none">
+              Drag to rotate &bull; Scroll to zoom
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="glass-panel p-5 rounded-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <i data-lucide="binary" class="w-4 h-4 text-sky-400"></i> AP Calculus Integral Setup & Volume Evaluation
+          </h2>
+          <span id="methodBadge" class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-sky-500/20 text-sky-300 border border-sky-500/30">
+            Washer Method
+          </span>
+        </div>
+
+        <!-- Math Details Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Identified Variables -->
+          <div class="bg-slate-900/80 border border-slate-800 p-3.5 rounded-lg space-y-2">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">1. Identified Slice Radii & Dimensions</h3>
+            <div id="mathVariables" class="text-sm font-mono text-slate-200 overflow-x-auto py-1">
+              <!-- Rendered via KaTeX -->
+            </div>
+          </div>
+
+          <!-- Integral Setup -->
+          <div class="bg-slate-900/80 border border-slate-800 p-3.5 rounded-lg space-y-2">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">2. Definite Integral Formula</h3>
+            <div id="mathIntegral" class="text-sm font-mono text-slate-200 overflow-x-auto py-1">
+              <!-- Rendered via KaTeX -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Calculated Volume Highlight -->
+        <div class="bg-gradient-to-r from-sky-950/60 to-purple-950/60 border border-sky-500/30 p-4 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="text-xs text-sky-300 font-semibold uppercase tracking-wider">Calculated Solid Volume V:</span>
+            <div id="mathVolumeExact" class="text-lg font-bold text-slate-100 font-mono">
+              <!-- Rendered via KaTeX -->
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400">Rounded Decimal Value:</span>
+            <div id="mathVolumeDecimal" class="text-2xl font-black text-amber-400 font-mono">
+              0.0000
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Global Application State
+    const state = {
+      funcFStr: "sqrt(x)",
+      funcGStr: "x^2",
+      boundA: 0,
+      boundB: 1,
+      axisType: "horizontal", // "horizontal" (y=k) or "vertical" (x=h)
+      axisVal: 0,
+      method: "washer", // "washer" or "shell"
+      slicePos: 0.5,
+      angleDeg: 360,
+      isRiemann: false,
+      riemannN: 10,
+      unfoldVal: 0,
+      viewMode: "split", // "2d", "3d", "split"
+      isPlaying: false
+    };
+
+    let animationFrameId = null;
+
+    // Compiled functions
+    let compiledF = null;
+    let compiledG = null;
+
+    // Evaluate function safely
+    function evalF(x) {
+      try {
+        if (!compiledF) compiledF = math.compile(state.funcFStr);
+        const res = compiledF.evaluate({ x: x });
+        return typeof res === 'number' && !isNaN(res) ? res : 0;
+      } catch (e) { return 0; }
+    }
+
+    function evalG(x) {
+      try {
+        if (!compiledG) compiledG = math.compile(state.funcGStr);
+        const res = compiledG.evaluate({ x: x });
+        return typeof res === 'number' && !isNaN(res) ? res : 0;
+      } catch (e) { return 0; }
+    }
+
+    function isDyMode() {
+      // Slicing w.r.t y occurs for:
+      // 1. Washer method around a vertical axis (x = h)
+      // 2. Cylindrical shell method around a horizontal axis (y = k)
+      return (state.method === "washer" && state.axisType === "vertical") ||
+             (state.method === "shell" && state.axisType === "horizontal");
+    }
+
+    function getRegionYBounds() {
+      const steps = 200;
+      const dx = (state.boundB - state.boundA) / steps;
+      let yMin = Infinity;
+      let yMax = -Infinity;
+
+      for (let i = 0; i <= steps; i++) {
+        const x = state.boundA + i * dx;
+        const yF = evalF(x);
+        const yG = evalG(x);
+        yMin = Math.min(yMin, yF, yG);
+        yMax = Math.max(yMax, yF, yG);
+      }
+      if (yMin === Infinity || yMin === yMax) {
+        yMin = 0;
+        yMax = 1;
+      }
+      return { yMin, yMax };
+    }
+
+    function getHorizontalBoundsAtY(y) {
+      const steps = 400;
+      const dx = (state.boundB - state.boundA) / steps;
+      let xMin = Infinity;
+      let xMax = -Infinity;
+
+      for (let i = 0; i <= steps; i++) {
+        const x = state.boundA + i * dx;
+        const yF = evalF(x);
+        const yG = evalG(x);
+        const yLow = Math.min(yF, yG);
+        const yHigh = Math.max(yF, yG);
+
+        if (y >= yLow - 1e-4 && y <= yHigh + 1e-4) {
+          if (x < xMin) xMin = x;
+          if (x > xMax) xMax = x;
+        }
+      }
+
+      if (xMin === Infinity) {
+        xMin = state.boundA;
+        xMax = state.boundB;
+      }
+      return { xLeft: xMin, xRight: xMax };
+    }
+
+    function updateParameters() {
+      state.funcFStr = document.getElementById("funcF").value;
+      state.funcGStr = document.getElementById("funcG").value;
+      compiledF = null;
+      compiledG = null;
+
+      state.boundA = parseFloat(document.getElementById("boundA").value) || 0;
+      state.boundB = parseFloat(document.getElementById("boundB").value) || 1;
+      
+      if (state.boundA >= state.boundB) {
+        state.boundB = state.boundA + 0.1;
+      }
+
+      state.axisVal = parseFloat(document.getElementById("axisValSlider").value);
+      document.getElementById("axisValDisp").innerText = 
+        `${state.axisType === 'horizontal' ? 'y' : 'x'} = ${state.axisVal.toFixed(2)}`;
+
+      const sliceSlider = document.getElementById("sliceSlider");
+      const sliceLabel = document.getElementById("sliceLabel");
+      const sliceInfo2D = document.getElementById("sliceInfo2D");
+
+      const dy = isDyMode();
+      if (dy) {
+        const { yMin, yMax } = getRegionYBounds();
+        sliceSlider.min = yMin;
+        sliceSlider.max = yMax;
+        if (state.slicePos < yMin || state.slicePos > yMax) {
+          state.slicePos = (yMin + yMax) / 2;
+          sliceSlider.value = state.slicePos;
+        } else {
+          state.slicePos = parseFloat(sliceSlider.value);
+        }
+        sliceLabel.innerHTML = `Representative Slice (y<sub>slice</sub>):`;
+        document.getElementById("sliceValDisp").innerText = `y = ${state.slicePos.toFixed(2)}`;
+        if (sliceInfo2D) sliceInfo2D.innerText = "dy horizontal slice";
+      } else {
+        sliceSlider.min = state.boundA;
+        sliceSlider.max = state.boundB;
+        if (state.slicePos < state.boundA || state.slicePos > state.boundB) {
+          state.slicePos = (state.boundA + state.boundB) / 2;
+          sliceSlider.value = state.slicePos;
+        } else {
+          state.slicePos = parseFloat(sliceSlider.value);
+        }
+        sliceLabel.innerHTML = `Representative Slice (x<sub>slice</sub>):`;
+        document.getElementById("sliceValDisp").innerText = `x = ${state.slicePos.toFixed(2)}`;
+        if (sliceInfo2D) sliceInfo2D.innerText = "dx vertical slice";
+      }
+
+      state.angleDeg = parseFloat(document.getElementById("angleSlider").value);
+      document.getElementById("angleValDisp").innerText = `${Math.round(state.angleDeg)}°`;
+
+      state.isRiemann = document.getElementById("riemannToggle").checked;
+      state.riemannN = parseInt(document.getElementById("riemannNSlider").value);
+      document.getElementById("riemannNDisp").innerText = `N = ${state.riemannN}`;
+
+      state.unfoldVal = parseFloat(document.getElementById("unfoldSlider").value);
+      document.getElementById("unfoldValDisp").innerText = `${Math.round(state.unfoldVal * 100)}%`;
+
+      // Shell unfolding control visibility
+      const unfoldContainer = document.getElementById("unfoldContainer");
+      if (state.method === "shell") {
+        unfoldContainer.classList.remove("hidden");
+      } else {
+        unfoldContainer.classList.add("hidden");
+      }
+
+      render2D();
+      render3D();
+      updateMathOutput();
+    }
+
+    function setAxisType(type) {
+      state.axisType = type;
+      const hBtn = document.getElementById("axisHorizBtn");
+      const vBtn = document.getElementById("axisVertBtn");
+      const lbl = document.getElementById("axisValLabel");
+
+      if (type === "horizontal") {
+        hBtn.className = "px-3 py-2 rounded-lg border border-sky-500 text-center font-medium bg-sky-600/30 text-sky-200";
+        vBtn.className = "px-3 py-2 rounded-lg border border-slate-700 text-center font-medium bg-slate-800 text-slate-400";
+        lbl.innerText = "Axis Location (k):";
+      } else {
+        vBtn.className = "px-3 py-2 rounded-lg border border-sky-500 text-center font-medium bg-sky-600/30 text-sky-200";
+        hBtn.className = "px-3 py-2 rounded-lg border border-slate-700 text-center font-medium bg-slate-800 text-slate-400";
+        lbl.innerText = "Axis Location (h):";
+      }
+      updateParameters();
+    }
+
+    function setMethod(m) {
+      state.method = m;
+      const wBtn = document.getElementById("methodWasherBtn");
+      const sBtn = document.getElementById("methodShellBtn");
+      const badge = document.getElementById("methodBadge");
+
+      if (m === "washer") {
+        wBtn.className = "px-3 py-2.5 rounded-lg border border-sky-500 text-center font-medium bg-sky-600/30 text-sky-200 flex flex-col items-center gap-1";
+        sBtn.className = "px-3 py-2.5 rounded-lg border border-slate-700 text-center font-medium bg-slate-800 text-slate-400 flex flex-col items-center gap-1";
+        badge.className = "text-xs px-2.5 py-0.5 rounded-full font-medium bg-sky-500/20 text-sky-300 border border-sky-500/30";
+        badge.innerText = "Washer / Disk Method";
+      } else {
+        sBtn.className = "px-3 py-2.5 rounded-lg border border-amber-500 text-center font-medium bg-amber-600/30 text-amber-200 flex flex-col items-center gap-1";
+        wBtn.className = "px-3 py-2.5 rounded-lg border border-slate-700 text-center font-medium bg-slate-800 text-slate-400 flex flex-col items-center gap-1";
+        badge.className = "text-xs px-2.5 py-0.5 rounded-full font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        badge.innerText = "Cylindrical Shell Method";
+      }
+      updateParameters();
+    }
+
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      const p2 = document.getElementById("panel2D");
+      const p3 = document.getElementById("panel3D");
+      const grid = document.getElementById("canvasGrid");
+
+      document.getElementById("view2dBtn").className = "px-3 py-1 rounded-md transition font-medium " + (mode === '2d' ? 'bg-sky-600 text-white shadow' : 'text-slate-400 hover:text-white');
+      document.getElementById("viewSplitBtn").className = "px-3 py-1 rounded-md transition font-medium " + (mode === 'split' ? 'bg-sky-600 text-white shadow' : 'text-slate-400 hover:text-white');
+      document.getElementById("view3dBtn").className = "px-3 py-1 rounded-md transition font-medium " + (mode === '3d' ? 'bg-sky-600 text-white shadow' : 'text-slate-400 hover:text-white');
+
+      if (mode === "2d") {
+        p2.classList.remove("hidden");
+        p3.classList.add("hidden");
+        grid.className = "grid grid-cols-1 gap-4 h-[580px]";
+      } else if (mode === "3d") {
+        p2.classList.add("hidden");
+        p3.classList.remove("hidden");
+        grid.className = "grid grid-cols-1 gap-4 h-[580px]";
+      } else {
+        p2.classList.remove("hidden");
+        p3.classList.remove("hidden");
+        grid.className = "grid grid-cols-1 md:grid-cols-2 gap-4 h-[580px]";
+      }
+
+      setTimeout(() => {
+        resizeCanvases();
+        render2D();
+        render3D();
+      }, 50);
+    }
+
+    function applyPreset(num) {
+      if (num === 1) {
+        document.getElementById("funcF").value = "sqrt(x)";
+        document.getElementById("funcG").value = "x^2";
+        document.getElementById("boundA").value = 0;
+        document.getElementById("boundB").value = 1;
+        document.getElementById("axisValSlider").value = 0;
+        setAxisType("horizontal");
+        setMethod("washer");
+      } else if (num === 2) {
+        document.getElementById("funcF").value = "sqrt(x)";
+        document.getElementById("funcG").value = "x^2";
+        document.getElementById("boundA").value = 0;
+        document.getElementById("boundB").value = 1;
+        document.getElementById("axisValSlider").value = 0;
+        setAxisType("vertical");
+        setMethod("washer");
+      } else if (num === 3) {
+        document.getElementById("funcF").value = "x";
+        document.getElementById("funcG").value = "x^2";
+        document.getElementById("boundA").value = 0;
+        document.getElementById("boundB").value = 1;
+        document.getElementById("axisValSlider").value = -1;
+        setAxisType("horizontal");
+        setMethod("washer");
+      } else if (num === 4) {
+        document.getElementById("funcF").value = "2 - x^2";
+        document.getElementById("funcG").value = "x^2";
+        document.getElementById("boundA").value = -1;
+        document.getElementById("boundB").value = 1;
+        document.getElementById("axisValSlider").value = 2;
+        setAxisType("vertical");
+        setMethod("shell");
+      }
+    }
+
+    function render2D() {
+      const canvas = document.getElementById("canvas2D");
+      if (!canvas || canvas.clientWidth === 0) return;
+      
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+
+      ctx.clearRect(0, 0, width, height);
+
+      let xMin = Math.min(-1, state.boundA - 1);
+      let xMax = Math.max(3, state.boundB + 1);
+      if (state.axisType === "vertical") {
+        xMin = Math.min(xMin, state.axisVal - 1);
+        xMax = Math.max(xMax, state.axisVal + 1);
+      }
+
+      let yMin = -2;
+      let yMax = 3;
+      if (state.axisType === "horizontal") {
+        yMin = Math.min(yMin, state.axisVal - 1);
+        yMax = Math.max(yMax, state.axisVal + 1);
+      }
+
+      function toScreenX(x) {
+        return ((x - xMin) / (xMax - xMin)) * width;
+      }
+      function toScreenY(y) {
+        return height - ((y - yMin) / (yMax - yMin)) * height;
+      }
+
+      // Draw Grid Lines
+      ctx.strokeStyle = "#1e293b";
+      ctx.lineWidth = 1;
+      
+      for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+        const sx = toScreenX(x);
+        ctx.beginPath();
+        ctx.moveTo(sx, 0);
+        ctx.lineTo(sx, height);
+        ctx.stroke();
+      }
+      for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+        const sy = toScreenY(y);
+        ctx.beginPath();
+        ctx.moveTo(0, sy);
+        ctx.lineTo(width, sy);
+        ctx.stroke();
+      }
+
+      // Main Axes
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      
+      const originX = toScreenX(0);
+      const originY = toScreenY(0);
+
+      ctx.beginPath();
+      ctx.moveTo(0, originY);
+      ctx.lineTo(width, originY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(originX, 0);
+      ctx.lineTo(originX, height);
+      ctx.stroke();
+
+      // Axis of Rotation
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([6, 4]);
+
+      ctx.beginPath();
+      if (state.axisType === "horizontal") {
+        const sy = toScreenY(state.axisVal);
+        ctx.moveTo(0, sy);
+        ctx.lineTo(width, sy);
+      } else {
+        const sx = toScreenX(state.axisVal);
+        ctx.moveTo(sx, 0);
+        ctx.lineTo(sx, height);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Fill Bounded Region
+      const steps = 200;
+      const dx = (state.boundB - state.boundA) / steps;
+
+      ctx.fillStyle = "rgba(14, 165, 233, 0.25)";
+      ctx.beginPath();
+      ctx.moveTo(toScreenX(state.boundA), toScreenY(evalF(state.boundA)));
+
+      for (let i = 0; i <= steps; i++) {
+        const x = state.boundA + i * dx;
+        ctx.lineTo(toScreenX(x), toScreenY(evalF(x)));
+      }
+      for (let i = steps; i >= 0; i--) {
+        const x = state.boundA + i * dx;
+        ctx.lineTo(toScreenX(x), toScreenY(evalG(x)));
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Plot f(x) (Cyan)
+      ctx.strokeStyle = "#06b6d4";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let sx = 0; sx <= width; sx += 2) {
+        const x = xMin + (sx / width) * (xMax - xMin);
+        const y = evalF(x);
+        const sy = toScreenY(y);
+        if (sx === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Plot g(x) (Emerald)
+      ctx.strokeStyle = "#10b981";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let sx = 0; sx <= width; sx += 2) {
+        const x = xMin + (sx / width) * (xMax - xMin);
+        const y = evalG(x);
+        const sy = toScreenY(y);
+        if (sx === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Bounds Vertical Lines
+      ctx.strokeStyle = "#64748b";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+
+      [state.boundA, state.boundB].forEach(bVal => {
+        const sx = toScreenX(bVal);
+        ctx.beginPath();
+        ctx.moveTo(sx, 0);
+        ctx.lineTo(sx, height);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+
+      const dyMode = isDyMode();
+      ctx.fillStyle = "rgba(245, 158, 11, 0.4)";
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2;
+
+      if (!dyMode) {
+        const xSlice = state.slicePos;
+        const yF = evalF(xSlice);
+        const yG = evalG(xSlice);
+
+        const sX = toScreenX(xSlice);
+        const sYF = toScreenY(yF);
+        const sYG = toScreenY(yG);
+
+        const sliceW = Math.max(4, (0.02 * width));
+        ctx.fillRect(sX - sliceW / 2, Math.min(sYF, sYG), sliceW, Math.abs(sYF - sYG));
+        ctx.strokeRect(sX - sliceW / 2, Math.min(sYF, sYG), sliceW, Math.abs(sYF - sYG));
+
+        if (state.method === "washer" && state.axisType === "horizontal") {
+          const sAxisY = toScreenY(state.axisVal);
+          ctx.strokeStyle = "#06b6d4";
+          ctx.setLineDash([4, 2]);
+          ctx.beginPath();
+          ctx.moveTo(sX, sAxisY);
+          ctx.lineTo(sX, sYF);
+          ctx.stroke();
+
+          ctx.strokeStyle = "#ec4899";
+          ctx.beginPath();
+          ctx.moveTo(sX, sAxisY);
+          ctx.lineTo(sX, sYG);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else if (state.method === "shell" && state.axisType === "vertical") {
+          const sAxisX = toScreenX(state.axisVal);
+          const midY = (sYF + sYG) / 2;
+
+          ctx.strokeStyle = "#f59e0b";
+          ctx.setLineDash([4, 2]);
+          ctx.beginPath();
+          ctx.moveTo(sAxisX, midY);
+          ctx.lineTo(sX, midY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      } else {
+        const ySlice = state.slicePos;
+        const { xLeft, xRight } = getHorizontalBoundsAtY(ySlice);
+
+        const sXLeft = toScreenX(xLeft);
+        const sXRight = toScreenX(xRight);
+        const sY = toScreenY(ySlice);
+
+        const sliceH = Math.max(4, (0.02 * height));
+        ctx.fillRect(Math.min(sXLeft, sXRight), sY - sliceH / 2, Math.abs(sXRight - sXLeft), sliceH);
+        ctx.strokeRect(Math.min(sXLeft, sXRight), sY - sliceH / 2, Math.abs(sXRight - sXLeft), sliceH);
+
+        if (state.method === "washer" && state.axisType === "vertical") {
+          const sAxisX = toScreenX(state.axisVal);
+          ctx.strokeStyle = "#06b6d4";
+          ctx.setLineDash([4, 2]);
+          ctx.beginPath();
+          ctx.moveTo(sAxisX, sY);
+          ctx.lineTo(sXRight, sY);
+          ctx.stroke();
+
+          ctx.strokeStyle = "#ec4899";
+          ctx.beginPath();
+          ctx.moveTo(sAxisX, sY);
+          ctx.lineTo(sXLeft, sY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else if (state.method === "shell" && state.axisType === "horizontal") {
+          const sAxisY = toScreenY(state.axisVal);
+          const midX = (sXLeft + sXRight) / 2;
+
+          ctx.strokeStyle = "#f59e0b";
+          ctx.setLineDash([4, 2]);
+          ctx.beginPath();
+          ctx.moveTo(midX, sAxisY);
+          ctx.lineTo(midX, sY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+    }
+
+    let scene, camera, renderer, controls;
+    let solidMesh = null;
+    let sliceMesh = null;
+    let riemannGroup = null;
+    let axisLineMesh = null;
+
+    function init3D() {
+      const container = document.getElementById("container3D");
+      if (!container) return;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x090d16);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(4, 4, 7);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight1.position.set(10, 15, 10);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0x0284c7, 0.5);
+      dirLight2.position.set(-10, -10, -10);
+      scene.add(dirLight2);
+
+      const gridHelper = new THREE.GridHelper(10, 20, 0x334155, 0x1e293b);
+      gridHelper.position.y = -0.01;
+      scene.add(gridHelper);
+
+      animate3D();
+    }
+
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+      if (controls) controls.update();
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    function reset3DCamera() {
+      if (camera && controls) {
+        camera.position.set(4, 4, 7);
+        controls.target.set(0, 0, 0);
+        controls.update();
+      }
+    }
+
+    function createWasherGeometry(R, r, thick, sweepAngle, axisType, axisVal, startPos, dirSign) {
+      R = Math.max(0.001, R);
+      r = Math.max(0, r);
+      if (r >= R) r = Math.max(0, R - 0.001);
+      thick = Math.max(0.001, thick);
+      sweepAngle = Math.min(Math.PI * 2, Math.max(0.01, sweepAngle));
+      dirSign = dirSign >= 0 ? 1 : -1;
+
+      const N_theta = Math.max(12, Math.floor(48 * (sweepAngle / (Math.PI * 2))));
+      const isFullCircle = Math.abs(sweepAngle - Math.PI * 2) < 1e-4;
+
+      const vertices = [];
+      const normals = [];
+      const indices = [];
+
+      function addQuad(p1, p2, p3, p4, n) {
+        const base = vertices.length / 3;
+        vertices.push(...p1, ...p2, ...p3, ...p4);
+        normals.push(...n, ...n, ...n, ...n);
+        indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
+      }
+
+      function getPos(rad, yLoc, angle) {
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+        if (axisType === "horizontal") {
+          return [
+            startPos + yLoc,
+            axisVal + dirSign * rad * cosA,
+            dirSign * rad * sinA
+          ];
+        } else {
+          return [
+            axisVal + dirSign * rad * cosA,
+            startPos + yLoc,
+            dirSign * rad * sinA
+          ];
+        }
+      }
+
+      // Top Face
+      const topNormal = axisType === "horizontal" ? [1, 0, 0] : [0, 1, 0];
+      for (let i = 0; i < N_theta; i++) {
+        const a1 = (i / N_theta) * sweepAngle;
+        const a2 = ((i + 1) / N_theta) * sweepAngle;
+        addQuad(
+          getPos(r, thick, a1),
+          getPos(R, thick, a1),
+          getPos(R, thick, a2),
+          getPos(r, thick, a2),
+          topNormal
+        );
+      }
+
+      // Bottom Face
+      const botNormal = axisType === "horizontal" ? [-1, 0, 0] : [0, -1, 0];
+      for (let i = 0; i < N_theta; i++) {
+        const a1 = (i / N_theta) * sweepAngle;
+        const a2 = ((i + 1) / N_theta) * sweepAngle;
+        addQuad(
+          getPos(r, 0, a1),
+          getPos(r, 0, a2),
+          getPos(R, 0, a2),
+          getPos(R, 0, a1),
+          botNormal
+        );
+      }
+
+      // Outer Cylindrical Wall
+      for (let i = 0; i < N_theta; i++) {
+        const a1 = (i / N_theta) * sweepAngle;
+        const a2 = ((i + 1) / N_theta) * sweepAngle;
+        const midA = (a1 + a2) / 2;
+        const cosM = Math.cos(midA), sinM = Math.sin(midA);
+        const wallNormal = axisType === "horizontal"
+          ? [0, dirSign * cosM, dirSign * sinM]
+          : [dirSign * cosM, 0, dirSign * sinM];
+
+        addQuad(
+          getPos(R, 0, a1),
+          getPos(R, 0, a2),
+          getPos(R, thick, a2),
+          getPos(R, thick, a1),
+          wallNormal
+        );
+      }
+
+      // Inner Cylindrical Wall
+      if (r > 0.001) {
+        for (let i = 0; i < N_theta; i++) {
+          const a1 = (i / N_theta) * sweepAngle;
+          const a2 = ((i + 1) / N_theta) * sweepAngle;
+          const midA = (a1 + a2) / 2;
+          const cosM = Math.cos(midA), sinM = Math.sin(midA);
+          const innerNormal = axisType === "horizontal"
+            ? [0, -dirSign * cosM, -dirSign * sinM]
+            : [-dirSign * cosM, 0, -dirSign * sinM];
+
+          addQuad(
+            getPos(r, 0, a1),
+            getPos(r, thick, a1),
+            getPos(r, thick, a2),
+            getPos(r, 0, a2),
+            innerNormal
+          );
+        }
+      }
+
+      // End Caps
+      if (!isFullCircle) {
+        const cap0Normal = [0, 0, -dirSign];
+        addQuad(
+          getPos(r, 0, 0),
+          getPos(r, thick, 0),
+          getPos(R, thick, 0),
+          getPos(R, 0, 0),
+          cap0Normal
+        );
+
+        const sinE = Math.sin(sweepAngle), cosE = Math.cos(sweepAngle);
+        const capENormal = axisType === "horizontal"
+          ? [0, dirSign * sinE, -dirSign * cosE]
+          : [dirSign * sinE, 0, -dirSign * cosE];
+
+        addQuad(
+          getPos(r, 0, sweepAngle),
+          getPos(R, 0, sweepAngle),
+          getPos(R, thick, sweepAngle),
+          getPos(r, thick, sweepAngle),
+          capENormal
+        );
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+      geo.setIndex(indices);
+      return geo;
+    }
+
+    function render3D() {
+      if (!scene) return;
+
+      if (solidMesh) { scene.remove(solidMesh); solidMesh = null; }
+      if (sliceMesh) { scene.remove(sliceMesh); sliceMesh = null; }
+      if (riemannGroup) { scene.remove(riemannGroup); riemannGroup = null; }
+      if (axisLineMesh) { scene.remove(axisLineMesh); axisLineMesh = null; }
+
+      // Axis Line
+      const axisGeo = new THREE.CylinderGeometry(0.03, 0.03, 12, 16);
+      const axisMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0x78350f });
+      axisLineMesh = new THREE.Mesh(axisGeo, axisMat);
+
+      if (state.axisType === "horizontal") {
+        axisLineMesh.rotation.z = Math.PI / 2;
+        axisLineMesh.position.set(0, state.axisVal, 0);
+      } else {
+        axisLineMesh.position.set(state.axisVal, 0, 0);
+      }
+      scene.add(axisLineMesh);
+
+      if (state.isRiemann) {
+        renderRiemann3D();
+      } else {
+        renderSmoothSolid3D();
+      }
+
+      renderSlice3D();
+    }
+
+    function renderSmoothSolid3D() {
+      const sweepAngle = (state.angleDeg * Math.PI) / 180;
+      if (sweepAngle <= 0.001) return;
+
+      const N_steps = 80;
+      const N_theta = Math.max(12, Math.floor(48 * (state.angleDeg / 360)));
+
+      const geometry = new THREE.BufferGeometry();
+      const vertices = [];
+      const indices = [];
+
+      const dy = isDyMode();
+
+      if (!dy) {
+        const a = state.boundA;
+        const b = state.boundB;
+
+        for (let layer = 0; layer < 2; layer++) {
+          for (let i = 0; i <= N_steps; i++) {
+            const xVal = a + (i / N_steps) * (b - a);
+            const yF = evalF(xVal);
+            const yG = evalG(xVal);
+
+            const yTop = Math.max(yF, yG);
+            const yBot = Math.min(yF, yG);
+
+            let dVal;
+            if (state.method === "washer" && state.axisType === "horizontal") {
+              const k = state.axisVal;
+              const dTop = yTop - k;
+              const dBot = yBot - k;
+              dVal = (layer === 0) ? dTop : dBot;
+            } else {
+              dVal = xVal - state.axisVal;
+            }
+
+            for (let j = 0; j <= N_theta; j++) {
+              const phi = (j / N_theta) * sweepAngle;
+
+              let x, y, z;
+              if (state.axisType === "horizontal") {
+                const k = state.axisVal;
+                x = xVal;
+                y = k + dVal * Math.cos(phi);
+                z = dVal * Math.sin(phi);
+              } else {
+                const h = state.axisVal;
+                x = h + dVal * Math.cos(phi);
+                y = (layer === 0) ? yTop : yBot;
+                z = dVal * Math.sin(phi);
+              }
+              vertices.push(x, y, z);
+            }
+          }
+        }
+      } else {
+        const { yMin, yMax } = getRegionYBounds();
+
+        for (let layer = 0; layer < 2; layer++) {
+          for (let i = 0; i <= N_steps; i++) {
+            const yVal = yMin + (i / N_steps) * (yMax - yMin);
+            const { xLeft, xRight } = getHorizontalBoundsAtY(yVal);
+
+            let dVal;
+            if (state.method === "washer" && state.axisType === "vertical") {
+              const h = state.axisVal;
+              const dRight = xRight - h;
+              const dLeft = xLeft - h;
+              if (Math.abs(dRight) >= Math.abs(dLeft)) {
+                dVal = (layer === 0) ? dRight : dLeft;
+              } else {
+                dVal = (layer === 0) ? dLeft : dRight;
+              }
+            } else {
+              dVal = yVal - state.axisVal;
+            }
+
+            for (let j = 0; j <= N_theta; j++) {
+              const phi = (j / N_theta) * sweepAngle;
+
+              let x, y, z;
+              if (state.axisType === "vertical") {
+                const h = state.axisVal;
+                x = h + dVal * Math.cos(phi);
+                y = yVal;
+                z = dVal * Math.sin(phi);
+              } else {
+                const k = state.axisVal;
+                x = (layer === 0) ? xRight : xLeft;
+                y = k + dVal * Math.cos(phi);
+                z = dVal * Math.sin(phi);
+              }
+              vertices.push(x, y, z);
+            }
+          }
+        }
+      }
+
+      const stride = N_theta + 1;
+      const layerOffset = (N_steps + 1) * stride;
+
+      for (let i = 0; i < N_steps; i++) {
+        for (let j = 0; j < N_theta; j++) {
+          const p1 = i * stride + j;
+          const p2 = p1 + 1;
+          const p3 = (i + 1) * stride + j;
+          const p4 = p3 + 1;
+
+          indices.push(p1, p3, p2);
+          indices.push(p2, p3, p4);
+        }
+      }
+
+      for (let i = 0; i < N_steps; i++) {
+        for (let j = 0; j < N_theta; j++) {
+          const p1 = layerOffset + i * stride + j;
+          const p2 = p1 + 1;
+          const p3 = layerOffset + (i + 1) * stride + j;
+          const p4 = p3 + 1;
+
+          indices.push(p1, p2, p3);
+          indices.push(p2, p4, p3);
+        }
+      }
+
+      for (let jIdx of [0, N_theta]) {
+        for (let i = 0; i < N_steps; i++) {
+          const out1 = i * stride + jIdx;
+          const out2 = (i + 1) * stride + jIdx;
+          const in1 = layerOffset + out1;
+          const in2 = layerOffset + out2;
+
+          if (jIdx === 0) {
+            indices.push(out1, in1, out2);
+            indices.push(in1, in2, out2);
+          } else {
+            indices.push(out1, out2, in1);
+            indices.push(in1, out2, in2);
+          }
+        }
+      }
+
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      geometry.setIndex(indices);
+      geometry.computeVertexNormals();
+
+      const material = new THREE.MeshPhysicalMaterial({
+        color: 0x0284c7,
+        roughness: 0.2,
+        metalness: 0.1,
+        transmission: 0.3,
+        transparent: true,
+        opacity: 0.85,
+        side: THREE.DoubleSide
+      });
+
+      solidMesh = new THREE.Mesh(geometry, material);
+      scene.add(solidMesh);
+    }
+
+    function renderRiemann3D() {
+      riemannGroup = new THREE.Group();
+      const N = state.riemannN;
+      const sweepAngle = (state.angleDeg * Math.PI) / 180;
+
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x8b5cf6,
+        roughness: 0.3,
+        metalness: 0.2,
+        transparent: true,
+        opacity: 0.8,
+        side: THREE.DoubleSide
+      });
+
+      if (!isDyMode()) {
+        const dx = (state.boundB - state.boundA) / N;
+
+        for (let i = 0; i < N; i++) {
+          const xMid = state.boundA + (i + 0.5) * dx;
+          const yF = evalF(xMid);
+          const yG = evalG(xMid);
+
+          const yTop = Math.max(yF, yG);
+          const yBot = Math.min(yF, yG);
+
+          if (state.method === "washer" && state.axisType === "horizontal") {
+            const k = state.axisVal;
+            const d1 = yTop - k;
+            const d2 = yBot - k;
+            const R = Math.max(Math.abs(d1), Math.abs(d2));
+            let r = Math.min(Math.abs(d1), Math.abs(d2));
+            if (k >= yBot && k <= yTop) r = 0;
+            const dirSign = (yTop + yBot) / 2 >= k ? 1 : -1;
+
+            const washerGeo = createWasherGeometry(R, r, dx, sweepAngle, "horizontal", k, xMid - dx / 2, dirSign);
+            const washerMesh = new THREE.Mesh(washerGeo, mat);
+            riemannGroup.add(washerMesh);
+
+          } else if (state.method === "shell" && state.axisType === "vertical") {
+            const h = state.axisVal;
+            const shellR = Math.abs(xMid - h);
+            const shellH = Math.abs(yTop - yBot);
+            const dirSign = xMid >= h ? 1 : -1;
+
+            const rOuter = shellR + dx / 2;
+            const rInner = Math.max(0, shellR - dx / 2);
+            const startY = (yTop + yBot) / 2 - shellH / 2;
+
+            const shellGeo = createWasherGeometry(rOuter, rInner, shellH, sweepAngle, "vertical", h, startY, dirSign);
+            const shellMesh = new THREE.Mesh(shellGeo, mat);
+            riemannGroup.add(shellMesh);
+          }
+        }
+      } else {
+        const { yMin, yMax } = getRegionYBounds();
+        const dy = (yMax - yMin) / N;
+
+        for (let i = 0; i < N; i++) {
+          const yMid = yMin + (i + 0.5) * dy;
+          const { xLeft, xRight } = getHorizontalBoundsAtY(yMid);
+
+          if (state.method === "washer" && state.axisType === "vertical") {
+            const h = state.axisVal;
+            const d1 = xRight - h;
+            const d2 = xLeft - h;
+
+            let R = Math.max(Math.abs(d1), Math.abs(d2));
+            let r = Math.min(Math.abs(d1), Math.abs(d2));
+            if (h >= Math.min(xLeft, xRight) && h <= Math.max(xLeft, xRight)) {
+              r = 0;
+            }
+            const dirSign = (xRight + xLeft) / 2 >= h ? 1 : -1;
+
+            const washerGeo = createWasherGeometry(R, r, dy, sweepAngle, "vertical", h, yMid - dy / 2, dirSign);
+            const washerMesh = new THREE.Mesh(washerGeo, mat);
+            riemannGroup.add(washerMesh);
+
+          } else if (state.method === "shell" && state.axisType === "horizontal") {
+            const k = state.axisVal;
+            const shellR = Math.abs(yMid - k);
+            const shellH = Math.abs(xRight - xLeft);
+            const dirSign = yMid >= k ? 1 : -1;
+
+            const rOuter = shellR + dy / 2;
+            const rInner = Math.max(0, shellR - dy / 2);
+            const startX = (xLeft + xRight) / 2 - shellH / 2;
+
+            const shellGeo = createWasherGeometry(rOuter, rInner, shellH, sweepAngle, "horizontal", k, startX, dirSign);
+            const shellMesh = new THREE.Mesh(shellGeo, mat);
+            riemannGroup.add(shellMesh);
+          }
+        }
+      }
+
+      scene.add(riemannGroup);
+    }
+
+    function renderSlice3D() {
+      const sliceThick = 0.05;
+      const sweepAngle = (state.angleDeg * Math.PI) / 180;
+
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        roughness: 0.2,
+        metalness: 0.3,
+        emissive: 0x78350f,
+        side: THREE.DoubleSide
+      });
+
+      if (state.method === "washer") {
+        if (state.axisType === "horizontal") {
+          const xS = state.slicePos;
+          const yF = evalF(xS);
+          const yG = evalG(xS);
+          const k = state.axisVal;
+
+          const d1 = yF - k;
+          const d2 = yG - k;
+
+          const R = Math.max(Math.abs(d1), Math.abs(d2));
+          let r = Math.min(Math.abs(d1), Math.abs(d2));
+          if (k >= Math.min(yF, yG) && k <= Math.max(yF, yG)) r = 0;
+
+          const dirSign = (yF + yG) / 2 >= k ? 1 : -1;
+
+          const washerGeo = createWasherGeometry(R, r, sliceThick, sweepAngle, "horizontal", k, xS - sliceThick / 2, dirSign);
+          sliceMesh = new THREE.Mesh(washerGeo, mat);
+          scene.add(sliceMesh);
+
+        } else {
+          const yS = state.slicePos;
+          const h = state.axisVal;
+          const { xLeft, xRight } = getHorizontalBoundsAtY(yS);
+
+          const d1 = xRight - h;
+          const d2 = xLeft - h;
+
+          let R = Math.max(Math.abs(d1), Math.abs(d2));
+          let r = Math.min(Math.abs(d1), Math.abs(d2));
+          if (h >= Math.min(xLeft, xRight) && h <= Math.max(xLeft, xRight)) {
+            r = 0;
+          }
+
+          const dirSign = (xRight + xLeft) / 2 >= h ? 1 : -1;
+
+          const washerGeo = createWasherGeometry(R, r, sliceThick, sweepAngle, "vertical", h, yS - sliceThick / 2, dirSign);
+          sliceMesh = new THREE.Mesh(washerGeo, mat);
+          scene.add(sliceMesh);
+        }
+      } else if (state.method === "shell") {
+        if (state.axisType === "vertical") {
+          const xS = state.slicePos;
+          const yF = evalF(xS);
+          const yG = evalG(xS);
+          const yTop = Math.max(yF, yG);
+          const yBot = Math.min(yF, yG);
+
+          const h = state.axisVal;
+          const shellR = Math.abs(xS - h);
+          const shellH = Math.abs(yTop - yBot);
+          const unfold = state.unfoldVal;
+          const dirSign = xS >= h ? 1 : -1;
+
+          if (unfold <= 0.01) {
+            const rOuter = shellR + sliceThick / 2;
+            const rInner = Math.max(0, shellR - sliceThick / 2);
+            const shellGeo = createWasherGeometry(rOuter, rInner, shellH, sweepAngle, "vertical", h, yBot, dirSign);
+            sliceMesh = new THREE.Mesh(shellGeo, mat);
+            scene.add(sliceMesh);
+          } else {
+            const circumference = 2 * Math.PI * shellR * (state.angleDeg / 360);
+            const flatWidth = circumference;
+
+            const sheetGeo = new THREE.PlaneGeometry(flatWidth, shellH, 32, 1);
+            const posAttr = sheetGeo.attributes.position;
+
+            for (let i = 0; i < posAttr.count; i++) {
+              const px = posAttr.getX(i);
+              const theta = (px / flatWidth) * sweepAngle;
+
+              const cylX = h + dirSign * shellR * Math.cos(theta);
+              const cylZ = dirSign * shellR * Math.sin(theta);
+
+              const flatX = h + dirSign * (shellR + px);
+              const flatZ = 0;
+
+              posAttr.setX(i, (1 - unfold) * cylX + unfold * flatX);
+              posAttr.setZ(i, (1 - unfold) * cylZ + unfold * flatZ);
+            }
+            sheetGeo.computeVertexNormals();
+
+            sliceMesh = new THREE.Mesh(sheetGeo, mat);
+            sliceMesh.position.set(0, (yTop + yBot) / 2, 0);
+            scene.add(sliceMesh);
+          }
+        } else {
+          const yS = state.slicePos;
+          const k = state.axisVal;
+          const { xLeft, xRight } = getHorizontalBoundsAtY(yS);
+
+          const shellR = Math.abs(yS - k);
+          const shellH = Math.abs(xRight - xLeft);
+          const dirSign = yS >= k ? 1 : -1;
+
+          const rOuter = shellR + sliceThick / 2;
+          const rInner = Math.max(0, shellR - sliceThick / 2);
+          const shellGeo = createWasherGeometry(rOuter, rInner, shellH, sweepAngle, "horizontal", k, xLeft, dirSign);
+          sliceMesh = new THREE.Mesh(shellGeo, mat);
+          scene.add(sliceMesh);
+        }
+      }
+    }
+
+    function updateMathOutput() {
+      const varElem = document.getElementById("mathVariables");
+      const intElem = document.getElementById("mathIntegral");
+      const exactElem = document.getElementById("mathVolumeExact");
+      const decElem = document.getElementById("mathVolumeDecimal");
+
+      const a = state.boundA;
+      const b = state.boundB;
+      const axisVal = state.axisVal;
+
+      let varLatex = "";
+      let intLatex = "";
+      let numericVolume = 0;
+
+      function integrate(fn, start, end, steps = 1000) {
+        if (steps % 2 !== 0) steps++;
+        const h = (end - start) / steps;
+        let sum = fn(start) + fn(end);
+        for (let i = 1; i < steps; i++) {
+          const x = start + i * h;
+          sum += (i % 2 === 0 ? 2 : 4) * fn(x);
+        }
+        return (h / 3) * sum;
+      }
+
+      if (state.method === "washer") {
+        if (state.axisType === "horizontal") {
+          varLatex = `\\begin{aligned}
+            R(x) &= \\left| ${state.funcFStr} - (${axisVal}) \\right| \\\\
+            r(x) &= \\left| ${state.funcGStr} - (${axisVal}) \\right|
+          \\end{aligned}`;
+
+          intLatex = `V = \\pi \\int_{${a}}^{${b}} \\left( \\left[ R(x) \\right]^2 - \\left[ r(x) \\right]^2 \\right) dx`;
+
+          const integrVal = integrate(x => {
+            const yF = evalF(x);
+            const yG = evalG(x);
+            const R = Math.abs(yF - axisVal);
+            const r = Math.abs(yG - axisVal);
+            return Math.pow(R, 2) - Math.pow(r, 2);
+          }, a, b);
+
+          numericVolume = Math.PI * integrVal;
+        } else {
+          const { yMin, yMax } = getRegionYBounds();
+
+          varLatex = `\\begin{aligned}
+            R(y) &= \\left| x_{\\text{right}}(y) - (${axisVal}) \\right| \\\\
+            r(y) &= \\left| x_{\\text{left}}(y) - (${axisVal}) \\right|
+          \\end{aligned}`;
+
+          intLatex = `V = \\pi \\int_{${yMin.toFixed(2)}}^{${yMax.toFixed(2)}} \\left( \\left[ R(y) \\right]^2 - \\left[ r(y) \\right]^2 \\right) dy`;
+
+          const integrVal = integrate(y => {
+            const { xLeft, xRight } = getHorizontalBoundsAtY(y);
+            const d1 = Math.abs(xRight - axisVal);
+            const d2 = Math.abs(xLeft - axisVal);
+            let R = Math.max(d1, d2);
+            let r = Math.min(d1, d2);
+            if (axisVal >= Math.min(xLeft, xRight) && axisVal <= Math.max(xLeft, xRight)) {
+              r = 0;
+            }
+            return Math.pow(R, 2) - Math.pow(r, 2);
+          }, yMin, yMax);
+
+          numericVolume = Math.PI * integrVal;
+        }
+      } else {
+        if (state.axisType === "vertical") {
+          varLatex = `\\begin{aligned}
+            r(x) &= \\left| x - (${axisVal}) \\right| \\\\
+            h(x) &= \\left| (${state.funcFStr}) - (${state.funcGStr}) \\right|
+          \\end{aligned}`;
+
+          intLatex = `V = 2\\pi \\int_{${a}}^{${b}} r(x) \\cdot h(x) \\, dx`;
+
+          const integrVal = integrate(x => {
+            const yF = evalF(x);
+            const yG = evalG(x);
+            const radius = Math.abs(x - axisVal);
+            const height = Math.abs(yF - yG);
+            return radius * height;
+          }, a, b);
+
+          numericVolume = 2 * Math.PI * integrVal;
+        } else {
+          const { yMin, yMax } = getRegionYBounds();
+
+          varLatex = `\\begin{aligned}
+            r(y) &= \\left| y - (${axisVal}) \\right| \\\\
+            h(y) &= \\left| x_{\\text{right}}(y) - x_{\\text{left}}(y) \\right|
+          \\end{aligned}`;
+
+          intLatex = `V = 2\\pi \\int_{${yMin.toFixed(2)}}^{${yMax.toFixed(2)}} r(y) \\cdot h(y) \\, dy`;
+
+          const integrVal = integrate(y => {
+            const { xLeft, xRight } = getHorizontalBoundsAtY(y);
+            const radius = Math.abs(y - axisVal);
+            const height = Math.abs(xRight - xLeft);
+            return radius * height;
+          }, yMin, yMax);
+
+          numericVolume = 2 * Math.PI * integrVal;
+        }
+      }
+
+      // Render KaTeX Formulas
+      try {
+        katex.render(varLatex, varElem, { displayMode: true, throwOnError: false });
+        katex.render(intLatex, intElem, { displayMode: true, throwOnError: false });
+
+        const piFraction = (numericVolume / Math.PI).toFixed(4);
+        katex.render(`V = ${piFraction} \\pi`, exactElem, { displayMode: false, throwOnError: false });
+        decElem.innerText = Math.abs(numericVolume).toFixed(4);
+      } catch (e) {
+        console.error("KaTeX rendering error", e);
+      }
+    }
+
+    function togglePlayAnimation() {
+      state.isPlaying = !state.isPlaying;
+      const icon = document.getElementById("playIcon");
+      
+      if (state.isPlaying) {
+        icon.setAttribute("data-lucide", "pause");
+        lucide.createIcons();
+        animateRevolution();
+      } else {
+        icon.setAttribute("data-lucide", "play");
+        lucide.createIcons();
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      }
+    }
+
+    function animateRevolution() {
+      if (!state.isPlaying) return;
+
+      state.angleDeg += 2;
+      if (state.angleDeg > 360) state.angleDeg = 0;
+
+      document.getElementById("angleSlider").value = state.angleDeg;
+      document.getElementById("angleValDisp").innerText = `${Math.round(state.angleDeg)}°`;
+
+      render3D();
+      animationFrameId = requestAnimationFrame(animateRevolution);
+    }
+
+    function resizeCanvases() {
+      const c2d = document.getElementById("canvas2D");
+      if (c2d && c2d.parentElement) {
+        c2d.width = c2d.parentElement.clientWidth;
+        c2d.height = c2d.parentElement.clientHeight;
+      }
+
+      const container3D = document.getElementById("container3D");
+      if (renderer && camera && container3D) {
+        camera.aspect = container3D.clientWidth / container3D.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container3D.clientWidth, container3D.clientHeight);
+      }
+    }
+
+    window.addEventListener("load", () => {
+      lucide.createIcons();
+      init3D();
+      resizeCanvases();
+      updateParameters();
+
+      window.addEventListener("resize", () => {
+        resizeCanvases();
+        render2D();
+        render3D();
+      });
+    });
+  </script>
+</body>
+</html>
