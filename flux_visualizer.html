@@ -169,35 +169,6 @@
 
       <!-- TAB 1: CONTROLS PANEL -->
       <div id="tab-content-controls" class="space-y-5">
-        
-        <!-- Live Flux Prominent HUD Banner -->
-        <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-2 border-cyan-500/40 p-4 rounded-2xl shadow-xl shadow-cyan-500/10 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold tracking-wider text-cyan-400 uppercase flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-              Live Net Flux ($\Phi$)
-            </span>
-            <span id="ctrl-flux-formula-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-300">
-              $\Phi = \iint_S \mathbf{F} \cdot \mathbf{n} \, dA$
-            </span>
-          </div>
-          <div class="flex items-baseline justify-between pt-1">
-            <div class="flex items-baseline gap-2">
-              <span id="ctrl-net-flux" class="text-4xl font-mono font-black text-cyan-300 tracking-tight">+16.00</span>
-              <span class="text-xs text-slate-400 font-sans">flux units</span>
-            </div>
-            <span id="ctrl-flux-status" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-              Max Outflow
-            </span>
-          </div>
-          <!-- Live Flow Balance Bar -->
-          <div class="space-y-1 pt-1">
-            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
-              <div id="ctrl-bar-pos-flux" class="bg-cyan-400 h-full transition-all duration-150" style="width: 100%;"></div>
-              <div id="ctrl-bar-neg-flux" class="bg-pink-500 h-full transition-all duration-150" style="width: 0%;"></div>
-            </div>
-          </div>
-        </div>
 
         <!-- Surface Selection Section -->
         <div class="space-y-2">
@@ -1062,61 +1033,6 @@
         headerTag.className = 'font-mono text-base font-black ' + (net > 0.1 ? 'text-cyan-300' : net < -0.1 ? 'text-pink-400' : 'text-slate-300');
       }
 
-      // Prominent Controls HUD Banner Readout
-      const ctrlNet = document.getElementById('ctrl-net-flux');
-      if (ctrlNet) {
-        ctrlNet.textContent = (net >= 0 ? '+' : '') + net.toFixed(2);
-        ctrlNet.className = 'text-4xl font-mono font-black tracking-tight ' + (net > 0.1 ? 'text-cyan-300' : net < -0.1 ? 'text-pink-400' : 'text-slate-300');
-      }
-
-      const ctrlStatus = document.getElementById('ctrl-flux-status');
-      if (ctrlStatus) {
-        if (state.surfaceType === 'rect_plane') {
-          const deg = state.planeAngle;
-          if (deg === 0) {
-            ctrlStatus.textContent = 'Max Outflow (0°)';
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
-          } else if (deg === 90) {
-            ctrlStatus.textContent = 'Zero Flux (90°)';
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700';
-          } else if (deg === 180) {
-            ctrlStatus.textContent = 'Max Inflow (180°)';
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-pink-500/20 text-pink-300 border border-pink-500/30';
-          } else if (net > 0.1) {
-            ctrlStatus.textContent = `Outflow (${deg}°)`;
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
-          } else if (net < -0.1) {
-            ctrlStatus.textContent = `Inflow (${deg}°)`;
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-pink-500/20 text-pink-300 border border-pink-500/30';
-          } else {
-            ctrlStatus.textContent = `Zero Flux (${deg}°)`;
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700';
-          }
-        } else {
-          if (net > 0.1) {
-            ctrlStatus.textContent = 'Net Outflow (+)';
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
-          } else if (net < -0.1) {
-            ctrlStatus.textContent = 'Net Inflow (-)';
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-pink-500/20 text-pink-300 border border-pink-500/30';
-          } else {
-            ctrlStatus.textContent = 'Net Zero Flux';
-            ctrlStatus.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700';
-          }
-        }
-      }
-
-      const ctrlPosBar = document.getElementById('ctrl-bar-pos-flux');
-      const ctrlNegBar = document.getElementById('ctrl-bar-neg-flux');
-      const totalMagnitude = pos + Math.abs(neg);
-      const posPct = totalMagnitude > 0 ? (pos / totalMagnitude) * 100 : 50;
-      const negPct = totalMagnitude > 0 ? (Math.abs(neg) / totalMagnitude) * 100 : 50;
-
-      if (ctrlPosBar && ctrlNegBar) {
-        ctrlPosBar.style.width = posPct + '%';
-        ctrlNegBar.style.width = negPct + '%';
-      }
-
       // Bottom-Left Prominent Net Flux Readouts
       const bottomNet = document.getElementById('bottom-net-flux');
       if (bottomNet) {
@@ -1160,6 +1076,10 @@
           }
         }
       }
+
+      const totalMagnitude = pos + Math.abs(neg);
+      const posPct = totalMagnitude > 0 ? (pos / totalMagnitude) * 100 : 50;
+      const negPct = totalMagnitude > 0 ? (Math.abs(neg) / totalMagnitude) * 100 : 50;
 
       const bottomPos = document.getElementById('bottom-pos-flux');
       if (bottomPos) bottomPos.textContent = '+' + pos.toFixed(2);
