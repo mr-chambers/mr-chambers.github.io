@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Partial Derivatives Visualizer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- KaTeX for LaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Math.js for Symbolic Differentiation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+
+  <!-- Chart.js for 2D Cross-Section Curves -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Styles -->
+  <style>
+    /* Custom scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    
+    .katex-display {
+      margin: 0.4em 0 !important;
+    }
+    
+    .text-planex { color: #38bdf8; }
+    .text-planey { color: #f43f5e; }
+    .text-tangent { color: #facc15; }
+    .text-grad { color: #10b981; }
+  </style>
+</head>
+<body class="h-full font-sans antialiased flex flex-col bg-slate-950 text-slate-100 overflow-hidden">
+
+  <!-- HEADER NAVBAR -->
+  <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shrink-0 shadow-lg z-20">
+    <div class="flex items-center space-x-3">
+      <div class="bg-gradient-to-tr from-sky-500 to-indigo-600 p-2 rounded-xl text-white shadow-md shadow-sky-500/20">
+        <i class="fa-solid fa-cube text-lg"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-base sm:text-lg text-slate-100 tracking-wide flex items-center space-x-2">
+          <span>3D Partial Derivatives Visualizer</span>
+        </h1>
+        <p class="text-xs text-slate-400 hidden sm:block">
+          Explore $f(x,y)$, tangent lines, slicing planes, and gradient vectors
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Header Controls -->
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <!-- Tab Selector -->
+      <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex text-xs">
+        <button id="tab-btn-3d" class="px-3 py-1.5 rounded-lg font-medium transition bg-sky-600 text-white shadow">
+          <i class="fa-solid fa-shapes mr-1"></i> 3D Surface
+        </button>
+        <button id="tab-btn-2d" class="px-3 py-1.5 rounded-lg font-medium transition bg-slate-800 text-slate-300 hover:text-white">
+          <i class="fa-solid fa-chart-line mr-1"></i> 2D Slices
+        </button>
+        <button id="tab-btn-breakdown" class="px-3 py-1.5 rounded-lg font-medium transition bg-slate-800 text-slate-300 hover:text-white">
+          <i class="fa-solid fa-square-root-variable mr-1"></i> Math Step-by-Step
+        </button>
+      </div>
+
+      <button id="btn-open-guide" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
+        <i class="fa-solid fa-book-open text-sky-400"></i>
+        <span class="hidden sm:inline">Guide & Theory</span>
+      </button>
+
+      <button id="btn-screenshot" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 transition" title="Take Screenshot">
+        <i class="fa-solid fa-camera text-sky-400"></i>
+      </button>
+
+      <button id="btn-reset-view" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 transition" title="Reset Camera View">
+        <i class="fa-solid fa-arrows-to-dot"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+
+    <!-- LEFT SIDEBAR: CONTROLS & INPUTS -->
+    <aside class="w-full md:w-80 lg:w-96 bg-slate-900/90 backdrop-blur-md border-r border-slate-800 flex flex-col overflow-y-auto shrink-0 z-10 p-4 space-y-4">
+      
+      <!-- Preset Function Selector -->
+      <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-2">
+        <label for="preset-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+          <i class="fa-solid fa-list-check text-sky-400 mr-1"></i> Function Presets
+        </label>
+        <select id="preset-select" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          <!-- Populated dynamically via JS -->
+        </select>
+      </div>
+
+      <!-- Custom Function Input -->
+      <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-2">
+        <label for="expr-input" class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+          <i class="fa-solid fa-calculator text-indigo-400 mr-1"></i> Function $f(x,y)$
+        </label>
+        <div class="flex space-x-2">
+          <input type="text" id="expr-input" value="0.5 * x^2 * y + 0.3 * y^2" class="flex-1 bg-slate-900 border border-slate-700 text-sky-300 font-mono text-xs rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="e.g. sin(x) * cos(y)" />
+          <button id="btn-apply-expr" class="bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs px-3 py-2 rounded-lg transition shadow">
+            Apply
+          </button>
+        </div>
+        <div id="error-banner" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 rounded-lg p-2 mt-1"></div>
+      </div>
+
+      <!-- Evaluation Point (x0, y0) Sliders -->
+      <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <i class="fa-solid fa-crosshairs text-amber-400 mr-1"></i> Point $(x_0, y_0)$
+          </label>
+          <button id="btn-animate" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1 rounded-md border border-slate-700 text-slate-300 transition flex items-center space-x-1">
+            <i class="fa-solid fa-play text-emerald-400"></i>
+            <span>Animate Point</span>
+          </button>
+        </div>
+
+        <!-- x0 Slider -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-sky-400 font-semibold">$x_0$:</span>
+            <span id="val-x0" class="text-slate-200">1.20</span>
+          </div>
+          <input type="range" id="slider-x0" min="-2.5" max="2.5" step="0.05" value="1.20" class="w-full accent-sky-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer" />
+        </div>
+
+        <!-- y0 Slider -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-rose-400 font-semibold">$y_0$:</span>
+            <span id="val-y0" class="text-slate-200">1.00</span>
+          </div>
+          <input type="range" id="slider-y0" min="-2.5" max="2.5" step="0.05" value="1.00" class="w-full accent-rose-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer" />
+        </div>
+      </div>
+
+      <!-- Layer Visibility Toggles -->
+      <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
+        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+          <i class="fa-solid fa-layer-group text-purple-400 mr-1"></i> Display Elements
+        </label>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <label class="flex items-center space-x-2 cursor-pointer text-slate-300 hover:text-white transition">
+            <input type="checkbox" id="chk-surface" checked class="rounded border-slate-700 text-sky-500 focus:ring-sky-500 bg-slate-950" />
+            <span>3D Surface</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-slate-300 hover:text-white transition">
+            <input type="checkbox" id="chk-wireframe" class="rounded border-slate-700 text-sky-500 focus:ring-sky-500 bg-slate-950" />
+            <span>Wireframe</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-planex hover:brightness-125 transition">
+            <input type="checkbox" id="chk-planex" checked class="rounded border-slate-700 text-sky-500 focus:ring-sky-500 bg-slate-950" />
+            <span>Plane $y = y_0$</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-planey hover:brightness-125 transition">
+            <input type="checkbox" id="chk-planey" checked class="rounded border-slate-700 text-rose-500 focus:ring-rose-500 bg-slate-950" />
+            <span>Plane $x = x_0$</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-emerald-400 hover:brightness-125 transition">
+            <input type="checkbox" id="chk-curves" checked class="rounded border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-950" />
+            <span>Intersection Curves</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-amber-400 hover:brightness-125 transition">
+            <input type="checkbox" id="chk-tangents" checked class="rounded border-slate-700 text-amber-500 focus:ring-amber-500 bg-slate-950" />
+            <span>Tangent Lines</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-tangent hover:brightness-125 transition">
+            <input type="checkbox" id="chk-tangent-plane" checked class="rounded border-slate-700 text-yellow-500 focus:ring-yellow-500 bg-slate-950" />
+            <span>Tangent Plane</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-emerald-400 hover:brightness-125 transition">
+            <input type="checkbox" id="chk-gradvec" checked class="rounded border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-950" />
+            <span>Gradient Vector</span>
+          </label>
+
+          <label class="flex items-center space-x-2 cursor-pointer text-slate-300 hover:text-white transition">
+            <input type="checkbox" id="chk-droplines" checked class="rounded border-slate-700 text-sky-500 focus:ring-sky-500 bg-slate-950" />
+            <span>Drop Lines</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Color Shader Theme Selector -->
+      <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-2">
+        <label for="color-mode" class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+          <i class="fa-solid fa-palette text-sky-400 mr-1"></i> Surface Color Mapping
+        </label>
+        <select id="color-mode" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          <option value="height">z Value (Elevation)</option>
+          <option value="gradient">Gradient Magnitude (|∇f|)</option>
+          <option value="fx">x-Slope (∂f/∂x)</option>
+          <option value="fy">y-Slope (∂f/∂y)</option>
+          <option value="uniform">Uniform Color</option>
+        </select>
+      </div>
+
+      <!-- Tangent Plane Style Selector -->
+      <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-2">
+        <label for="tangent-style" class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+          <i class="fa-solid fa-vector-square text-tangent mr-1"></i> Tangent Plane Style
+        </label>
+        <select id="tangent-style" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          <option value="translucent">Translucent Surface</option>
+          <option value="wireframe">Wireframe Grid</option>
+          <option value="solid">Solid Surface</option>
+        </select>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT MAIN PANEL: VIEWS -->
+    <main class="flex-1 relative flex flex-col bg-slate-950 overflow-hidden">
+
+      <!-- TAB 1: 3D VIEWPORT -->
+      <div id="tab-view-3d" class="absolute inset-0 flex flex-col">
+        
+        <!-- Three.js Canvas Container -->
+        <div id="canvas-container" class="w-full h-full relative cursor-grab active:cursor-grabbing">
+          
+          <!-- On-Canvas HUD Readout Card -->
+          <div class="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-xl text-xs space-y-2 pointer-events-none select-none max-w-xs">
+            <div class="flex items-center space-x-2 border-b border-slate-800 pb-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <span class="font-bold text-slate-200">Point $P_0$:</span>
+              <span id="hud-point" class="font-mono text-amber-300">(1.20, 1.00, 1.50)</span>
+            </div>
+
+            <div class="space-y-1 font-mono text-[11px]">
+              <div class="flex justify-between items-center">
+                <span class="text-planex font-semibold flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-sky-400 mr-1.5"></span>
+                  $\frac{\partial f}{\partial x}$ (x-slope):
+                </span>
+                <span id="hud-dfdx" class="text-sky-300 font-bold">0.000</span>
+              </div>
+
+              <div class="flex justify-between items-center">
+                <span class="text-planey font-semibold flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-rose-400 mr-1.5"></span>
+                  $\frac{\partial f}{\partial y}$ (y-slope):
+                </span>
+                <span id="hud-dfdy" class="text-rose-300 font-bold">0.000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Axis Color Legend Overlay -->
+          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 px-3 py-2 rounded-xl text-[11px] flex items-center space-x-4 pointer-events-none">
+            <span class="flex items-center text-rose-400"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span> X Axis</span>
+            <span class="flex items-center text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span> Y Axis</span>
+            <span class="flex items-center text-sky-400"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 mr-1"></span> Z (Height)</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 2: 2D CROSS-SECTION SLICES -->
+      <div id="tab-view-2d" class="absolute inset-0 hidden p-6 overflow-y-auto bg-slate-950 flex flex-col space-y-6">
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-lg font-bold text-slate-100 flex items-center space-x-2">
+            <i class="fa-solid fa-chart-line text-sky-400"></i>
+            <span>2D Cross-Section Curves & Tangent Slopes</span>
+          </h2>
+          <p class="text-xs text-slate-400">
+            Fixing one variable turns $f(x,y)$ into a single-variable curve. The partial derivative is the 2D slope of that slice curve.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Slice 1: Curve along X axis (y = y0 fixed) -->
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="font-bold text-sm text-planex flex items-center">
+                  <span class="w-3 h-3 rounded-full bg-sky-400 mr-2"></span>
+                  Slice $y = y_0$ (Partial $\frac{\partial f}{\partial x}$)
+                </h3>
+                <p class="text-xs text-slate-400">Curve $g(x) = f(x, y_0)$ with slope line $\frac{\partial f}{\partial x}$</p>
+              </div>
+              <span id="badge-dfdx-val" class="font-mono text-xs px-2.5 py-1 rounded-lg bg-sky-950 border border-sky-800 text-sky-300 font-bold">
+                Slope = 0.00
+              </span>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="chart-x-slice"></canvas>
+            </div>
+          </div>
+
+          <!-- Slice 2: Curve along Y axis (x = x0 fixed) -->
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="font-bold text-sm text-planey flex items-center">
+                  <span class="w-3 h-3 rounded-full bg-rose-400 mr-2"></span>
+                  Slice $x = x_0$ (Partial $\frac{\partial f}{\partial y}$)
+                </h3>
+                <p class="text-xs text-slate-400">Curve $h(y) = f(x_0, y)$ with slope line $\frac{\partial f}{\partial y}$</p>
+              </div>
+              <span id="badge-dfdy-val" class="font-mono text-xs px-2.5 py-1 rounded-lg bg-rose-950 border border-rose-800 text-rose-300 font-bold">
+                Slope = 0.00
+              </span>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="chart-y-slice"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 3: MATHEMATICAL STEP-BY-STEP BREAKDOWN -->
+      <div id="tab-view-breakdown" class="absolute inset-0 hidden p-6 overflow-y-auto bg-slate-950 flex flex-col space-y-6">
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-lg font-bold text-slate-100 flex items-center space-x-2">
+            <i class="fa-solid fa-square-root-variable text-indigo-400"></i>
+            <span>Algebraic Step-by-Step Derivation</span>
+          </h2>
+          <p class="text-xs text-slate-400">
+            Symbolic expressions, partial derivatives evaluated at $(x_0, y_0)$, and the linear approximation (tangent plane).
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Symbolic Functions Card -->
+          <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+            <h3 class="font-bold text-sm text-slate-200 border-b border-slate-800 pb-2">
+              <i class="fa-solid fa-function text-sky-400 mr-1.5"></i> Symbolic Partial Derivatives
+            </h3>
+
+            <div class="space-y-3 text-xs">
+              <div>
+                <span class="text-slate-400 block mb-1">Target Surface Function:</span>
+                <div id="math-f-expr" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-sky-300 text-sm overflow-x-auto">
+                  $$f(x, y) = ...$$
+                </div>
+              </div>
+
+              <div>
+                <span class="text-slate-400 block mb-1">Partial w.r.t $x$ (treating $y$ as constant):</span>
+                <div id="math-dfdx-expr" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-sky-300 text-sm overflow-x-auto">
+                  $$\frac{\partial f}{\partial x} = ...$$
+                </div>
+              </div>
+
+              <div>
+                <span class="text-slate-400 block mb-1">Partial w.r.t $y$ (treating $x$ as constant):</span>
+                <div id="math-dfdy-expr" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-rose-300 text-sm overflow-x-auto">
+                  $$\frac{\partial f}{\partial y} = ...$$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evaluated Point & Tangent Plane Card -->
+          <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+            <h3 class="font-bold text-sm text-slate-200 border-b border-slate-800 pb-2">
+              <i class="fa-solid fa-calculator text-amber-400 mr-1.5"></i> Evaluation at $(x_0, y_0)$
+            </h3>
+
+            <div class="space-y-3 text-xs">
+              <div>
+                <span class="text-slate-400 block mb-1">Surface Point Position:</span>
+                <div id="math-point-eval" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-amber-300 text-sm">
+                  $$P_0 = (x_0, y_0, z_0) = ...$$
+                </div>
+              </div>
+
+              <div>
+                <span class="text-slate-400 block mb-1">Gradient Vector $\nabla f(x_0, y_0)$:</span>
+                <div id="math-grad-eval" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-emerald-300 text-sm">
+                  $$\nabla f = \left\langle \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y} \right\rangle = ...$$
+                </div>
+              </div>
+
+              <div>
+                <span class="text-slate-400 block mb-1">Tangent Plane Equation $L(x, y)$:</span>
+                <div id="math-plane-eval" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-tangent text-sm overflow-x-auto">
+                  $$z = z_0 + f_x(x - x_0) + f_y(y - y_0)$$
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- THEORY GUIDE MODAL DIALOG -->
+  <div id="modal-guide" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <h2 class="font-bold text-base text-slate-100 flex items-center space-x-2">
+          <i class="fa-solid fa-book-open text-sky-400"></i>
+          <span>Theory & Definition of Partial Derivatives</span>
+        </h2>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-white text-lg transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-5 text-xs text-slate-300 leading-relaxed">
+        
+        <div class="space-y-2">
+          <h3 class="font-bold text-sky-400 text-sm">1. Formal Limit Definition</h3>
+          <p>
+            For a multivariable function $f(x,y)$, the partial derivative with respect to $x$ measures the instantaneous rate of change along the $x$-axis while keeping $y$ fixed as a constant:
+          </p>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-sm font-mono text-sky-300">
+            $$\frac{\partial f}{\partial x}(x, y) = \lim_{h \to 0} \frac{f(x+h, y) - f(x, y)}{h}$$
+          </div>
+          <p>
+            Similarly, the partial derivative with respect to $y$ keeps $x$ fixed as a constant:
+          </p>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-sm font-mono text-rose-300">
+            $$\frac{\partial f}{\partial y}(x, y) = \lim_{h \to 0} \frac{f(x, y+h) - f(x, y)}{h}$$
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-bold text-emerald-400 text-sm">2. Geometric Interpretation</h3>
+          <ul class="list-disc pl-5 space-y-1 text-slate-300">
+            <li><strong>Slicing Planes:</strong> The plane $y = y_0$ cuts through the 3D surface $z = f(x,y)$, producing a 2D curve $g(x)$.</li>
+            <li><strong>Tangent Lines:</strong> The value $\frac{\partial f}{\partial x}(x_0, y_0)$ is the slope of the tangent line to that slice curve at $x = x_0$.</li>
+            <li><strong>Tangent Plane:</strong> The two tangent lines span the unique 2D linear tangent plane that best approximates $f(x,y)$ locally around $(x_0, y_0)$.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-bold text-amber-400 text-sm">3. Gradient Vector ($\nabla f$)</h3>
+          <p>
+            The gradient vector combines both partial derivatives into a 2D vector on the input domain:
+          </p>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-sm font-mono text-emerald-300">
+            $$\nabla f(x_0, y_0) = \left\langle \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y} \right\rangle$$
+          </div>
+          <p>
+            The gradient points in the direction of **steepest ascent** on the surface, and its length $|\nabla f|$ is the rate of maximum increase.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // --- PRESET FUNCTIONS DATA ---
+    const PRESETS = [
+      {
+        name: "Polynomial: 0.5·x²·y + 0.3·y²",
+        expr: "0.5 * x^2 * y + 0.3 * y^2",
+        x0: 1.2,
+        y0: 1.0
+      },
+      {
+        name: "Saddle: 0.5·(x² - y²)",
+        expr: "0.5 * (x^2 - y^2)",
+        x0: 1.0,
+        y0: 1.0
+      },
+      {
+        name: "Waves: sin(x) · cos(y)",
+        expr: "sin(x) * cos(y)",
+        x0: 0.8,
+        y0: 0.8
+      },
+      {
+        name: "Gaussian: 2 · exp(-(x² + y²)/2)",
+        expr: "2 * exp(-(x^2 + y^2)/2)",
+        x0: 0.8,
+        y0: 0.5
+      },
+      {
+        name: "Paraboloid: 0.3·(x² + y²)",
+        expr: "0.3 * (x^2 + y^2)",
+        x0: 1.5,
+        y0: -1.0
+      },
+      {
+        name: "Ripple: sin(sqrt(x² + y² + 0.01))",
+        expr: "sin(sqrt(x^2 + y^2 + 0.01))",
+        x0: 1.5,
+        y0: 1.5
+      }
+    ];
+
+    // --- APPLICATION STATE ---
+    const state = {
+      exprStr: PRESETS[0].expr,
+      compiledExpr: null,
+      dfdxCompiled: null,
+      dfdyCompiled: null,
+      dfdxNode: null,
+      dfdyNode: null,
+      x0: PRESETS[0].x0,
+      y0: PRESETS[0].y0,
+      z0: 0,
+      fxVal: 0,
+      fyVal: 0,
+      animating: false,
+      animTime: 0,
+      colorMode: 'height',
+      tangentStyle: 'translucent',
+      gridSpan: 3.2,
+      gridResolution: 70,
+      toggles: {
+        surface: true,
+        wireframe: false,
+        planex: true,
+        planey: true,
+        curves: true,
+        tangents: true,
+        tangentPlane: true,
+        gradvec: true,
+        droplines: true
+      }
+    };
+
+    // --- THREE.JS GLOBALS ---
+    let scene, camera, renderer, controls;
+    let surfaceMesh, wireframeMesh;
+    let slicePlaneYGroup, slicePlaneXGroup;
+    let curveXMesh, curveYMesh;
+    let tangentLineX, tangentLineY;
+    let tangentPlaneMesh;
+    let pointMarker, pointGlow, dropLineGroup, gradArrow;
+
+    // --- CHART.JS GLOBALS ---
+    let chartX, chartY;
+
+    // --- INITIALIZE PRESETS DROPDOWN ---
+    function initPresets() {
+      const select = document.getElementById('preset-select');
+      if (!select) return;
+      select.innerHTML = '';
+      PRESETS.forEach((preset, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = preset.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // --- SYMBOLIC EXPRESSION COMPILATION ---
+    function updateFunction(exprStr) {
+      try {
+        const compiled = math.compile(exprStr);
+        // Test evaluation
+        compiled.evaluate({ x: 1, y: 1 });
+
+        const parsedNode = math.parse(exprStr);
+        const dfdxNode = math.derivative(parsedNode, 'x');
+        const dfdyNode = math.derivative(parsedNode, 'y');
+
+        state.exprStr = exprStr;
+        state.compiledExpr = compiled;
+        state.dfdxCompiled = dfdxNode.compile();
+        state.dfdyCompiled = dfdyNode.compile();
+        state.dfdxNode = dfdxNode;
+        state.dfdyNode = dfdyNode;
+
+        const errBanner = document.getElementById('error-banner');
+        if (errBanner) errBanner.classList.add('hidden');
+
+        rebuildSurfaceMesh();
+        updateAllCalculations();
+        updateMathDisplay();
+        return true;
+      } catch (err) {
+        const errBanner = document.getElementById('error-banner');
+        if (errBanner) {
+          errBanner.textContent = 'Invalid expression: ' + err.message;
+          errBanner.classList.remove('hidden');
+        }
+        return false;
+      }
+    }
+
+    // --- SAFE EVALUATION HELPERS ---
+    function evaluateF(x, y) {
+      if (!state.compiledExpr) return 0;
+      try {
+        const res = state.compiledExpr.evaluate({ x: x, y: y });
+        return isNaN(res) || !isFinite(res) ? 0 : res;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function evaluateFx(x, y) {
+      if (!state.dfdxCompiled) return 0;
+      try {
+        const res = state.dfdxCompiled.evaluate({ x: x, y: y });
+        return isNaN(res) || !isFinite(res) ? 0 : res;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function evaluateFy(x, y) {
+      if (!state.dfdyCompiled) return 0;
+      try {
+        const res = state.dfdyCompiled.evaluate({ x: x, y: y });
+        return isNaN(res) || !isFinite(res) ? 0 : res;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    // --- THREE.JS SCENE SETUP ---
+    function initThreeScene() {
+      const container = document.getElementById('canvas-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x020617);
+
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.set(4.5, 4.0, 5.5);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight1.position.set(5, 10, 7);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.4);
+      dirLight2.position.set(-5, -5, -5);
+      scene.add(dirLight2);
+
+      // Grid Base on XY Floor
+      const gridHelper = new THREE.GridHelper(state.gridSpan * 2, 20, 0x334155, 0x1e293b);
+      gridHelper.position.y = 0;
+      scene.add(gridHelper);
+
+      // Axes Helpers
+      createAxes();
+
+      // Evaluation Point Marker
+      const ptGeo = new THREE.SphereGeometry(0.08, 32, 32);
+      const ptMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.2, metalness: 0.8 });
+      pointMarker = new THREE.Mesh(ptGeo, ptMat);
+      scene.add(pointMarker);
+
+      // Point Halo Glow
+      const glowGeo = new THREE.SphereGeometry(0.12, 16, 16);
+      const glowMat = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.3 });
+      pointGlow = new THREE.Mesh(glowGeo, glowMat);
+      pointMarker.add(pointGlow);
+
+      // Initialize groups
+      slicePlaneYGroup = new THREE.Group();
+      slicePlaneXGroup = new THREE.Group();
+      dropLineGroup = new THREE.Group();
+
+      scene.add(slicePlaneYGroup);
+      scene.add(slicePlaneXGroup);
+      scene.add(dropLineGroup);
+
+      window.addEventListener('resize', onWindowResize);
+    }
+
+    // --- CREATE AXES WITH LABELS ---
+    function createAxes() {
+      const axesGroup = new THREE.Group();
+
+      // Axis length
+      const L = state.gridSpan + 0.3;
+
+      // X Axis (Red)
+      const matX = new THREE.LineBasicMaterial({ color: 0xf43f5e, linewidth: 2 });
+      const geoX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-L, 0, 0), new THREE.Vector3(L, 0, 0)]);
+      axesGroup.add(new THREE.Line(geoX, matX));
+
+      // Y Axis (Green - Math Y mapped to Three.js -Z)
+      const matY = new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 2 });
+      const geoY = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -L), new THREE.Vector3(0, 0, L)]);
+      axesGroup.add(new THREE.Line(geoY, matY));
+
+      // Z Axis (Blue - Height in Three.js Y)
+      const matZ = new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 2 });
+      const geoZ = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -L / 2, 0), new THREE.Vector3(0, L, 0)]);
+      axesGroup.add(new THREE.Line(geoZ, matZ));
+
+      scene.add(axesGroup);
+    }
+
+    // --- COLOR PALETTE COMPUTATION ---
+    function getVertexColor(x, y, z, zMin, zMax) {
+      const col = new THREE.Color();
+      const mode = state.colorMode;
+
+      if (mode === 'uniform') {
+        col.setHex(0x38bdf8);
+      } else if (mode === 'height') {
+        const t = Math.max(0, Math.min(1, (z - zMin) / (zMax - zMin || 1)));
+        col.setHSL((1 - t) * 0.65, 0.85, 0.5); // Blue -> Cyan -> Green -> Yellow -> Red
+      } else if (mode === 'gradient') {
+        const fx = evaluateFx(x, y);
+        const fy = evaluateFy(x, y);
+        const mag = Math.sqrt(fx * fx + fy * fy);
+        const t = Math.min(1, mag / 3.0);
+        col.setHSL(0.75 - t * 0.75, 0.9, 0.2 + t * 0.4);
+      } else if (mode === 'fx') {
+        const fx = evaluateFx(x, y);
+        const t = Math.max(-1, Math.min(1, fx / 2.5));
+        if (t < 0) col.lerpColors(new THREE.Color(0x38bdf8), new THREE.Color(0x334155), 1 + t);
+        else col.lerpColors(new THREE.Color(0x334155), new THREE.Color(0xef4444), t);
+      } else if (mode === 'fy') {
+        const fy = evaluateFy(x, y);
+        const t = Math.max(-1, Math.min(1, fy / 2.5));
+        if (t < 0) col.lerpColors(new THREE.Color(0xf87171), new THREE.Color(0x334155), 1 + t);
+        else col.lerpColors(new THREE.Color(0x334155), new THREE.Color(0xfacc15), t);
+      }
+      return col;
+    }
+
+    // --- REBUILD 3D SURFACE MESH ---
+    function rebuildSurfaceMesh() {
+      if (surfaceMesh) scene.remove(surfaceMesh);
+      if (wireframeMesh) scene.remove(wireframeMesh);
+
+      const N = state.gridResolution;
+      const L = state.gridSpan;
+      const geo = new THREE.PlaneGeometry(L * 2, L * 2, N, N);
+
+      // Rotate plane so X is standard X, and Y maps to Three.js -Z
+      geo.rotateX(-Math.PI / 2);
+
+      const posAttr = geo.attributes.position;
+      const colors = new Float32Array(posAttr.count * 3);
+
+      let zMin = Infinity;
+      let zMax = -Infinity;
+
+      // Pass 1: compute Z values
+      for (let i = 0; i < posAttr.count; i++) {
+        const x = posAttr.getX(i);
+        const y = -posAttr.getZ(i); // Three.js Z is negative math Y
+        const z = evaluateF(x, y);
+        posAttr.setY(i, z);
+
+        if (z < zMin) zMin = z;
+        if (z > zMax) zMax = z;
+      }
+
+      // Pass 2: compute colors
+      for (let i = 0; i < posAttr.count; i++) {
+        const x = posAttr.getX(i);
+        const y = -posAttr.getZ(i);
+        const z = posAttr.getY(i);
+        const col = getVertexColor(x, y, z, zMin, zMax);
+        colors[i * 3] = col.r;
+        colors[i * 3 + 1] = col.g;
+        colors[i * 3 + 2] = col.b;
+      }
+
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      geo.computeVertexNormals();
+
+      const mat = new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        side: THREE.DoubleSide,
+        roughness: 0.3,
+        metalness: 0.1,
+        transparent: true,
+        opacity: 0.88
+      });
+
+      surfaceMesh = new THREE.Mesh(geo, mat);
+      surfaceMesh.visible = state.toggles.surface;
+      scene.add(surfaceMesh);
+
+      // Optional wireframe
+      const wireMat = new THREE.MeshBasicMaterial({ color: 0x64748b, wireframe: true, transparent: true, opacity: 0.25 });
+      wireframeMesh = new THREE.Mesh(geo, wireMat);
+      wireframeMesh.visible = state.toggles.wireframe;
+      scene.add(wireframeMesh);
+
+      updateAllCalculations();
+    }
+
+    // --- REAL-TIME CALCULATIONS & 3D OBJECT UPDATES ---
+    function updateAllCalculations(opts = {}) {
+      const scaleX = opts.scaleX !== undefined ? opts.scaleX : true;
+      const scaleY = opts.scaleY !== undefined ? opts.scaleY : true;
+
+      const x0 = state.x0;
+      const y0 = state.y0;
+      const z0 = evaluateF(x0, y0);
+      const fx = evaluateFx(x0, y0);
+      const fy = evaluateFy(x0, y0);
+
+      state.z0 = z0;
+      state.fxVal = fx;
+      state.fyVal = fy;
+
+      // 1. Position evaluation point marker
+      pointMarker.position.set(x0, z0, -y0);
+
+      // 2. Update Drop Lines & Projections
+      updateDropLines(x0, y0, z0);
+
+      // 3. Update Slice Planes
+      updateSlicePlanes(x0, y0, z0);
+
+      // 4. Update 3D Curves of Intersection
+      updateIntersectionCurves(x0, y0);
+
+      // 5. Update Tangent Lines
+      updateTangentLines(x0, y0, z0, fx, fy);
+
+      // 6. Update Tangent Plane
+      updateTangentPlane(x0, y0, z0, fx, fy);
+
+      // 7. Update Gradient Vector Arrow on XY-Plane
+      updateGradientVector(x0, y0, fx, fy);
+
+      // 8. Update HUD Overlay
+      document.getElementById('hud-point').textContent = `(${x0.toFixed(2)}, ${y0.toFixed(2)}, ${z0.toFixed(2)})`;
+      document.getElementById('hud-dfdx').textContent = fx.toFixed(3);
+      document.getElementById('hud-dfdy').textContent = fy.toFixed(3);
+
+      // 9. Update Slider Value Text
+      document.getElementById('val-x0').textContent = x0.toFixed(2);
+      document.getElementById('val-y0').textContent = y0.toFixed(2);
+
+      // 10. Update 2D Slice Charts
+      if (scaleX) updateChartXScale();
+      if (scaleY) updateChartYScale();
+      update2DCharts();
+    }
+
+    // --- DROP LINES & DOMAIN PROJECTIONS ---
+    function updateDropLines(x0, y0, z0) {
+      while (dropLineGroup.children.length > 0) {
+        dropLineGroup.remove(dropLineGroup.children[0]);
+      }
+
+      if (!state.toggles.droplines) return;
+
+      const mat = new THREE.LineDashedMaterial({ color: 0x94a3b8, dashSize: 0.08, gapSize: 0.05 });
+
+      // Line 1: From point (x0, y0, z0) down to floor (x0, y0, 0)
+      const geo1 = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x0, z0, -y0),
+        new THREE.Vector3(x0, 0, -y0)
+      ]);
+      const line1 = new THREE.Line(geo1, mat);
+      line1.computeLineDistances();
+      dropLineGroup.add(line1);
+
+      // Line 2: On floor from (x0, y0, 0) to X axis (x0, 0, 0)
+      const geo2 = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x0, 0, -y0),
+        new THREE.Vector3(x0, 0, 0)
+      ]);
+      const line2 = new THREE.Line(geo2, mat);
+      line2.computeLineDistances();
+      dropLineGroup.add(line2);
+
+      // Line 3: On floor from (x0, y0, 0) to Y axis (0, y0, 0)
+      const geo3 = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x0, 0, -y0),
+        new THREE.Vector3(0, 0, -y0)
+      ]);
+      const line3 = new THREE.Line(geo3, mat);
+      line3.computeLineDistances();
+      dropLineGroup.add(line3);
+    }
+
+    // --- SLICE PLANES ---
+    function updateSlicePlanes(x0, y0, z0) {
+      while (slicePlaneYGroup.children.length > 0) slicePlaneYGroup.remove(slicePlaneYGroup.children[0]);
+      while (slicePlaneXGroup.children.length > 0) slicePlaneXGroup.remove(slicePlaneXGroup.children[0]);
+
+      const L = state.gridSpan;
+      const H = 4.0;
+
+      // Plane y = y0 (constant y)
+      if (state.toggles.planex) {
+        const geoY = new THREE.PlaneGeometry(L * 2, H);
+        const matY = new THREE.MeshBasicMaterial({
+          color: 0x38bdf8,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.15,
+          depthWrite: false
+        });
+        const planeY = new THREE.Mesh(geoY, matY);
+        planeY.position.set(0, H / 4, -y0);
+        slicePlaneYGroup.add(planeY);
+      }
+
+      // Plane x = x0 (constant x)
+      if (state.toggles.planey) {
+        const geoX = new THREE.PlaneGeometry(L * 2, H);
+        geoX.rotateY(Math.PI / 2);
+        const matX = new THREE.MeshBasicMaterial({
+          color: 0xf43f5e,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.15,
+          depthWrite: false
+        });
+        const planeX = new THREE.Mesh(geoX, matX);
+        planeX.position.set(x0, H / 4, 0);
+        slicePlaneXGroup.add(planeX);
+      }
+    }
+
+    // --- INTERSECTION CURVES ---
+    function updateIntersectionCurves(x0, y0) {
+      if (curveXMesh) scene.remove(curveXMesh);
+      if (curveYMesh) scene.remove(curveYMesh);
+
+      if (!state.toggles.curves) return;
+
+      const L = state.gridSpan;
+      const steps = 120;
+
+      // Curve 1: along x (y fixed at y0)
+      const ptsX = [];
+      for (let i = 0; i <= steps; i++) {
+        const x = -L + (2 * L * i) / steps;
+        const z = evaluateF(x, y0);
+        ptsX.push(new THREE.Vector3(x, z, -y0));
+      }
+      const geoX = new THREE.BufferGeometry().setFromPoints(ptsX);
+      const matX = new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 3 });
+      curveXMesh = new THREE.Line(geoX, matX);
+      scene.add(curveXMesh);
+
+      // Curve 2: along y (x fixed at x0)
+      const ptsY = [];
+      for (let i = 0; i <= steps; i++) {
+        const y = -L + (2 * L * i) / steps;
+        const z = evaluateF(x0, y);
+        ptsY.push(new THREE.Vector3(x0, z, -y));
+      }
+      const geoY = new THREE.BufferGeometry().setFromPoints(ptsY);
+      const matY = new THREE.LineBasicMaterial({ color: 0xf43f5e, linewidth: 3 });
+      curveYMesh = new THREE.Line(geoY, matY);
+      scene.add(curveYMesh);
+    }
+
+    // --- TANGENT LINES ---
+    function updateTangentLines(x0, y0, z0, fx, fy) {
+      if (tangentLineX) scene.remove(tangentLineX);
+      if (tangentLineY) scene.remove(tangentLineY);
+
+      if (!state.toggles.tangents) return;
+
+      const span = 1.2;
+
+      // Tangent in X direction
+      const ptsX = [
+        new THREE.Vector3(x0 - span, z0 - fx * span, -y0),
+        new THREE.Vector3(x0 + span, z0 + fx * span, -y0)
+      ];
+      const geoX = new THREE.BufferGeometry().setFromPoints(ptsX);
+      const matX = new THREE.LineBasicMaterial({ color: 0xfacc15, linewidth: 4 });
+      tangentLineX = new THREE.Line(geoX, matX);
+      scene.add(tangentLineX);
+
+      // Tangent in Y direction
+      const ptsY = [
+        new THREE.Vector3(x0, z0 - fy * span, -(y0 - span)),
+        new THREE.Vector3(x0, z0 + fy * span, -(y0 + span))
+      ];
+      const geoY = new THREE.BufferGeometry().setFromPoints(ptsY);
+      const matY = new THREE.LineBasicMaterial({ color: 0xfacc15, linewidth: 4 });
+      tangentLineY = new THREE.Line(geoY, matY);
+      scene.add(tangentLineY);
+    }
+
+    // --- TANGENT PLANE ---
+    function updateTangentPlane(x0, y0, z0, fx, fy) {
+      if (tangentPlaneMesh) scene.remove(tangentPlaneMesh);
+
+      if (!state.toggles.tangentPlane) return;
+
+      const size = 1.6;
+      const res = 16;
+      const geo = new THREE.PlaneGeometry(size * 2, size * 2, res, res);
+      geo.rotateX(-Math.PI / 2);
+
+      const pos = geo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const dx = pos.getX(i);
+        const dy = -pos.getZ(i);
+
+        const x = x0 + dx;
+        const y = y0 + dy;
+        const z = z0 + fx * (x - x0) + fy * (y - y0);
+
+        pos.setX(i, x);
+        pos.setY(i, z);
+        pos.setZ(i, -y);
+      }
+      geo.computeVertexNormals();
+
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0xfacc15,
+        side: THREE.DoubleSide,
+        transparent: state.tangentStyle !== 'solid',
+        opacity: state.tangentStyle === 'solid' ? 1.0 : 0.45,
+        wireframe: state.tangentStyle === 'wireframe',
+        roughness: 0.2,
+        metalness: 0.1
+      });
+
+      tangentPlaneMesh = new THREE.Mesh(geo, mat);
+      scene.add(tangentPlaneMesh);
+    }
+
+    // --- GRADIENT VECTOR ARROW ON XY PLANE ---
+    function updateGradientVector(x0, y0, fx, fy) {
+      if (gradArrow) scene.remove(gradArrow);
+
+      if (!state.toggles.gradvec) return;
+
+      const mag = Math.sqrt(fx * fx + fy * fy);
+      if (mag < 0.001) return;
+
+      // Map mathematical gradient (fx, fy) to Three.js coordinates (X, 0, -Y)
+      const dir = new THREE.Vector3(fx, 0, -fy).normalize();
+      const origin = new THREE.Vector3(x0, 0.02, -y0);
+      const length = Math.min(2.5, mag * 0.7);
+
+      gradArrow = new THREE.ArrowHelper(dir, origin, length, 0x10b981, 0.25, 0.15);
+      scene.add(gradArrow);
+    }
+
+    // --- UPDATE MATH DISPLAY WITH KATEX ---
+    function updateMathDisplay() {
+      const x0 = state.x0;
+      const y0 = state.y0;
+      const z0 = state.z0;
+      const fx = state.fxVal;
+      const fy = state.fyVal;
+
+      const elF = document.getElementById('math-f-expr');
+      const elFx = document.getElementById('math-dfdx-expr');
+      const elFy = document.getElementById('math-dfdy-expr');
+      const elPt = document.getElementById('math-point-eval');
+      const elGrad = document.getElementById('math-grad-eval');
+      const elPlane = document.getElementById('math-plane-eval');
+
+      if (elF) elF.textContent = `$$f(x, y) = ${state.exprStr}$$`;
+      if (elFx && state.dfdxNode) elFx.textContent = `$$\\frac{\\partial f}{\\partial x} = ${state.dfdxNode.toTex()}$$`;
+      if (elFy && state.dfdyNode) elFy.textContent = `$$\\frac{\\partial f}{\\partial y} = ${state.dfdyNode.toTex()}$$`;
+
+      if (elPt) elPt.textContent = `$$P_0 = (${x0.toFixed(2)}, ${y0.toFixed(2)}, ${z0.toFixed(2)})$$`;
+      if (elGrad) elGrad.textContent = `$$\\nabla f(${x0.toFixed(2)}, ${y0.toFixed(2)}) = \\left\\langle ${fx.toFixed(3)}, ${fy.toFixed(3)} \\right\\rangle$$`;
+
+      const planeStr = `z = ${z0.toFixed(2)} + ${fx >= 0 ? fx.toFixed(2) : '(' + fx.toFixed(2) + ')'}(x - ${x0.toFixed(2)}) + ${fy >= 0 ? fy.toFixed(2) : '(' + fy.toFixed(2) + ')'}(y - ${y0.toFixed(2)})`;
+      if (elPlane) elPlane.textContent = `$$L(x,y) \\Rightarrow ${planeStr}$$`;
+
+      // Update 2D slice slope badges
+      const badgeFx = document.getElementById('badge-dfdx-val');
+      const badgeFy = document.getElementById('badge-dfdy-val');
+      if (badgeFx) badgeFx.textContent = `Slope = ${fx.toFixed(3)}`;
+      if (badgeFy) badgeFy.textContent = `Slope = ${fy.toFixed(3)}`;
+
+      renderPageMath();
+    }
+
+    // --- KATEX RENDER TRIGGER ---
+    function renderPageMath() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option', 'select', 'input']
+        });
+      }
+    }
+
+    // --- RECALCULATE CHART X SCALE (Depends only on y0 slice curve) ---
+    function updateChartXScale() {
+      if (!chartX) return;
+      const y0 = state.y0;
+      const L = state.gridSpan;
+      const steps = 60;
+      let yMin = Infinity, yMax = -Infinity;
+
+      for (let i = 0; i <= steps; i++) {
+        const x = -L + (2 * L * i) / steps;
+        const val = evaluateF(x, y0);
+        if (val < yMin) yMin = val;
+        if (val > yMax) yMax = val;
+      }
+
+      if (!isFinite(yMin) || !isFinite(yMax)) {
+        yMin = -1; yMax = 1;
+      }
+
+      const range = yMax - yMin;
+      const margin = Math.max(0.5, range * 0.15);
+      chartX.options.scales.y.min = yMin - margin;
+      chartX.options.scales.y.max = yMax + margin;
+    }
+
+    // --- RECALCULATE CHART Y SCALE (Depends only on x0 slice curve) ---
+    function updateChartYScale() {
+      if (!chartY) return;
+      const x0 = state.x0;
+      const L = state.gridSpan;
+      const steps = 60;
+      let yMin = Infinity, yMax = -Infinity;
+
+      for (let i = 0; i <= steps; i++) {
+        const y = -L + (2 * L * i) / steps;
+        const val = evaluateF(x0, y);
+        if (val < yMin) yMin = val;
+        if (val > yMax) yMax = val;
+      }
+
+      if (!isFinite(yMin) || !isFinite(yMax)) {
+        yMin = -1; yMax = 1;
+      }
+
+      const range = yMax - yMin;
+      const margin = Math.max(0.5, range * 0.15);
+      chartY.options.scales.y.min = yMin - margin;
+      chartY.options.scales.y.max = yMax + margin;
+    }
+
+    // --- CHART.JS 2D CROSS SECTIONS SETUP ---
+    function initCharts() {
+      const ctxX = document.getElementById('chart-x-slice').getContext('2d');
+      const ctxY = document.getElementById('chart-y-slice').getContext('2d');
+
+      chartX = new Chart(ctxX, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'Curve g(x)',
+              borderColor: '#38bdf8',
+              borderWidth: 2.5,
+              fill: false,
+              pointRadius: 0,
+              data: []
+            },
+            {
+              label: 'Tangent Line',
+              borderColor: '#facc15',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0,
+              data: []
+            },
+            {
+              label: 'Point P0',
+              backgroundColor: '#facc15',
+              borderColor: '#ffffff',
+              borderWidth: 2,
+              pointRadius: 6,
+              data: []
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          scales: {
+            x: { type: 'linear', position: 'bottom', grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } }
+          },
+          plugins: { legend: { labels: { color: '#cbd5e1', boxWidth: 12 } } }
+        }
+      });
+
+      chartY = new Chart(ctxY, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'Curve h(y)',
+              borderColor: '#f43f5e',
+              borderWidth: 2.5,
+              fill: false,
+              pointRadius: 0,
+              data: []
+            },
+            {
+              label: 'Tangent Line',
+              borderColor: '#facc15',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0,
+              data: []
+            },
+            {
+              label: 'Point P0',
+              backgroundColor: '#facc15',
+              borderColor: '#ffffff',
+              borderWidth: 2,
+              pointRadius: 6,
+              data: []
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          scales: {
+            x: { type: 'linear', position: 'bottom', grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } }
+          },
+          plugins: { legend: { labels: { color: '#cbd5e1', boxWidth: 12 } } }
+        }
+      });
+    }
+
+    // --- UPDATE CHART.JS DATA ---
+    function update2DCharts() {
+      if (!chartX || !chartY) return;
+
+      const x0 = state.x0;
+      const y0 = state.y0;
+      const z0 = state.z0;
+      const fx = state.fxVal;
+      const fy = state.fyVal;
+      const L = state.gridSpan;
+      const steps = 60;
+
+      // Chart X: Varying x, y = y0 fixed
+      const curveDataX = [];
+      for (let i = 0; i <= steps; i++) {
+        const x = -L + (2 * L * i) / steps;
+        curveDataX.push({ x: x, y: evaluateF(x, y0) });
+      }
+      const tangentDataX = [
+        { x: x0 - 1.2, y: z0 - fx * 1.2 },
+        { x: x0 + 1.2, y: z0 + fx * 1.2 }
+      ];
+
+      chartX.data.datasets[0].data = curveDataX;
+      chartX.data.datasets[1].data = tangentDataX;
+      chartX.data.datasets[2].data = [{ x: x0, y: z0 }];
+      chartX.update();
+
+      // Chart Y: Varying y, x = x0 fixed
+      const curveDataY = [];
+      for (let i = 0; i <= steps; i++) {
+        const y = -L + (2 * L * i) / steps;
+        curveDataY.push({ x: y, y: evaluateF(x0, y) });
+      }
+      const tangentDataY = [
+        { x: y0 - 1.2, y: z0 - fy * 1.2 },
+        { x: y0 + 1.2, y: z0 + fy * 1.2 }
+      ];
+
+      chartY.data.datasets[0].data = curveDataY;
+      chartY.data.datasets[1].data = tangentDataY;
+      chartY.data.datasets[2].data = [{ x: y0, y: z0 }];
+      chartY.update();
+    }
+
+    // --- EVENT LISTENERS & CONTROLS ---
+    function setupEventListeners() {
+      // Sliders
+      const sliderX = document.getElementById('slider-x0');
+      if (sliderX) {
+        sliderX.addEventListener('input', (e) => {
+          state.x0 = parseFloat(e.target.value);
+          updateAllCalculations({ scaleX: false, scaleY: true });
+          updateMathDisplay();
+        });
+      }
+
+      const sliderY = document.getElementById('slider-y0');
+      if (sliderY) {
+        sliderY.addEventListener('input', (e) => {
+          state.y0 = parseFloat(e.target.value);
+          updateAllCalculations({ scaleX: true, scaleY: false });
+          updateMathDisplay();
+        });
+      }
+
+      // Presets
+      const presetSelect = document.getElementById('preset-select');
+      if (presetSelect) {
+        presetSelect.addEventListener('change', (e) => {
+          const index = parseInt(e.target.value, 10);
+          if (!isNaN(index) && PRESETS[index]) {
+            const p = PRESETS[index];
+            document.getElementById('expr-input').value = p.expr;
+            state.x0 = p.x0;
+            state.y0 = p.y0;
+            if (sliderX) sliderX.value = p.x0;
+            if (sliderY) sliderY.value = p.y0;
+            updateFunction(p.expr);
+          }
+        });
+      }
+
+      // Custom Function Apply
+      const btnApply = document.getElementById('btn-apply-expr');
+      const inputExpr = document.getElementById('expr-input');
+      if (btnApply && inputExpr) {
+        btnApply.addEventListener('click', () => {
+          const expr = inputExpr.value.trim();
+          if (expr) updateFunction(expr);
+        });
+        inputExpr.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const expr = inputExpr.value.trim();
+            if (expr) updateFunction(expr);
+          }
+        });
+      }
+
+      // Animation Toggle
+      const btnAnim = document.getElementById('btn-animate');
+      if (btnAnim) {
+        btnAnim.addEventListener('click', () => {
+          state.animating = !state.animating;
+          const icon = btnAnim.querySelector('i');
+          const label = btnAnim.querySelector('span');
+          if (state.animating) {
+            if (icon) icon.className = 'fa-solid fa-pause text-amber-400';
+            if (label) label.textContent = 'Pause Motion';
+          } else {
+            if (icon) icon.className = 'fa-solid fa-play text-emerald-400';
+            if (label) label.textContent = 'Animate Point';
+          }
+        });
+      }
+
+      // Display Element Toggles
+      const toggleKeys = ['surface', 'wireframe', 'planex', 'planey', 'curves', 'tangents', 'tangentPlane', 'gradvec', 'droplines'];
+      toggleKeys.forEach((key) => {
+        const idMap = { tangentPlane: 'tangent-plane', gradvec: 'gradvec' };
+        const el = document.getElementById(`chk-${idMap[key] || key}`);
+        if (el) {
+          el.addEventListener('change', (e) => {
+            state.toggles[key] = e.target.checked;
+            if (key === 'surface' && surfaceMesh) surfaceMesh.visible = e.target.checked;
+            if (key === 'wireframe' && wireframeMesh) wireframeMesh.visible = e.target.checked;
+            updateAllCalculations();
+          });
+        }
+      });
+
+      // Color Mode Select
+      const colorSelect = document.getElementById('color-mode');
+      if (colorSelect) {
+        colorSelect.addEventListener('change', (e) => {
+          state.colorMode = e.target.value;
+          rebuildSurfaceMesh();
+        });
+      }
+
+      // Tangent Style Select
+      const styleSelect = document.getElementById('tangent-style');
+      if (styleSelect) {
+        styleSelect.addEventListener('change', (e) => {
+          state.tangentStyle = e.target.value;
+          updateAllCalculations();
+        });
+      }
+
+      // Screenshot Tool
+      const btnScreenshot = document.getElementById('btn-screenshot');
+      if (btnScreenshot) {
+        btnScreenshot.addEventListener('click', () => {
+          if (renderer && scene && camera) {
+            renderer.render(scene, camera);
+            const dataURL = renderer.domElement.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'partial-derivatives-3d.png';
+            link.href = dataURL;
+            link.click();
+          }
+        });
+      }
+
+      // Reset View Tool
+      const btnReset = document.getElementById('btn-reset-view');
+      if (btnReset) {
+        btnReset.addEventListener('click', () => {
+          if (camera && controls) {
+            camera.position.set(4.5, 4.0, 5.5);
+            controls.target.set(0, 0, 0);
+            controls.update();
+          }
+        });
+      }
+
+      // Theory Guide Modal Toggle
+      const btnGuide = document.getElementById('btn-open-guide');
+      const modalGuide = document.getElementById('modal-guide');
+      const btnCloseGuide = document.getElementById('btn-close-guide');
+
+      if (btnGuide && modalGuide) {
+        btnGuide.addEventListener('click', () => {
+          modalGuide.classList.remove('hidden');
+          renderPageMath();
+        });
+      }
+
+      if (btnCloseGuide && modalGuide) {
+        btnCloseGuide.addEventListener('click', () => {
+          modalGuide.classList.add('hidden');
+        });
+      }
+
+      // Tab Switching
+      const tabs = ['3d', '2d', 'breakdown'];
+      tabs.forEach((tab) => {
+        const btn = document.getElementById(`tab-btn-${tab}`);
+        const view = document.getElementById(`tab-view-${tab}`);
+        if (btn && view) {
+          btn.addEventListener('click', () => {
+            tabs.forEach((t) => {
+              const b = document.getElementById(`tab-btn-${t}`);
+              const v = document.getElementById(`tab-view-${t}`);
+              if (b) {
+                b.classList.remove('bg-sky-600', 'text-white');
+                b.classList.add('bg-slate-800', 'text-slate-300');
+              }
+              if (v) v.classList.add('hidden');
+            });
+            btn.classList.remove('bg-slate-800', 'text-slate-300');
+            btn.classList.add('bg-sky-600', 'text-white');
+            view.classList.remove('hidden');
+
+            if (tab === '3d' && renderer && camera && controls) {
+              onWindowResize();
+            } else if (tab === '2d') {
+              update2DCharts();
+            } else if (tab === 'breakdown') {
+              renderPageMath();
+            }
+          });
+        }
+      });
+    }
+
+    // --- ANIMATION LOOP ---
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (controls) controls.update();
+
+      if (state.animating) {
+        state.animTime += 0.02;
+        state.x0 = 1.2 * Math.cos(state.animTime);
+        state.y0 = 1.2 * Math.sin(state.animTime * 0.8);
+
+        const sliderX = document.getElementById('slider-x0');
+        const sliderY = document.getElementById('slider-y0');
+        if (sliderX) sliderX.value = state.x0;
+        if (sliderY) sliderY.value = state.y0;
+
+        updateAllCalculations();
+        updateMathDisplay();
+      }
+
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    // --- WINDOW RESIZE HANDLER ---
+    function onWindowResize() {
+      const container = document.getElementById('canvas-container');
+      if (!container || !renderer || !camera) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    // --- INITIALIZATION ON DOM LOAD ---
+    window.addEventListener('DOMContentLoaded', () => {
+      initPresets();
+      initThreeScene();
+      initCharts();
+      setupEventListeners();
+
+      // Set initial function
+      updateFunction(PRESETS[0].expr);
+
+      // Initial KaTeX render
+      renderPageMath();
+
+      // Start render loop
+      animate();
+    });
+  </script>
+</body>
+</html>
