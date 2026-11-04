@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Silk Road: Ancient Networks of Exchange</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        amber: { 450: '#F59E0B', 550: '#D97706' },
+                        gold: '#D4AF37',
+                        silk: '#E6C280',
+                        jade: '#3B7A57',
+                        lapis: '#1E40AF',
+                        carmine: '#991B1B'
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Leaflet Dark Adjustments */
+        .leaflet-container {
+            background-color: #0b0f19 !important;
+            font-family: 'Inter', sans-serif;
+        }
+        .leaflet-control-zoom {
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+        }
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+            background-color: #1e293b !important;
+            color: #cbd5e1 !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
+            background-color: #334155 !important;
+            color: #fff !important;
+        }
+        
+        /* City Label Offset Utility Classes for Zero Overlap */
+        .city-label-container {
+            pointer-events: none;
+        }
+        .city-label-pill {
+            pointer-events: auto;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .city-label-pill:hover {
+            transform: scale(1.08);
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+            z-index: 1000 !important;
+        }
+
+        /* Label Offsets relative to node marker center */
+        .pos-top { transform: translate(-50%, -100%) translateY(-12px); }
+        .pos-bottom { transform: translate(-50%, 100%) translateY(4px); }
+        .pos-left { transform: translate(-100%, -50%) translateX(-12px); }
+        .pos-right { transform: translate(0%, -50%) translateX(12px); }
+        .pos-top-right { transform: translate(0%, -100%) translateY(-6px) translateX(6px); }
+        .pos-top-left { transform: translate(-100%, -100%) translateY(-6px) translateX(-6px); }
+        .pos-bottom-right { transform: translate(0%, 0%) translateY(8px) translateX(6px); }
+        .pos-bottom-left { transform: translate(-100%, 0%) translateY(8px) translateX(-6px); }
+
+        /* Glowing Marker Pulse Animations */
+        @keyframes pulse-amber {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        @keyframes pulse-cyan {
+            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.8); }
+            70% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+
+        .node-pulse-amber { animation: pulse-amber 2.5s infinite; }
+        .node-pulse-cyan { animation: pulse-cyan 2.5s infinite; }
+        .node-pulse-red { animation: pulse-red 1.8s infinite; }
+
+        /* Animated Dashed Polyline Effect */
+        @keyframes dash-flow {
+            to { stroke-dashoffset: -40; }
+        }
+        .animated-route {
+            stroke-dasharray: 8, 8;
+            animation: dash-flow 3s linear infinite;
+        }
+
+        /* Custom Scrollbar for Drawer */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.6); }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col font-sans select-none">
+
+    <!-- TOP HEADER NAVBAR -->
+    <header class="h-14 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 flex items-center justify-between z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-compass"></i>
+            </div>
+            <div>
+                <h1 class="text-base font-bold text-amber-100 tracking-wide font-serif leading-tight">THE SILK ROAD</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-mono">Geographic Networks of Exchange (130 BCE – 1453 CE)</p>
+            </div>
+        </div>
+
+        <!-- Center Era Indicator -->
+        <div class="hidden md:flex items-center px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs text-amber-300">
+            <i class="fa-regular fa-clock mr-2 text-amber-400"></i>
+            <span id="current-era-badge" class="font-semibold">Pax Mongolica & Peak Exchange (1300 CE)</span>
+        </div>
+
+        <!-- Quick Theme & Info Controls -->
+        <div class="flex items-center space-x-2">
+            <div class="relative inline-block text-left">
+                <select id="theme-selector" class="bg-slate-800 text-slate-200 border border-slate-700 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer">
+                    <option value="dark">Dark Canvas (Esri)</option>
+                    <option value="topo">Vintage Topo (Esri Terrain)</option>
+                    <option value="carto">Imperial Slate (CartoDB)</option>
+                </select>
+            </div>
+            <button id="reset-view-btn" class="p-2 text-slate-300 hover:text-amber-400 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs transition" title="Reset View">
+                <i class="fa-solid fa-arrows-to-dot"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CANVAS CONTAINER -->
+    <div class="relative flex-1 w-full h-full overflow-hidden">
+
+        <!-- LEAFLET MAP CONTAINER -->
+        <div id="map" class="w-full h-full z-10"></div>
+
+        <!-- TOP FLOATING ERA SLIDER BAR -->
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-2xl bg-slate-900/90 backdrop-blur-md border border-slate-700/70 rounded-2xl p-3 shadow-2xl">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <span class="text-xs font-semibold text-slate-300 flex items-center">
+                    <i class="fa-solid fa-timeline text-amber-400 mr-2"></i> HISTORICAL ERA FILTER
+                </span>
+                <span id="era-year-label" class="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                    1300 CE
+                </span>
+            </div>
+
+            <!-- Custom Slider -->
+            <input id="era-slider" type="range" min="0" max="3" step="1" value="2" 
+                class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none">
+
+            <!-- Step Labels -->
+            <div class="flex justify-between text-[11px] font-medium text-slate-400 mt-2 px-0.5">
+                <button onclick="setEra(0)" class="hover:text-amber-300 transition text-left">Han-Roman<br><span class="text-[9px] text-slate-500 font-mono">130 BCE</span></button>
+                <button onclick="setEra(1)" class="hover:text-amber-300 transition text-center">Tang Age<br><span class="text-[9px] text-slate-500 font-mono">700 CE</span></button>
+                <button onclick="setEra(2)" class="hover:text-amber-300 transition text-center">Pax Mongolica<br><span class="text-[9px] text-slate-500 font-mono">1300 CE</span></button>
+                <button onclick="setEra(3)" class="hover:text-amber-300 transition text-right">Maritime Age<br><span class="text-[9px] text-slate-500 font-mono">1453 CE</span></button>
+            </div>
+        </div>
+
+        <!-- LEFT CONTROL PANEL (LAYERS & TRAVELERS) -->
+        <div class="absolute top-28 left-4 z-20 w-64 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-xl p-3.5 shadow-2xl hidden md:block">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center">
+                <i class="fa-solid fa-layer-group text-amber-400 mr-2"></i> Route Networks & Layers
+            </h3>
+
+            <!-- Route Toggles -->
+            <div class="space-y-2 mb-4 text-xs">
+                <label class="flex items-center justify-between p-2 rounded bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 cursor-pointer">
+                    <span class="flex items-center text-slate-200">
+                        <span class="w-3 h-3 rounded-full bg-amber-500 mr-2 shadow-sm shadow-amber-500"></span> Northern Overland Oasis
+                    </span>
+                    <input type="checkbox" id="toggle-overland" checked class="accent-amber-500 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 cursor-pointer">
+                    <span class="flex items-center text-slate-200">
+                        <span class="w-3 h-3 rounded-full bg-cyan-400 mr-2 shadow-sm shadow-cyan-400"></span> Maritime Spice Route
+                    </span>
+                    <input type="checkbox" id="toggle-maritime" checked class="accent-cyan-400 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 cursor-pointer">
+                    <span class="flex items-center text-slate-200">
+                        <span class="w-3 h-3 rounded-full bg-red-600 mr-2 shadow-sm shadow-red-500"></span> Black Death Bubonic Vector
+                    </span>
+                    <input type="checkbox" id="toggle-plague" checked class="accent-red-500 rounded">
+                </label>
+            </div>
+
+            <!-- Famous Traveler Expeditions -->
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center">
+                <i class="fa-solid fa-shoe-prints text-amber-400 mr-2"></i> Historical Travelers
+            </h3>
+            <div class="space-y-1.5 text-xs">
+                <button id="btn-polo" onclick="toggleTraveler('polo')" class="w-full text-left px-2.5 py-1.5 rounded bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-between transition">
+                    <span><i class="fa-solid fa-route text-amber-400 mr-2"></i> Marco Polo (1271-1295)</span>
+                    <i id="icon-polo" class="fa-solid fa-eye-slash text-slate-500"></i>
+                </button>
+                <button id="btn-xuanzang" onclick="toggleTraveler('xuanzang')" class="w-full text-left px-2.5 py-1.5 rounded bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-between transition">
+                    <span><i class="fa-solid fa-scroll text-emerald-400 mr-2"></i> Xuanzang (629-645)</span>
+                    <i id="icon-xuanzang" class="fa-solid fa-eye-slash text-slate-500"></i>
+                </button>
+                <button id="btn-battuta" onclick="toggleTraveler('battuta')" class="w-full text-left px-2.5 py-1.5 rounded bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-between transition">
+                    <span><i class="fa-solid fa-ship text-pink-400 mr-2"></i> Ibn Battuta (1325-1354)</span>
+                    <i id="icon-battuta" class="fa-solid fa-eye-slash text-slate-500"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- BOTTOM MAP LEGEND -->
+        <div class="absolute bottom-6 left-4 z-20 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-xl p-3 shadow-2xl text-[11px] text-slate-300 space-y-1.5 hidden lg:block">
+            <div class="font-bold text-amber-200 border-b border-slate-800 pb-1 mb-1.5">MAP LEGEND</div>
+            <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full border-2 border-amber-400 bg-amber-500/30"></span><span>Overland Silk Trade Node</span></div>
+            <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full border-2 border-cyan-400 bg-cyan-500/30"></span><span>Maritime Port City</span></div>
+            <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full border-2 border-purple-400 bg-purple-500/30"></span><span>Primary Multi-Route Hub</span></div>
+            <div class="flex items-center space-x-2"><span class="w-5 h-0.5 bg-red-600"></span><span>Plague Path (1346–1351)</span></div>
+        </div>
+
+        <!-- RIGHT SIDE HISTORICAL INSPECTOR DRAWER -->
+        <div id="inspector-panel" class="absolute top-0 right-0 z-30 h-full w-full sm:w-[420px] bg-slate-900/95 backdrop-blur-xl border-l border-slate-800 shadow-2xl transition-transform duration-300 translate-x-full flex flex-col">
+            <!-- Inspector Header -->
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+                <div class="flex items-center space-x-2">
+                    <span id="inspector-badge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        Oasis Hub
+                    </span>
+                    <span id="inspector-coords" class="text-[10px] font-mono text-slate-500">39.65° N, 66.95° E</span>
+                </div>
+                <button onclick="closeInspector()" class="p-1.5 text-slate-400 hover:text-slate-100 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Inspector Content Scrollable -->
+            <div class="p-5 overflow-y-auto flex-1 space-y-5">
+                <div>
+                    <h2 id="inspector-title" class="text-2xl font-bold font-serif text-amber-100">Samarkand</h2>
+                    <p id="inspector-subtitle" class="text-xs text-amber-400/90 font-medium mt-0.5">Crossroads of Sogdiana & Jewel of Transoxiana</p>
+                </div>
+
+                <!-- Hero Header Banner / Visual Graphic -->
+                <div id="inspector-graphic" class="w-full h-36 rounded-xl bg-gradient-to-r from-amber-900/40 via-slate-800 to-indigo-950 border border-slate-700/50 flex items-center justify-center relative overflow-hidden p-4">
+                    <i id="inspector-icon" class="fa-solid fa-city text-6xl text-amber-400/20 absolute right-3 bottom-2"></i>
+                    <p id="inspector-quote" class="text-xs italic text-slate-300 relative z-10 font-serif leading-relaxed">
+                        "Samarkand is the grandest and most splendid city in the world..." — Ibn Battuta
+                    </p>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5">Historical Significance</h4>
+                    <p id="inspector-desc" class="text-xs text-slate-300 leading-relaxed font-sans">
+                        Located in the fertile Zarafshan River valley, Samarkand was the key metropolis of the Sogdian merchants who brokered trade between China, Persia, and the Mediterranean.
+                    </p>
+                </div>
+
+                <!-- Primary Exchange Grid -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                        <span class="text-[10px] uppercase font-bold text-amber-400 block mb-1">
+                            <i class="fa-solid fa-boxes-packing mr-1"></i> Key Exports / Goods
+                        </span>
+                        <p id="inspector-exports" class="text-xs text-slate-200">Raw Silk, Sogdian Glass, Fergana Horses, Paper, Lapis Lazuli</p>
+                    </div>
+                    <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                        <span class="text-[10px] uppercase font-bold text-cyan-400 block mb-1">
+                            <i class="fa-solid fa-flask mr-1"></i> Tech & Culture Transfer
+                        </span>
+                        <p id="inspector-tech" class="text-xs text-slate-200">Papermaking Mills, Islamic Astronomy, Zoroastrianism, Buddhism</p>
+                    </div>
+                </div>
+
+                <!-- Era Chronology Notes -->
+                <div class="p-3.5 bg-amber-950/20 border border-amber-500/20 rounded-xl">
+                    <h4 class="text-xs font-bold text-amber-300 mb-1 flex items-center">
+                        <i class="fa-solid fa-hourglass-half mr-2"></i> Era Context: <span id="inspector-era-name" class="ml-1 text-slate-200 font-normal">Pax Mongolica</span>
+                    </h4>
+                    <p id="inspector-era-detail" class="text-xs text-slate-300 leading-relaxed">
+                        Under Mongol governance, Samarkand thrived along protected imperial post routes (Yam system), welcoming diplomats and traders across Eurasia.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-4 border-t border-slate-800 bg-slate-950/80 text-center">
+                <button onclick="zoomToSelected()" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg shadow-lg transition flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-location mr-2"></i> Center Map on Location
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. DATA DEFINITIONS (GEO ACCURATE NODES)
+        // ==========================================
+
+        // City Nodes with Exact Lat/Lng and Label Placement Offsets
+        const CITIES = [
+            {
+                id: 'changan',
+                name: "Chang'an (Xi'an)",
+                lat: 34.3416, lng: 108.9398,
+                type: 'overland',
+                labelPos: 'pos-right',
+                eraStart: 0,
+                subtitle: 'Eastern Terminus & Tang Imperial Capital',
+                desc: "The largest city in the ancient world and the eastern origin of the Silk Road. Capital of the Han and Tang dynasties.",
+                exports: "Raw Silk, Porcelain, Tea, Ironware, Rhubarb",
+                tech: "Papermaking, Woodblock Printing, Gunpowder",
+                icon: "fa-torii-gate"
+            },
+            {
+                id: 'lanzhou',
+                name: "Lanzhou",
+                lat: 36.0611, lng: 103.8343,
+                type: 'overland',
+                labelPos: 'pos-top-left',
+                eraStart: 0,
+                subtitle: 'Yellow River Hexi Gateway',
+                desc: "Critical crossing point over the Yellow River heading into the Hexi Corridor.",
+                exports: "Wheat, Fine Textiles, Copper",
+                tech: "Irrigation Methods, River Ferry Engineering",
+                icon: "fa-water"
+            },
+            {
+                id: 'dunhuang',
+                name: "Dunhuang",
+                lat: 40.1421, lng: 94.6620,
+                type: 'overland',
+                labelPos: 'pos-top-right',
+                eraStart: 0,
+                subtitle: 'Gobi Desert Oasis & Mogao Caves',
+                desc: "The fork where northern and southern Taklamakan routes split. Famed for its Mogao Buddhist cave temples.",
+                exports: "Jade, Manuscripts, Religious Relics",
+                tech: "Buddhist Art Synthesis, Translation Bureau",
+                icon: "fa-gopuram"
+            },
+            {
+                id: 'turpan',
+                name: "Turpan",
+                lat: 42.9514, lng: 89.1895,
+                type: 'overland',
+                labelPos: 'pos-top',
+                eraStart: 0,
+                subtitle: 'Karez Irrigated Northern Oasis',
+                desc: "Located in the Turpan Depression, famous for underground Karez irrigation channels and vineyards.",
+                exports: "Grapes, Dried Raisins, Cotton, Silk",
+                tech: "Karez Underground Water Technology",
+                icon: "fa-sun"
+            },
+            {
+                id: 'khotan',
+                name: "Khotan",
+                lat: 37.1143, lng: 79.9224,
+                type: 'overland',
+                labelPos: 'pos-bottom',
+                eraStart: 0,
+                subtitle: 'Southern Taklamakan Jade Kingdom',
+                desc: "Famous for white and green nephrite jade found in the Yurungkash River beds.",
+                exports: "Nephrite Jade, Sericulture Silk, Carpets",
+                tech: "Early Mulberry Cultivation Methods",
+                icon: "fa-gem"
+            },
+            {
+                id: 'kashgar',
+                name: "Kashgar",
+                lat: 39.4704, lng: 75.9897,
+                type: 'overland',
+                labelPos: 'pos-bottom-right',
+                eraStart: 0,
+                subtitle: 'Pamir Mountain Foothill Oasis',
+                desc: "Where the northern and southern desert paths converged before crossing the high Pamir Mountain passes into Central Asia.",
+                exports: "Dried Fruits, Livestock, Rugs, Spices",
+                tech: "Mountain Pack Mule Logistics",
+                icon: "fa-mountain"
+            },
+            {
+                id: 'samarkand',
+                name: "Samarkand",
+                lat: 39.6542, lng: 66.9597,
+                type: 'overland',
+                labelPos: 'pos-bottom-right',
+                eraStart: 0,
+                subtitle: 'Crossroads of Sogdiana & Transoxiana',
+                desc: "Heart of the Sogdian trading empire. Essential stop for caravans carrying goods between East and West.",
+                exports: "Sogdian Glass, Fergana Horses, Lapis Lazuli",
+                tech: "Paper Mill Engineering, Astronomy",
+                icon: "fa-archway"
+            },
+            {
+                id: 'bukhara',
+                name: "Bukhara",
+                lat: 39.7747, lng: 64.4286,
+                type: 'overland',
+                labelPos: 'pos-top-left',
+                eraStart: 0,
+                subtitle: 'Islamic Learning Hub of Central Asia',
+                desc: "Major trade center and intellectual capital of Transoxiana.",
+                exports: "Cotton, Furs, Carpets, Fine Leather",
+                tech: "Avicennan Medicine, Mathematics",
+                icon: "fa-book-quran"
+            },
+            {
+                id: 'merv',
+                name: "Merv",
+                lat: 37.6638, lng: 62.1926,
+                type: 'overland',
+                labelPos: 'pos-bottom-left',
+                eraStart: 0,
+                subtitle: 'Karakum Desert Oasis Metropolis',
+                desc: "Once one of the world's largest cities before its destruction during the Mongol conquest.",
+                exports: "Merv Cotton, Damask Silk, Grain",
+                tech: "Crucible Steel Metallurgy",
+                icon: "fa-landmark"
+            },
+            {
+                id: 'nishapur',
+                name: "Nishapur",
+                lat: 36.2133, lng: 58.7958,
+                type: 'overland',
+                labelPos: 'pos-bottom-right',
+                eraStart: 0,
+                subtitle: 'Turquoise Gem & Persian Craft Center',
+                desc: "Famous Persian city known for high-grade turquoise mines and pottery.",
+                exports: "Turquoise Gems, Glazed Ceramics, Saffron",
+                tech: "Algebraic Mathematics, Pottery Glazes",
+                icon: "fa-gem"
+            },
+            {
+                id: 'rayy',
+                name: "Rayy (Tehran)",
+                lat: 35.5901, lng: 51.4358,
+                type: 'overland',
+                labelPos: 'pos-top-left',
+                eraStart: 0,
+                subtitle: 'Key Iranian Plateau Stop',
+                desc: "Strategic Silk Road stop on the fertile plains south of the Alborz mountains.",
+                exports: "Lusterware Ceramics, Wool, Silk Textiles",
+                tech: "Persian Qanat Water Systems",
+                icon: "fa-monument"
+            },
+            {
+                id: 'baghdad',
+                name: "Baghdad",
+                lat: 33.3152, lng: 44.3661,
+                type: 'both',
+                labelPos: 'pos-bottom-right',
+                eraStart: 1,
+                subtitle: 'Abbasid House of Wisdom & Caliphate Capital',
+                desc: "Founded in 762 CE, Baghdad became the epicenter of the Islamic Golden Age.",
+                exports: "Glassware, Books, Textiles, Perfumes",
+                tech: "Translation of Greek Philosophy, Optics",
+                icon: "fa-mosque"
+            },
+            {
+                id: 'palmyra',
+                name: "Palmyra",
+                lat: 34.5601, lng: 38.2818,
+                type: 'overland',
+                labelPos: 'pos-top-left',
+                eraStart: 0,
+                subtitle: 'Syrian Desert Oasis Empire',
+                desc: "Ancient semitic city that brokered trade between Parthia/Persia and the Roman Empire.",
+                exports: "Myrrh, Frankincense, Purple Dyes, Silk",
+                tech: "Caravan Taxation & Protection Systems",
+                icon: "fa-monument"
+            },
+            {
+                id: 'constantinople',
+                name: "Constantinople",
+                lat: 41.0082, lng: 28.9784,
+                type: 'both',
+                labelPos: 'pos-top-right',
+                eraStart: 0,
+                subtitle: 'Byzantine Empire Capital & Bosphorus Gateway',
+                desc: "Where Europe and Asia meet. Secured Silk Road wealth for the Eastern Roman Empire.",
+                exports: "Byzantine Imperial Silk, Gold Coins, Icons",
+                tech: "Greek Fire, Defensive Fortifications",
+                icon: "fa-church"
+            },
+            {
+                id: 'venice',
+                name: "Venice",
+                lat: 45.4408, lng: 12.3155,
+                type: 'both',
+                labelPos: 'pos-top-left',
+                eraStart: 1,
+                subtitle: 'Maritime Republic & European Terminus',
+                desc: "Dominant maritime trading republic that distributed Asian spices and silks throughout Europe.",
+                exports: "Murano Glass, Venetian Galleys, Silver Coins",
+                tech: "Double-Entry Bookkeeping, Arsenal Shipbuilding",
+                icon: "fa-ship"
+            },
+            {
+                id: 'guangzhou',
+                name: "Guangzhou (Canton)",
+                lat: 23.1291, lng: 113.2644,
+                type: 'maritime',
+                labelPos: 'pos-top-right',
+                eraStart: 1,
+                subtitle: 'Maritime Silk Road Emporium',
+                desc: "China's premier foreign trade port during Tang and Song dynasties.",
+                exports: "Porcelain, Tea, Raw Silk, Rhubarb",
+                tech: "Junk Ship Sternpost Rudders, Compass Navigation",
+                icon: "fa-anchor"
+            },
+            {
+                id: 'malacca',
+                name: "Strait of Malacca",
+                lat: 2.1896, lng: 102.2501,
+                type: 'maritime',
+                labelPos: 'pos-bottom-right',
+                eraStart: 1,
+                subtitle: 'Chokepoint of Spice Trade Navigation',
+                desc: "Crucial maritime choke point connecting the South China Sea to the Indian Ocean.",
+                exports: "Nutmeg, Cloves, Tin, Aromatic Woods",
+                tech: "Monsoon Wind Navigation Mapping",
+                icon: "fa-compass"
+            },
+            {
+                id: 'calicut',
+                name: "Calicut (Kozhikode)",
+                lat: 11.2588, lng: 75.7804,
+                type: 'maritime',
+                labelPos: 'pos-bottom-right',
+                eraStart: 1,
+                subtitle: 'Malabar Coast City of Spices',
+                desc: "Major trade hub on India's southwest coast where Chinese junks met Arab dhows.",
+                exports: "Black Pepper, Cinnamon, Cardamom, Calico Cloth",
+                tech: "Coir Rope Marine Technology",
+                icon: "fa-pepper-hot"
+            },
+            {
+                id: 'hormuz',
+                name: "Hormuz",
+                lat: 27.0601, lng: 56.4638,
+                type: 'maritime',
+                labelPos: 'pos-top-right',
+                eraStart: 1,
+                subtitle: 'Persian Gulf Spice Gateway',
+                desc: "Strategic island kingdom controlling trade into the Persian Gulf.",
+                exports: "Pearls, Horses, Persian Carpets, Dates",
+                tech: "Wind-Tower Cooling Architecture",
+                icon: "fa-gem"
+            },
+            {
+                id: 'aden',
+                name: "Aden",
+                lat: 12.7855, lng: 45.0186,
+                type: 'maritime',
+                labelPos: 'pos-bottom-left',
+                eraStart: 0,
+                subtitle: 'Red Sea Trade Entrepôt',
+                desc: "Key Yemeni port city guarding entry into the Red Sea.",
+                exports: "Frankincense, Myrrh, Arabian Horses, Coffee",
+                tech: "Cistern Rainwater Storage",
+                icon: "fa-sailboat"
+            },
+            {
+                id: 'alexandria',
+                name: "Alexandria",
+                lat: 31.2001, lng: 29.9187,
+                type: 'both',
+                labelPos: 'pos-bottom-left',
+                eraStart: 0,
+                subtitle: 'Mediterranean Gateway to Egypt & Red Sea',
+                desc: "Connecting Mediterranean trade with Overland/Red Sea routes from India.",
+                exports: "Papyrus, Egyptian Grain, Glassware, Linen",
+                tech: "Lighthouse Engineering, Library Archiving",
+                icon: "fa-monument"
+            },
+            {
+                id: 'kaffa',
+                name: "Kaffa (Feodosia)",
+                lat: 45.0350, lng: 35.3828,
+                type: 'both',
+                labelPos: 'pos-top',
+                eraStart: 2,
+                subtitle: 'Genoese Black Sea Trading Post',
+                desc: "Famous Crimean port town where the Mongol siege of 1346 unleashed the Black Death into Europe.",
+                exports: "Grain, Slaves, Furs, Wax",
+                tech: "Genoese Maritime Banking",
+                icon: "fa-biohazard"
+            }
+        ];
+
+        // Historical Trade Route Geometry Coordinates
+        const ROUTES = {
+            overland_north: [
+                [34.3416, 108.9398], // Chang'an
+                [36.0611, 103.8343], // Lanzhou
+                [40.1421, 94.6620],  // Dunhuang
+                [42.9514, 89.1895],  // Turpan
+                [39.4704, 75.9897],  // Kashgar
+                [39.6542, 66.9597],  // Samarkand
+                [39.7747, 64.4286],  // Bukhara
+                [37.6638, 62.1926],  // Merv
+                [36.2133, 58.7958],  // Nishapur
+                [35.5901, 51.4358],  // Rayy
+                [33.3152, 44.3661],  // Baghdad
+                [34.5601, 38.2818],  // Palmyra
+                [41.0082, 28.9784],  // Constantinople
+                [45.4408, 12.3155]   // Venice
+            ],
+            overland_south: [
+                [40.1421, 94.6620],  // Dunhuang
+                [37.1143, 79.9224],  // Khotan
+                [39.4704, 75.9897]   // Kashgar
+            ],
+            maritime: [
+                [23.1291, 113.2644], // Guangzhou
+                [12.0000, 111.0000], // South China Sea midpoint
+                [2.1896, 102.2501],  // Malacca
+                [6.0000, 80.0000],   // Sri Lanka South tip
+                [11.2588, 75.7804],  // Calicut
+                [27.0601, 56.4638],  // Hormuz
+                [12.7855, 45.0186],  // Aden
+                [27.5000, 34.0000],  // Red Sea midpoint
+                [31.2001, 29.9187],  // Alexandria
+                [35.5000, 20.0000],  // Mediterranean midpoint
+                [45.4408, 12.3155]   // Venice
+            ],
+            plague: [
+                [39.6542, 66.9597],  // Samarkand
+                [45.0350, 35.3828],  // Kaffa
+                [41.0082, 28.9784],  // Constantinople
+                [38.1938, 15.5540],  // Messina / Sicily
+                [45.4408, 12.3155],  // Venice
+                [31.2001, 29.9187]   // Alexandria
+            ]
+        };
+
+        // Traveler Expeditions Coordinates
+        const TRAVELERS = {
+            polo: [
+                [45.4408, 12.3155], // Venice
+                [41.0082, 28.9784], // Constantinople
+                [35.5901, 51.4358], // Rayy
+                [37.6638, 62.1926], // Merv
+                [39.4704, 75.9897], // Kashgar
+                [40.1421, 94.6620], // Dunhuang
+                [39.9042, 116.4074] // Khanbaliq (Beijing)
+            ],
+            xuanzang: [
+                [34.3416, 108.9398], // Chang'an
+                [42.9514, 89.1895],  // Turpan
+                [39.4704, 75.9897],  // Kashgar
+                [39.6542, 66.9597],  // Samarkand
+                [34.5553, 69.2075],  // Kabul
+                [25.3176, 82.9739]   // Nalanda / Varanasi
+            ],
+            battuta: [
+                [35.7595, -5.8340],  // Tangier
+                [31.2001, 29.9187],  // Alexandria
+                [21.4225, 39.8262],  // Mecca
+                [33.3152, 44.3661],  // Baghdad
+                [11.2588, 75.7804],  // Calicut
+                [2.1896, 102.2501],  // Malacca
+                [23.1291, 113.2644]  // Guangzhou
+            ]
+        };
+
+        const ERAS = [
+            {
+                name: "Han-Roman Era (130 BCE)",
+                yearLabel: "130 BCE",
+                badge: "Han-Roman Foundations",
+                desc: "Zhang Qian's mission to the West opens regular trade. Han Dynasty trades silk for Fergana 'heavenly horses', while Roman glassware flows eastward."
+            },
+            {
+                name: "Tang Golden Age (700 CE)",
+                yearLabel: "700 CE",
+                badge: "Tang Golden Age",
+                desc: "Height of cosmopolitan exchange. Xuanzang travels to India for Buddhist scriptures. Battle of Talas (751 CE) spreads papermaking technology into the Islamic world."
+            },
+            {
+                name: "Pax Mongolica (1300 CE)",
+                yearLabel: "1300 CE",
+                badge: "Pax Mongolica & Peak Exchange",
+                desc: "Mongol unification creates secure travel across Eurasia via the Yam postal system. Marco Polo travels to China; Black Death plague vectors emerge near 1346 CE."
+            },
+            {
+                name: "Maritime Spice Age (1453 CE)",
+                yearLabel: "1453 CE",
+                badge: "Maritime Age & Ottoman Closure",
+                desc: "Ottoman conquest of Constantinople closes land routes to Western Europeans, shifting primary trade to Indian Ocean maritime routes."
+            }
+        ];
+
+        // Tile Layer URLs
+        const TILE_LAYERS = {
+            dark: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            topo: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+            carto: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        };
+
+        // ==========================================
+        // 2. STATE & LEAFLET INITIALIZATION
+        // ==========================================
+
+        let currentEra = 2; // Default Pax Mongolica
+        let currentTileLayer = null;
+        let selectedEntity = null;
+        
+        // Active Map Layers
+        const cityMarkers = [];
+        let polyOverlandNorth = null;
+        let polyOverlandSouth = null;
+        let polyMaritime = null;
+        let polyPlague = null;
+        const travelerPolys = { polo: null, xuanzang: null, battuta: null };
+        const activeTravelers = { polo: false, xuanzang: false, battuta: false };
+
+        // Initialize Map
+        const map = L.map('map', {
+            center: [34.0, 68.0],
+            zoom: 4,
+            minZoom: 3,
+            maxZoom: 10,
+            zoomControl: false
+        });
+
+        // Add Zoom Control to Bottom Right
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // Load Default Dark Tile Layer
+        function setMapTheme(themeKey) {
+            if (currentTileLayer) map.removeLayer(currentTileLayer);
+            
+            const layerUrl = TILE_LAYERS[themeKey] || TILE_LAYERS.dark;
+            const attribution = themeKey === 'carto' ? '&copy; CartoDB & OpenStreetMap' : '&copy; Esri & ArcGIS';
+
+            currentTileLayer = L.tileLayer(layerUrl, {
+                attribution: attribution,
+                maxZoom: 16
+            }).addTo(map);
+        }
+
+        setMapTheme('dark');
+
+        // ==========================================
+        // 3. MAP DRAWING FUNCTIONS
+        // ==========================================
+
+        // Render City Markers with Custom HTML Labels (Zero Overlap)
+        function renderCities() {
+            // Clear existing
+            cityMarkers.forEach(m => map.removeLayer(m));
+            cityMarkers.length = 0;
+
+            CITIES.forEach(city => {
+                // Check era visibility
+                if (city.eraStart > currentEra) return;
+
+                // Color accent by type
+                let pulseColorClass = "node-pulse-amber";
+                let badgeBg = "bg-amber-500/20 text-amber-300 border-amber-500/40";
+                let dotBg = "bg-amber-500";
+
+                if (city.type === 'maritime') {
+                    pulseColorClass = "node-pulse-cyan";
+                    badgeBg = "bg-cyan-500/20 text-cyan-300 border-cyan-500/40";
+                    dotBg = "bg-cyan-400";
+                } else if (city.type === 'both') {
+                    badgeBg = "bg-purple-500/20 text-purple-300 border-purple-500/40";
+                    dotBg = "bg-purple-400";
+                }
+
+                if (city.id === 'kaffa') {
+                    pulseColorClass = "node-pulse-red";
+                    dotBg = "bg-red-500";
+                }
+
+                // Custom Leaflet DivIcon for Label + Dot
+                const customIcon = L.divIcon({
+                    className: 'city-label-container',
+                    html: `
+                        <div class="relative flex items-center justify-center w-6 h-6">
+                            <!-- Glowing Outer Ring -->
+                            <div class="absolute w-4 h-4 rounded-full ${dotBg} ${pulseColorClass}"></div>
+                            <!-- Center Dot -->
+                            <div class="absolute w-2 h-2 bg-slate-950 rounded-full"></div>
+                            
+                            <!-- Position Offset Label Pill -->
+                            <div class="absolute city-label-pill ${city.labelPos} px-2 py-0.5 rounded-md border text-[11px] font-medium tracking-wide ${badgeBg}"
+                                 onclick="selectCity('${city.id}')">
+                                <i class="fa-solid ${city.icon} text-[9px] mr-1 opacity-80"></i>${city.name}
+                            </div>
+                        </div>
+                    `,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+
+                const marker = L.marker([city.lat, city.lng], { icon: customIcon }).addTo(map);
+                marker.on('click', () => selectCity(city.id));
+                cityMarkers.push(marker);
+            });
+        }
+
+        // Render Base Route Polylines
+        function renderRoutes() {
+            // 1. Northern Overland Oasis
+            if (polyOverlandNorth) map.removeLayer(polyOverlandNorth);
+            polyOverlandNorth = L.polyline(ROUTES.overland_north, {
+                color: '#f59e0b',
+                weight: 3.5,
+                opacity: 0.85,
+                dashArray: '6, 6'
+            }).addTo(map);
+
+            polyOverlandNorth.on('click', () => {
+                openInspectorCustom(
+                    "Northern Overland Silk Route",
+                    "Chang'an to Constantinople & Venice",
+                    "fa-caravan",
+                    "The legendary terrestrial network crossing the Hexi Corridor, Taklamakan Desert oases, and Sogdiana.",
+                    "Raw Silk, Fergana Horses, Rhubarb, Jade",
+                    "Papermaking, Gunpowder, Compass, Sericulture",
+                    ERAS[currentEra].name,
+                    "Monitored by ancient watchtowers and protected under imperial dynasties."
+                );
+            });
+
+            // 2. Southern Taklamakan Bypass
+            if (polyOverlandSouth) map.removeLayer(polyOverlandSouth);
+            polyOverlandSouth = L.polyline(ROUTES.overland_south, {
+                color: '#d97706',
+                weight: 2.5,
+                opacity: 0.8,
+                dashArray: '4, 4'
+            }).addTo(map);
+
+            // 3. Maritime Spice Route
+            if (polyMaritime) map.removeLayer(polyMaritime);
+            polyMaritime = L.polyline(ROUTES.maritime, {
+                color: '#06b6d4',
+                weight: 3.5,
+                opacity: 0.85,
+                dashArray: '8, 8'
+            }).addTo(map);
+
+            polyMaritime.on('click', () => {
+                openInspectorCustom(
+                    "Maritime Spice Navigation Route",
+                    "South China Sea to Red Sea & Mediterranean",
+                    "fa-ship",
+                    "Seaborne trade lanes connecting Guangzhou, Malacca, Calicut, Hormuz, Aden, and Alexandria.",
+                    "Black Pepper, Nutmeg, Cloves, Porcelain, Spices",
+                    "Monsoon Wind Mapping, Sternpost Rudders, Astrolabes",
+                    ERAS[currentEra].name,
+                    "Dominated by Arab, Indian, and Chinese vessels, and later Portuguese armada."
+                );
+            });
+
+            // 4. Black Death Vector (Visible in Era 2 - Pax Mongolica)
+            if (polyPlague) map.removeLayer(polyPlague);
+            if (currentEra >= 2 && document.getElementById('toggle-plague').checked) {
+                polyPlague = L.polyline(ROUTES.plague, {
+                    color: '#dc2626',
+                    weight: 3,
+                    opacity: 0.9,
+                    dashArray: '5, 5',
+                    className: 'animated-route'
+                }).addTo(map);
+
+                polyPlague.on('click', () => {
+                    openInspectorCustom(
+                        "Black Death Pathogen Spread (1346–1351)",
+                        "Central Asian Steppe to Europe & Mediterranean",
+                        "fa-skull-crossbones",
+                        "Bubonic plague (Yersinia pestis) vector carried by flea-infested rodents along trade routes and Genoese galleys.",
+                        "Biological Impact: 30%-60% European population loss",
+                        "Quarantine Protocols, Demise of Serfdom",
+                        "Pax Mongolica Crisis",
+                        "Spread rapidly from Kaffa siege across Constantinople, Messina, Venice, and Alexandria."
+                    );
+                });
+            }
+        }
+
+        // Render Active Traveler Expedition Paths
+        function renderTravelers() {
+            Object.keys(TRAVELERS).forEach(key => {
+                if (travelerPolys[key]) map.removeLayer(travelerPolys[key]);
+                
+                if (activeTravelers[key]) {
+                    const color = key === 'polo' ? '#facc15' : (key === 'xuanzang' ? '#10b981' : '#ec4899');
+                    travelerPolys[key] = L.polyline(TRAVELERS[key], {
+                        color: color,
+                        weight: 4,
+                        opacity: 0.9,
+                        dashArray: '10, 10',
+                        className: 'animated-route'
+                    }).addTo(map);
+                }
+            });
+        }
+
+        // ==========================================
+        // 4. INTERACTIVE CONTROLS & INSPECTOR
+        // ==========================================
+
+        function setEra(eraIdx) {
+            currentEra = parseInt(eraIdx);
+            document.getElementById('era-slider').value = currentEra;
+            
+            const era = ERAS[currentEra];
+            document.getElementById('current-era-badge').innerText = era.name;
+            document.getElementById('era-year-label').innerText = era.yearLabel;
+
+            renderCities();
+            renderRoutes();
+            renderTravelers();
+        }
+
+        function selectCity(cityId) {
+            const city = CITIES.find(c => c.id === cityId);
+            if (!city) return;
+
+            selectedEntity = city;
+
+            document.getElementById('inspector-badge').innerText = city.type.toUpperCase() + " NODE";
+            document.getElementById('inspector-coords').innerText = `${city.lat.toFixed(2)}° N, ${city.lng.toFixed(2)}° E`;
+            document.getElementById('inspector-title').innerText = city.name;
+            document.getElementById('inspector-subtitle').innerText = city.subtitle;
+            document.getElementById('inspector-desc').innerText = city.desc;
+            document.getElementById('inspector-exports').innerText = city.exports;
+            document.getElementById('inspector-tech').innerText = city.tech;
+            
+            document.getElementById('inspector-icon').className = `fa-solid ${city.icon} text-6xl text-amber-400/20 absolute right-3 bottom-2`;
+            document.getElementById('inspector-quote').innerText = `Primary exchange center active during ${ERAS[currentEra].name}.`;
+            
+            document.getElementById('inspector-era-name').innerText = ERAS[currentEra].name;
+            document.getElementById('inspector-era-detail').innerText = ERAS[currentEra].desc;
+
+            // Slide in Inspector
+            document.getElementById('inspector-panel').classList.remove('translate-x-full');
+            
+            // Pan map smoothly to node
+            map.flyTo([city.lat, city.lng], 6, { duration: 1.2 });
+        }
+
+        function openInspectorCustom(title, subtitle, icon, desc, exports, tech, eraName, eraDetail) {
+            document.getElementById('inspector-badge').innerText = "ROUTE NETWORK";
+            document.getElementById('inspector-coords').innerText = "Eurasian Corridor";
+            document.getElementById('inspector-title').innerText = title;
+            document.getElementById('inspector-subtitle').innerText = subtitle;
+            document.getElementById('inspector-desc').innerText = desc;
+            document.getElementById('inspector-exports').innerText = exports;
+            document.getElementById('inspector-tech').innerText = tech;
+            
+            document.getElementById('inspector-icon').className = `fa-solid ${icon} text-6xl text-amber-400/20 absolute right-3 bottom-2`;
+            document.getElementById('inspector-quote').innerText = subtitle;
+            
+            document.getElementById('inspector-era-name').innerText = eraName;
+            document.getElementById('inspector-era-detail').innerText = eraDetail;
+
+            document.getElementById('inspector-panel').classList.remove('translate-x-full');
+        }
+
+        function closeInspector() {
+            document.getElementById('inspector-panel').classList.add('translate-x-full');
+        }
+
+        function zoomToSelected() {
+            if (selectedEntity) {
+                map.flyTo([selectedEntity.lat, selectedEntity.lng], 7, { duration: 1.0 });
+            }
+        }
+
+        function toggleTraveler(key) {
+            activeTravelers[key] = !activeTravelers[key];
+            
+            const btn = document.getElementById(`btn-${key}`);
+            const icon = document.getElementById(`icon-${key}`);
+
+            if (activeTravelers[key]) {
+                btn.classList.add('bg-slate-700', 'border-amber-500/50');
+                icon.className = "fa-solid fa-eye text-amber-400";
+            } else {
+                btn.classList.remove('bg-slate-700', 'border-amber-500/50');
+                icon.className = "fa-solid fa-eye-slash text-slate-500";
+            }
+
+            renderTravelers();
+        }
+
+        // ==========================================
+        // 5. EVENT LISTENERS
+        // ==========================================
+
+        document.getElementById('era-slider').addEventListener('input', (e) => {
+            setEra(e.target.value);
+        });
+
+        document.getElementById('theme-selector').addEventListener('change', (e) => {
+            setMapTheme(e.target.value);
+        });
+
+        document.getElementById('reset-view-btn').addEventListener('click', () => {
+            map.flyTo([34.0, 68.0], 4, { duration: 1.2 });
+            closeInspector();
+        });
+
+        document.getElementById('toggle-overland').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                if (polyOverlandNorth) map.addLayer(polyOverlandNorth);
+                if (polyOverlandSouth) map.addLayer(polyOverlandSouth);
+            } else {
+                if (polyOverlandNorth) map.removeLayer(polyOverlandNorth);
+                if (polyOverlandSouth) map.removeLayer(polyOverlandSouth);
+            }
+        });
+
+        document.getElementById('toggle-maritime').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                if (polyMaritime) map.addLayer(polyMaritime);
+            } else {
+                if (polyMaritime) map.removeLayer(polyMaritime);
+            }
+        });
+
+        document.getElementById('toggle-plague').addEventListener('change', () => {
+            renderRoutes();
+        });
+
+        // Initialize Map Content
+        window.addEventListener('load', () => {
+            setEra(2); // Start at Pax Mongolica
+        });
+    </script>
+</body>
+</html>
