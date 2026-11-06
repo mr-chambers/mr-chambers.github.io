@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace-Temps des Verbes Français</title>
+    <!-- Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls for free camera movement -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Phosphor Icons for UI -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --indicatif-color: #45f3ff;
+            --subjonctif-color: #f0f;
+            --conditionnel-color: #ffb800;
+            --past-color: #ff5722;
+            --present-color: #4caf50;
+            --future-color: #2196f3;
+            --text-main: #c5c6c7;
+            --panel-bg: rgba(11, 12, 16, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Empêche le défilement classique de la page */
+            user-select: none;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* --- UI OVERLAYS --- */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none; /* Laisse passer les clics vers le canvas sauf sur les éléments interactifs */
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Header */
+        header {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
+        header p {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        /* Labels 3D synchronisés en 2D */
+        .node-label {
+            position: absolute;
+            transform: translate(-50%, -50%); /* Centre le label sur les coordonnées */
+            background: rgba(20, 20, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .node-label:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            border-color: white;
+            z-index: 100 !important;
+        }
+        .node-label .tense-time {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        /* Panneau d'informations latéral */
+        #info-panel {
+            position: absolute;
+            right: -500px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 40px 30px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        #info-panel.open {
+            right: 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .close-btn:hover { opacity: 1; }
+
+        .tag-mode {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        #info-title {
+            font-size: 2.2rem;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        .info-section {
+            margin-bottom: 25px;
+        }
+        .info-section h3 {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-section p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #ddd;
+        }
+        .example-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid var(--indicatif-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.3rem;
+            font-weight: bold;
+            font-style: italic;
+            color: white;
+        }
+        .structure-box {
+            font-family: monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 6px;
+            color: #a8b2d1;
+            font-size: 1rem;
+        }
+
+        /* Navigation en bas */
+        #nav-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); }
+        .nav-btn.active {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .color-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Instructions */
+        #instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(20,20,30,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+        kbd {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-family: monospace;
+            border-bottom: 2px solid #111;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-layer">
+        <header>
+            <h1>L'Espace des Temps</h1>
+            <p>Voyagez à travers l'Indicatif, le Subjonctif et le Conditionnel</p>
+        </header>
+
+        <!-- Conteneur pour les étiquettes HTML générées dynamiquement -->
+        <div id="labels-container" class="interactive"></div>
+
+        <div id="instructions">
+            <div><i class="ph ph-mouse-left"></i> <b>Clic Gauche</b> : Tourner la vue</div>
+            <div><i class="ph ph-mouse-right"></i> <b>Clic Droit</b> : Déplacer (Pan)</div>
+            <div><i class="ph ph-arrows-out-line-vertical"></i> <b>Molette</b> : Zoomer/Dézoomer</div>
+            <div>Cliquez sur un temps pour explorer.</div>
+        </div>
+
+        <div id="nav-controls" class="interactive">
+            <button class="nav-btn active" onclick="resetCamera()">
+                <i class="ph ph-arrows-out-simple"></i> Vue Globale
+            </button>
+            <button class="nav-btn" onclick="focusPath('indicatif')">
+                <div class="color-dot" style="background: var(--indicatif-color)"></div>
+                Indicatif
+            </button>
+            <button class="nav-btn" onclick="focusPath('subjonctif')">
+                <div class="color-dot" style="background: var(--subjonctif-color)"></div>
+                Subjonctif
+            </button>
+            <button class="nav-btn" onclick="focusPath('conditionnel')">
+                <div class="color-dot" style="background: var(--conditionnel-color)"></div>
+                Conditionnel
+            </button>
+        </div>
+
+        <!-- Panneau Latéral -->
+        <div id="info-panel" class="interactive">
+            <button class="close-btn" onclick="closePanel()"><i class="ph ph-x"></i></button>
+            <div id="panel-tag" class="tag-mode">MODE</div>
+            <h2 id="info-title">Nom du Temps</h2>
+            
+            <div class="info-section">
+                <h3><i class="ph ph-chat-centered-text"></i> Exemple</h3>
+                <div id="info-example" class="example-box">Je mange</div>
+            </div>
+
+            <div class="info-section">
+                <h3><i class="ph ph-info"></i> Utilisation</h3>
+                <p id="info-desc">Description de l'utilisation.</p>
+            </div>
+
+            <div class="info-section">
+                <h3><i class="ph ph-wrench"></i> Formation</h3>
+                <div id="info-structure" class="structure-box">Radical + Terminaison</div>
+            </div>
+            
+            <div class="info-section" id="info-extra-section">
+                <h3><i class="ph ph-book-open"></i> Notes additionnelles</h3>
+                <p id="info-extra"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === DONNÉES PÉDAGOGIQUES (Calquées sur le PDF Page 33) ===
+        // X représente le Temps (gauche/droite): X < 0 = Passé, X = 0 = Présent, X > 0 = Futur
+        // Z représente le Mode (profondeur/haut-bas): Z = 0 = Indicatif, Z = -150 = Subjonctif, Z = 150 = Conditionnel
+        const tensesData = [
+            // --- L'INDICATIF (Axe central) ---
+            { id: 'ind_pqp', name: 'Plus-que-parfait', mode: 'Indicatif', time: 'Passé du passé', 
+              desc: 'Action antérieure à une autre action passée.', 
+              structure: 'Auxiliaire (Imparfait) + Participe passé', 
+              example: "J'avais mangé", extra: "Ex: J'avais déjà mangé quand tu es arrivé.", 
+              x: -450, z: 0, color: 'var(--past-color)', path: 'indicatif' },
+              
+            { id: 'ind_imp', name: 'Imparfait', mode: 'Indicatif', time: 'Habituel / Répété', 
+              desc: 'Indique les habitudes, les routines, ou le décor dans le passé.', 
+              structure: 'Racine de "nous" au présent + ais, ais, ait, ions, iez, aient', 
+              example: "Je mangeais", extra: "C'est la toile de fond du passé.", 
+              x: -350, z: 0, color: 'var(--past-color)', path: 'indicatif' },
+
+            { id: 'ind_pa', name: 'Passé antérieur', mode: 'Indicatif', time: 'Passé littéraire', 
+              desc: 'Action passée immédiate avant une autre action au passé simple.', 
+              structure: 'Auxiliaire (Passé simple) + Participe passé', 
+              example: "J'eus mangé", extra: "Généralement après 'dès que', 'quand'.", 
+              x: -250, z: 0, color: 'var(--past-color)', path: 'indicatif', opacity: 0.5 },
+
+            { id: 'ind_ps', name: 'Passé simple', mode: 'Indicatif', time: 'Action achevée (littéraire)', 
+              desc: 'Action achevée et brève dans un récit littéraire historique.', 
+              structure: 'Terminaisons spécifiques (-ai, -is, -us...)', 
+              example: "Je mangeai", extra: "À reconnaître pour la lecture (Examen AP).", 
+              x: -150, z: 0, color: 'var(--past-color)', path: 'indicatif', opacity: 0.6 },
+
+            { id: 'ind_pc', name: 'Passé composé', mode: 'Indicatif', time: 'Action terminée', 
+              desc: 'Action spécifique, terminée et achevée (le récit à l\'oral).', 
+              structure: 'Auxiliaire (Présent) + Participe passé', 
+              example: "J'ai mangé", extra: "Le passé le plus courant.", 
+              x: -50, z: 0, color: 'var(--past-color)', path: 'indicatif' },
+
+            { id: 'ind_pres', name: 'Présent', mode: 'Indicatif', time: 'Maintenant', 
+              desc: 'Maintenant, action au moment présent ou vérité générale.', 
+              structure: 'Radical + terminaisons régulières ou irrégulières', 
+              example: "Je mange", extra: "", 
+              x: 0, z: 0, color: 'var(--present-color)', path: 'indicatif', isCenter: true },
+
+            { id: 'ind_fp', name: 'Futur proche', mode: 'Indicatif', time: 'Bientôt', 
+              desc: 'Dans le futur immédiat. Une action certaine.', 
+              structure: 'Aller (au présent) + Infinitif', 
+              example: "Je vais manger", extra: "Très utilisé à l'oral.", 
+              x: 100, z: 0, color: 'var(--future-color)', path: 'indicatif' },
+
+            { id: 'ind_fa', name: 'Futur antérieur', mode: 'Indicatif', time: 'Avant un autre futur', 
+              desc: 'Action future qui sera terminée avant une autre action future.', 
+              structure: 'Auxiliaire (Futur simple) + Participe passé', 
+              example: "J'aurai mangé", extra: "Ex: Quand tu arriveras, j'aurai déjà mangé.", 
+              x: 250, z: 0, color: 'var(--future-color)', path: 'indicatif' },
+
+            { id: 'ind_fs', name: 'Futur simple', mode: 'Indicatif', time: 'Futur connu', 
+              desc: 'Action qui se passera plus tard, l\'avenir connu.', 
+              structure: 'Infinitif + ai, as, a, ons, ez, ont', 
+              example: "Je mangerai", extra: "Planification formelle.", 
+              x: 380, z: 0, color: 'var(--future-color)', path: 'indicatif' },
+
+            // --- LE SUBJONCTIF (Branche supérieure : Émotions, doutes) ---
+            { id: 'sub_pqp', name: 'Subjonctif P.-Q.-P.', mode: 'Subjonctif', time: 'Passé lointain', 
+              desc: 'Utilisé en littérature pour une condition passée.', 
+              structure: 'Auxiliaire (Subj. imparfait) + Participe passé', 
+              example: "Que j'eusse mangé", extra: "Très rare, purement littéraire.", 
+              x: -450, z: -150, color: 'var(--subjonctif-color)', path: 'subjonctif', opacity: 0.4 },
+
+            { id: 'sub_imp', name: 'Subjonctif Imparfait', mode: 'Subjonctif', time: 'Passé régulier', 
+              desc: 'Souhait régulier dans un récit au passé.', 
+              structure: 'Passé simple + terminaisons spécifiques', 
+              example: "Que je mangeasse", extra: "Purement littéraire.", 
+              x: -300, z: -150, color: 'var(--subjonctif-color)', path: 'subjonctif', opacity: 0.4 },
+
+            { id: 'sub_pass', name: 'Subjonctif Passé', mode: 'Subjonctif', time: 'Nécessité passée', 
+              desc: 'Action incertaine ou émotion liée à une action déjà accomplie.', 
+              structure: 'Auxiliaire (Subjonctif présent) + Participe passé', 
+              example: "Que j'aie mangé", extra: "Ex: Je suis content que tu aies mangé.", 
+              x: -150, z: -150, color: 'var(--subjonctif-color)', path: 'subjonctif' },
+
+            { id: 'sub_pres', name: 'Subjonctif Présent', mode: 'Subjonctif', time: 'Désirs (Maintenant)', 
+              desc: 'Exprime le doute, le souhait, l\'émotion, la nécessité. On ne planifie pas les désirs.', 
+              structure: 'Radical (ils au présent sans -ent) + e, es, e, ions, iez, ent', 
+              example: "Que je mange", extra: "Introduit par 'il faut que', 'je doute que'...", 
+              x: 0, z: -150, color: 'var(--subjonctif-color)', path: 'subjonctif' },
+
+            // --- LE CONDITIONNEL (Branche inférieure : Hypothèses, si...) ---
+            { id: 'cond_pass', name: 'Conditionnel Passé', mode: 'Conditionnel', time: 'Passé possible', 
+              desc: 'Un passé possible qui aurait pu être (Si j\'avais eu...). Exprime un regret.', 
+              structure: 'Auxiliaire (Conditionnel présent) + Participe passé', 
+              example: "J'aurais mangé", extra: "Formule: Si + Plus-que-parfait -> Conditionnel Passé.", 
+              x: -200, z: 150, color: 'var(--conditionnel-color)', path: 'conditionnel' },
+              
+            { id: 'cond_pres', name: 'Conditionnel Présent', mode: 'Conditionnel', time: 'Futur possible / inconnu', 
+              desc: 'Action hypothétique ou incertaine. Souhait, ou demande polie ("si c\'était possible").', 
+              structure: 'Radical du Futur simple + Terminaisons de l\'imparfait', 
+              example: "Je mangerais", extra: "Formule: Si + Imparfait -> Conditionnel Présent.", 
+              x: 150, z: 150, color: 'var(--conditionnel-color)', path: 'conditionnel' }
+        ];
+
+        // === VARIABLES THREE.JS ===
+        let scene, camera, renderer, controls;
+        let objects = [];
+        let labels = []; 
+        let globalCameraPos = new THREE.Vector3(0, 450, 200); // Position pour voir tout d'en haut
+        
+        window.onload = function() {
+            init3D();
+            createEnvironment();
+            createTenseNodes();
+            animate();
+            window.addEventListener('resize', onWindowResize);
+        };
+
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0b0c10, 0.0015);
+
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2500);
+            camera.position.copy(globalCameraPos);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Orbit Controls pour permettre la liberté de mouvement
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxDistance = 1000;
+            controls.minDistance = 50;
+            controls.target.set(0, 0, 0); // Regarde le centre (Présent Indicatif)
+
+            // Lumières
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+            directionalLight.position.set(100, 300, 100);
+            scene.add(directionalLight);
+        }
+
+        function createEnvironment() {
+            // Lignes de connexion (Lignes du temps)
+            const materialInd = new THREE.LineBasicMaterial({ color: 0x45f3ff, linewidth: 3, opacity: 0.5, transparent: true });
+            const materialSub = new THREE.LineBasicMaterial({ color: 0xff00ff, linewidth: 3, opacity: 0.5, transparent: true });
+            const materialCon = new THREE.LineBasicMaterial({ color: 0xffb800, linewidth: 3, opacity: 0.5, transparent: true });
+
+            // Axe Indicatif (Horizontal X)
+            const ptsInd = [new THREE.Vector3(-550, 0, 0), new THREE.Vector3(500, 0, 0)];
+            scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsInd), materialInd));
+
+            // Axe Subjonctif
+            const ptsSub = [new THREE.Vector3(-500, 0, -150), new THREE.Vector3(50, 0, -150)];
+            scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsSub), materialSub));
+            
+            // Ligne de liaison Subjonctif Présent -> Indicatif Présent (pour montrer le lien)
+            const linkSub = [new THREE.Vector3(0, 0, -150), new THREE.Vector3(0, 0, 0)];
+            scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(linkSub), new THREE.LineDashedMaterial({color: 0x888888, dashSize: 5, gapSize: 5})));
+
+            // Axe Conditionnel
+            const ptsCon = [new THREE.Vector3(-300, 0, 150), new THREE.Vector3(300, 0, 150)];
+            scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ptsCon), materialCon));
+            
+            createParticles();
+        }
+
+        function createParticles() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            for (let i = 0; i < 1500; i++) {
+                vertices.push(
+                    THREE.MathUtils.randFloatSpread(1500), // x
+                    THREE.MathUtils.randFloat(-100, 100),  // y
+                    THREE.MathUtils.randFloatSpread(800)   // z
+                );
+            }
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            const material = new THREE.PointsMaterial({ color: 0x555566, size: 1.5, transparent: true, opacity: 0.4 });
+            scene.add(new THREE.Points(geometry, material));
+        }
+
+        function createTenseNodes() {
+            const container = document.getElementById('labels-container');
+            const geometry = new THREE.OctahedronGeometry(6, 0); // Forme plus visible
+
+            tensesData.forEach(data => {
+                const color = new THREE.Color(data.color);
+                const material = new THREE.MeshPhongMaterial({ 
+                    color: color, 
+                    emissive: color,
+                    emissiveIntensity: data.isCenter ? 0.8 : 0.4, // Le présent brille plus
+                    transparent: true,
+                    opacity: data.opacity || 1.0,
+                });
+
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(data.x, 0, data.z);
+                
+                mesh.userData = { id: data.id, initialY: 0, randomOffset: Math.random() * Math.PI * 2 };
+                scene.add(mesh);
+                objects.push(mesh);
+
+                // Label HTML
+                const div = document.createElement('div');
+                div.className = 'node-label';
+                div.style.borderColor = data.color;
+                
+                div.innerHTML = `
+                    <span>${data.name}</span>
+                    <span class="tense-time" style="color:${data.color}">${data.time}</span>
+                `;
+                
+                div.onclick = () => openInfoPanel(data);
+                container.appendChild(div);
+                
+                labels.push({ mesh: mesh, element: div, data: data });
+            });
+        }
+
+        // === NAVIGATION ===
+
+        function resetCamera() {
+            // Animation manuelle douce vers la vue globale
+            gsapCameraTo(globalCameraPos.x, globalCameraPos.y, globalCameraPos.z, 0, 0, 0);
+            updateNavActive('Vue Globale');
+        }
+
+        function focusPath(pathName) {
+            let targetX = 0, targetY = 150, targetZ = 0;
+            if (pathName === 'indicatif') { targetZ = 80; }
+            if (pathName === 'subjonctif') { targetZ = -70; targetY = 100; }
+            if (pathName === 'conditionnel') { targetZ = 230; targetY = 100; }
+            
+            gsapCameraTo(targetX, targetY, targetZ, targetX, 0, targetZ - 80);
+            updateNavActive(pathName);
+        }
+
+        function updateNavActive(textMatch) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(textMatch.toLowerCase())) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Fonction simple de transition fluide (remplaçant une librairie complexe)
+        function gsapCameraTo(cx, cy, cz, tx, ty, tz) {
+            const startPos = camera.position.clone();
+            const startTarget = controls.target.clone();
+            const endPos = new THREE.Vector3(cx, cy, cz);
+            const endTarget = new THREE.Vector3(tx, ty, tz);
+            
+            let progress = 0;
+            const animateCam = () => {
+                progress += 0.03;
+                if(progress <= 1) {
+                    camera.position.lerpVectors(startPos, endPos, easeInOutCubic(progress));
+                    controls.target.lerpVectors(startTarget, endTarget, easeInOutCubic(progress));
+                    controls.update();
+                    requestAnimationFrame(animateCam);
+                }
+            };
+            animateCam();
+        }
+        function easeInOutCubic(t) { return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1; }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // === UI & PANNEAU ===
+        function openInfoPanel(data) {
+            const panel = document.getElementById('info-panel');
+            const tag = document.getElementById('panel-tag');
+            
+            document.getElementById('info-title').textContent = data.name;
+            document.getElementById('info-example').textContent = `"${data.example}"`;
+            document.getElementById('info-desc').textContent = data.desc;
+            document.getElementById('info-structure').textContent = data.structure;
+            
+            if(data.extra) {
+                document.getElementById('info-extra').textContent = data.extra;
+                document.getElementById('info-extra-section').style.display = 'block';
+            } else {
+                document.getElementById('info-extra-section').style.display = 'none';
+            }
+            
+            tag.textContent = `Mode ${data.mode}`;
+            tag.style.background = data.color;
+            tag.style.color = '#000';
+            document.getElementById('info-example').style.borderLeftColor = data.color;
+
+            // Focale caméra légère sur l'élément (sans perdre complètement le contexte)
+            gsapCameraTo(data.x, 80, data.z + 120, data.x, 0, data.z);
+            updateNavActive(data.mode);
+            
+            panel.classList.add('open');
+        }
+
+        function closePanel() {
+            document.getElementById('info-panel').classList.remove('open');
+        }
+
+        // === BOUCLE PRINCIPALE ===
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Requis pour l'inertie (damping)
+
+            const time = Date.now() * 0.002;
+            objects.forEach(mesh => {
+                mesh.rotation.y = time * 0.5;
+                mesh.rotation.z = time * 0.3;
+                mesh.position.y = mesh.userData.initialY + Math.sin(time + mesh.userData.randomOffset) * 3;
+            });
+
+            // Sync HTML Labels
+            const tempV = new THREE.Vector3();
+            labels.forEach(label => {
+                tempV.copy(label.mesh.position);
+                tempV.y += 8; // Décale légèrement le point de référence vers le haut
+                tempV.project(camera);
+                
+                if (tempV.z > 1) {
+                    label.element.style.display = 'none';
+                    return;
+                }
+                
+                const x = (tempV.x * 0.5 + 0.5) * window.innerWidth;
+                const y = -(tempV.y * 0.5 - 0.5) * window.innerHeight;
+                
+                label.element.style.display = 'flex';
+                label.element.style.left = `${x}px`;
+                label.element.style.top = `${y - 15}px`;
+
+                // Diminue la taille plutôt que l'opacité selon la distance
+                const distance = camera.position.distanceTo(label.mesh.position);
+                const scale = Math.max(0.4, Math.min(1.2, 300 / distance));
+                label.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                
+                // Garde les labels visibles même de loin (sauf les plus rares/transparents)
+                label.element.style.opacity = Math.min(label.data.opacity || 1, 1500 / distance);
+            });
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
