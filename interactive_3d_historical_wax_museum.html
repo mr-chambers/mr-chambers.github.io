@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Historical Wax Museum</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js (WebGL Engine) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            overflow: hidden;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Glassmorphism Styling */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 9999px;
+        }
+
+        /* Audio Wave Indicator Animation */
+        @keyframes soundWave {
+            0%, 100% { height: 4px; }
+            50% { height: 18px; }
+        }
+        .wave-bar-1 { animation: soundWave 0.6s ease-in-out infinite; }
+        .wave-bar-2 { animation: soundWave 0.8s ease-in-out infinite 0.15s; }
+        .wave-bar-3 { animation: soundWave 0.5s ease-in-out infinite 0.3s; }
+        .wave-bar-4 { animation: soundWave 0.7s ease-in-out infinite 0.1s; }
+
+        /* Pulse glow animation for interactive elements */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+
+        /* Canvas Touch Layer */
+        #webgl-canvas {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="relative w-screen h-screen m-0 p-0 overflow-hidden bg-slate-950 text-slate-100 select-none">
+
+    <!-- 3D WEBGL CANVAS CONTAINER -->
+    <div id="canvas-container" class="absolute inset-0 w-full h-full">
+        <canvas id="webgl-canvas" class="w-full h-full block"></canvas>
+    </div>
+
+    <!-- HUD OVERLAY (ALWAYS VISIBLE) -->
+    <div id="hud-overlay" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-4 md:p-6 z-10">
+        <!-- TOP HUD: Title & Discovery Checklist -->
+        <div class="flex items-start justify-between w-full">
+            <!-- Header Brand -->
+            <div class="pointer-events-auto glass-panel p-3.5 md:p-4 rounded-2xl flex items-center gap-3 shadow-2xl border border-amber-500/30">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-slate-950 font-bold text-xl md:text-2xl shadow-lg">
+                    <i class="fa-solid fa-landmark"></i>
+                </div>
+                <div>
+                    <h1 class="text-base md:text-xl font-black font-cinzel tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
+                        HISTORICAL WAX MUSEUM
+                    </h1>
+                    <p class="text-[10px] md:text-xs text-amber-200/80 font-medium">3D Interactive Hall of Legends</p>
+                </div>
+            </div>
+
+            <!-- Tracker & Controls HUD -->
+            <div class="pointer-events-auto flex items-center gap-3">
+                <!-- Discovered Figures HUD Box -->
+                <div class="glass-panel px-4 py-2.5 rounded-2xl flex items-center gap-4 border border-amber-500/30 shadow-xl">
+                    <div class="text-center">
+                        <div class="text-[10px] text-amber-300/80 font-bold uppercase tracking-wider">Figures Visited</div>
+                        <div id="discovered-count" class="text-base md:text-lg font-black text-amber-400">0 / 5</div>
+                    </div>
+                    <div class="h-7 w-px bg-amber-500/20"></div>
+                    <div class="text-center">
+                        <div class="text-[10px] text-emerald-300/80 font-bold uppercase tracking-wider">Quizzes Passed</div>
+                        <div id="quizzes-count" class="text-base md:text-lg font-black text-emerald-400">0 / 5</div>
+                    </div>
+                </div>
+
+                <!-- Ambient Audio Toggle Button -->
+                <button id="audio-toggle-btn" class="glass-panel w-11 h-11 rounded-2xl flex items-center justify-center text-amber-300 hover:text-yellow-200 hover:bg-amber-500/20 transition-all shadow-xl" title="Toggle Museum Ambient Sound">
+                    <i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i>
+                </button>
+
+                <!-- Help Button -->
+                <button id="help-btn" class="glass-panel w-11 h-11 rounded-2xl flex items-center justify-center text-amber-300 hover:text-yellow-200 hover:bg-amber-500/20 transition-all shadow-xl" title="Instructions & Controls">
+                    <i class="fa-solid fa-circle-question text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- CENTER PROXIMITY NOTIFICATION PROMPT -->
+        <div id="proximity-prompt" class="self-center pointer-events-auto opacity-0 transform translate-y-4 transition-all duration-300 mb-6">
+            <button id="interact-btn" class="pulse-glow glass-panel px-6 py-3.5 rounded-2xl border-2 border-amber-400 flex items-center gap-3 text-amber-200 hover:text-white bg-gradient-to-r from-amber-600/60 via-yellow-600/60 to-amber-600/60 hover:from-amber-500 hover:to-yellow-500 transition-all shadow-2xl cursor-pointer">
+                <div class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-sm shadow">
+                    E
+                </div>
+                <span id="prompt-text" class="font-bold text-sm md:text-base tracking-wide">Tap or Press [E] to Talk with Figure</span>
+            </button>
+        </div>
+
+        <!-- BOTTOM HUD: Minimap & Touch Controls -->
+        <div class="flex items-end justify-between w-full">
+            <!-- Minimap Canvas Container -->
+            <div class="pointer-events-auto glass-panel p-2.5 rounded-2xl border border-amber-500/30 shadow-2xl relative">
+                <div class="text-[9px] font-bold text-amber-300/80 uppercase tracking-wider text-center mb-1">Museum Map</div>
+                <canvas id="minimap" width="120" height="150" class="rounded-xl bg-slate-950/80 border border-slate-800 block"></canvas>
+            </div>
+
+            <!-- Touch Controls Overlay (Visible on Mobile / Touch devices) -->
+            <div id="touch-controls" class="pointer-events-auto flex items-end gap-3 md:hidden">
+                <!-- Virtual D-Pad -->
+                <div class="grid grid-cols-3 gap-1.5 w-36 h-36 p-1 glass-panel rounded-2xl">
+                    <div></div>
+                    <button id="btn-up" class="bg-amber-500/20 active:bg-amber-500/60 rounded-xl flex items-center justify-center text-amber-300 text-lg"><i class="fa-solid fa-chevron-up"></i></button>
+                    <div></div>
+                    <button id="btn-left" class="bg-amber-500/20 active:bg-amber-500/60 rounded-xl flex items-center justify-center text-amber-300 text-lg"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="flex items-center justify-center text-[10px] text-amber-400/50 font-bold">MOVE</div>
+                    <button id="btn-right" class="bg-amber-500/20 active:bg-amber-500/60 rounded-xl flex items-center justify-center text-amber-300 text-lg"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div></div>
+                    <button id="btn-down" class="bg-amber-500/20 active:bg-amber-500/60 rounded-xl flex items-center justify-center text-amber-300 text-lg"><i class="fa-solid fa-chevron-down"></i></button>
+                    <div></div>
+                </div>
+
+                <!-- Camera Pan Buttons -->
+                <div class="flex flex-col gap-2">
+                    <button id="btn-look-left" class="w-12 h-16 glass-panel rounded-xl flex items-center justify-center text-amber-300 active:bg-amber-500/50"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button id="btn-look-right" class="w-12 h-16 glass-panel rounded-xl flex items-center justify-center text-amber-300 active:bg-amber-500/50"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STARTUP & INSTRUCTIONS OVERLAY MODAL -->
+    <div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md transition-opacity duration-300">
+        <div class="glass-panel max-w-xl w-full rounded-3xl p-6 md:p-8 border-2 border-amber-500/40 shadow-2xl relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 text-center">
+            <!-- Glow background -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl"></div>
+            
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 mb-4 shadow-lg text-3xl font-black">
+                <i class="fa-solid fa-landmark"></i>
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-black font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 mb-2">
+                Grand Wax Museum
+            </h2>
+            <p class="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed">
+                Step inside our 3D historical hall! Walk up to world-famous figures to hear their stories told directly in their own first-person voices, discover fun facts, and test your knowledge with interactive mini-quizzes.
+            </p>
+
+            <!-- Controls Visual Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 text-left">
+                <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-amber-500/20">
+                    <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-base shrink-0">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-amber-200">Move Around</div>
+                        <div class="text-[11px] text-slate-400">WASD or Arrow Keys</div>
+                    </div>
+                </div>
+                <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-amber-500/20">
+                    <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-base shrink-0">
+                        <i class="fa-solid fa-computer-mouse"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-amber-200">Look Around</div>
+                        <div class="text-[11px] text-slate-400">Mouse Drag / Pointer Lock</div>
+                    </div>
+                </div>
+                <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-amber-500/20">
+                    <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-base shrink-0">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-amber-200">Interact with Figure</div>
+                        <div class="text-[11px] text-slate-400">Press [E] or Click Prompt</div>
+                    </div>
+                </div>
+                <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-amber-500/20">
+                    <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-base shrink-0">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-amber-200">Mobile & Tablet</div>
+                        <div class="text-[11px] text-slate-400">On-screen D-Pad buttons</div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="start-btn" class="w-full py-4 px-6 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold rounded-2xl text-base shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                <i class="fa-solid fa-door-open mr-2"></i> ENTER MUSEUM HALL
+            </button>
+        </div>
+    </div>
+
+    <!-- EXHIBIT READING & QUIZ MODAL -->
+    <div id="exhibit-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-panel max-w-3xl w-full max-h-[92vh] rounded-3xl p-5 md:p-8 border-2 border-amber-500/40 shadow-2xl relative flex flex-col overflow-hidden bg-slate-950">
+            <!-- Top Close Button -->
+            <button id="close-modal-btn" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all z-20">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="flex items-center gap-4 mb-4 pb-4 border-b border-amber-500/20 shrink-0">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center text-2xl font-black shadow-lg">
+                    <i id="modal-icon" class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <div id="modal-era-badge" class="text-[11px] font-bold text-amber-400 uppercase tracking-widest">Era Title</div>
+                    <h2 id="modal-title" class="text-2xl md:text-3xl font-black font-cinzel text-amber-100">Historical Figure</h2>
+                </div>
+            </div>
+
+            <!-- Scrollable Content Body -->
+            <div class="overflow-y-auto space-y-5 pr-2 flex-grow">
+
+                <!-- Web Speech API 1st-Person Audio Controls -->
+                <div class="glass-card p-4 rounded-2xl border border-amber-500/30 flex flex-wrap items-center justify-between gap-4 bg-amber-500/5">
+                    <div class="flex items-center gap-3">
+                        <button id="speak-btn" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-slate-950 font-bold rounded-xl text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer">
+                            <i id="speak-icon" class="fa-solid fa-volume-high"></i>
+                            <span id="speak-btn-text">Hear My Story (1st Person)</span>
+                        </button>
+                        <button id="stop-speech-btn" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm transition-all hidden" title="Stop Reading">
+                            <i class="fa-solid fa-square"></i>
+                        </button>
+                    </div>
+
+                    <!-- Audio Wave Indicator -->
+                    <div id="speech-wave" class="flex items-center gap-1.5 h-6 hidden">
+                        <span class="w-1 bg-amber-400 rounded-full wave-bar-1"></span>
+                        <span class="w-1 bg-amber-400 rounded-full wave-bar-2"></span>
+                        <span class="w-1 bg-amber-400 rounded-full wave-bar-3"></span>
+                        <span class="w-1 bg-amber-400 rounded-full wave-bar-4"></span>
+                        <span class="text-xs text-amber-300 font-semibold ml-2">Speaking...</span>
+                    </div>
+                </div>
+
+                <!-- Live Captions Box -->
+                <div id="transcript-container" class="glass-card p-3.5 rounded-2xl border border-amber-500/30 bg-slate-950/90 hidden text-xs md:text-sm text-amber-100 flex items-start gap-3 shadow-inner">
+                    <i class="fa-solid fa-closed-captioning text-amber-400 text-lg mt-0.5 shrink-0"></i>
+                    <div id="transcript-text" class="leading-relaxed font-normal">...</div>
+                </div>
+
+                <!-- First-Person Biography -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> First-Person Biography
+                    </h3>
+                    <div id="modal-bio-content" class="text-slate-200 text-sm md:text-base leading-relaxed space-y-3 font-normal">
+                        <!-- Paragraphs inserted dynamically -->
+                    </div>
+                </div>
+
+                <!-- Fun Fact Callout Box -->
+                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-yellow-400 border-amber-500/20 bg-gradient-to-r from-yellow-500/10 to-transparent">
+                    <div class="text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-yellow-300"></i> Fun Fact Callout
+                    </div>
+                    <p id="modal-fun-fact" class="text-xs md:text-sm text-yellow-100 italic">
+                        "Fun fact content..."
+                    </p>
+                </div>
+
+                <!-- Interactive Mini Quiz Section -->
+                <div class="glass-card p-4 md:p-5 rounded-2xl border border-amber-500/30 space-y-3 bg-slate-900/60">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap"></i> Exhibit Comprehension Quiz
+                        </h3>
+                        <span id="quiz-status-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">Unanswered</span>
+                    </div>
+
+                    <p id="quiz-question-text" class="text-xs md:text-sm font-semibold text-slate-100">Question text goes here?</p>
+
+                    <!-- Quiz Options List -->
+                    <div id="quiz-options-container" class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
+                        <!-- Options generated dynamically -->
+                    </div>
+
+                    <!-- Quiz Feedback Banner -->
+                    <div id="quiz-feedback" class="hidden p-3 rounded-xl text-xs md:text-sm font-medium flex items-center gap-2">
+                        <!-- Feedback text -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CERTIFICATE OF ACHIEVEMENT MODAL -->
+    <div id="certificate-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-500">
+        <div class="glass-panel max-w-xl w-full rounded-3xl p-6 md:p-8 text-center border-2 border-amber-400/80 shadow-2xl relative overflow-hidden bg-gradient-to-b from-slate-900 via-amber-950/30 to-slate-900">
+            <div class="absolute -top-16 -left-16 w-40 h-40 bg-amber-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-16 -right-16 w-40 h-40 bg-yellow-500/20 rounded-full blur-3xl"></div>
+
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 mb-4 shadow-xl text-4xl border-2 border-amber-200">
+                <i class="fa-solid fa-award"></i>
+            </div>
+
+            <div class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">Museum Master Explorer</div>
+            <h2 class="text-2xl md:text-3xl font-extrabold font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-500 mb-2">
+                Official Certificate of Achievement
+            </h2>
+            <p class="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed">
+                Congratulations! You have personally visited all 5 historical figures, listened to their first-person stories, and passed every comprehension mini-quiz with flying colors!
+            </p>
+
+            <div class="glass-card p-4 rounded-2xl border border-amber-500/30 mb-6 bg-amber-500/10 text-left space-y-2 text-xs md:text-sm">
+                <div class="flex justify-between items-center text-amber-300 font-semibold border-b border-amber-500/20 pb-2">
+                    <span><i class="fa-solid fa-user-check text-amber-400 mr-1.5"></i> Figures Discovered:</span>
+                    <span class="text-white font-bold">5 / 5</span>
+                </div>
+                <div class="flex justify-between items-center text-emerald-300 font-semibold border-b border-amber-500/20 pb-2">
+                    <span><i class="fa-solid fa-graduation-cap text-emerald-400 mr-1.5"></i> Quizzes Mastered:</span>
+                    <span class="text-white font-bold">5 / 5</span>
+                </div>
+                <div class="flex justify-between items-center text-amber-200 font-semibold pt-1">
+                    <span><i class="fa-solid fa-star text-yellow-400 mr-1.5"></i> Explorer Rank:</span>
+                    <span class="text-amber-300 font-extrabold">Grand Historian</span>
+                </div>
+            </div>
+
+            <button id="close-cert-btn" class="w-full py-3.5 px-6 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-slate-950 font-extrabold rounded-xl text-base shadow-lg transition-all transform hover:scale-[1.02] cursor-pointer">
+                <i class="fa-solid fa-check-double mr-2"></i> Continue Exploring Museum
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT APPLICATION -->
+    <script>
+        /* =========================================================================
+           1. HISTORICAL FIGURES DATA (WRITTEN STRICTLY IN 1ST PERSON)
+           ========================================================================= */
+        const figuresData = [
+            {
+                id: 'phelps',
+                name: 'Michael Phelps',
+                title: 'The Flying Fish',
+                era: 'Olympic Swimming Legend (2000s - 2010s)',
+                color: 0x0088ff,
+                icon: 'fa-person-swimming',
+                position: { x: -10, z: -6 },
+                speechPitch: 1.05,
+                speechRate: 1.0,
+                bio: [
+                    "Hey there! I'm Michael Phelps. Swimming has been my passion since I was seven years old, when I first jumped into the water in Baltimore to channel my endless energy and ADHD.",
+                    "Through intense daily training and unwavering focus, I competed in five Olympic Games. Over my career, I won 28 Olympic medals—including 23 gold medals! In 2008 at the Beijing Olympics, I won eight gold medals in a single Games, breaking a record that stood for decades.",
+                    "I always believed that if you set your mind to something and work hard every day, there are no limits. I hope my journey in the pool inspires you to dive headfirst into your own dreams!"
+                ],
+                funFact: "My arm span is 6 feet 7 inches—which is actually 3 inches wider than my height! It acted like custom-made natural oars in the water.",
+                quiz: {
+                    question: "How many total Olympic gold medals did I win during my swimming career?",
+                    options: ["18 Gold Medals", "23 Gold Medals", "28 Gold Medals", "15 Gold Medals"],
+                    answer: 1,
+                    explanation: "Correct! I won 23 gold medals (and 28 total medals) across my Olympic career."
+                }
+            },
+            {
+                id: 'eminem',
+                name: 'Eminem',
+                title: 'Global Rap Icon',
+                era: 'Modern Music Era (1990s - Present)',
+                color: 0x333333,
+                icon: 'fa-microphone',
+                position: { x: -10, z: -18 },
+                speechPitch: 0.9,
+                speechRate: 1.15,
+                bio: [
+                    "Yo! I'm Marshall Mathers, better known around the world as Eminem. I grew up on the east side of Detroit, where life wasn't easy, but writing complex rhymes became my ultimate outlet.",
+                    "I poured my struggles and determination into my albums like 'The Slim Shady LP' and 'The Marshall Mathers LP'. Through rapid rhythms and personal storytelling, I helped take hip-hop to massive global audiences.",
+                    "I've sold over 220 million records, won 15 Grammy Awards, and became the first hip-hop artist to win an Academy Award for my song 'Lose Yourself' from my movie 8 Mile. Never let where you start limit where you can go!"
+                ],
+                funFact: "I set a Guinness World Record by rapping 1,560 words in just 6 minutes and 4 seconds in my song 'Rap God'—that's nearly 4.3 words every single second!",
+                quiz: {
+                    question: "Which city did I grow up in and frequently reference in my music and movie 8 Mile?",
+                    options: ["New York City", "Chicago", "Detroit", "Los Angeles"],
+                    answer: 2,
+                    explanation: "Spot on! I grew up in Detroit, Michigan, where I launched my battle rap career."
+                }
+            },
+            {
+                id: 'mj',
+                name: 'Michael Jackson',
+                title: 'The King of Pop',
+                era: 'Pop Music Revolution (1970s - 2000s)',
+                color: 0xdd2222,
+                icon: 'fa-music',
+                position: { x: 0, z: -26 },
+                speechPitch: 1.15,
+                speechRate: 0.95,
+                bio: [
+                    "Hello and welcome! I'm Michael Jackson. From the time I was a little boy singing with my brothers in the Jackson 5, music and dance were my entire heart and soul.",
+                    "In my solo career, I wanted to create music that brought the whole world together. My 1982 album 'Thriller' became the best-selling album of all time. I loved introducing dance moves like the Moonwalk and turning music videos into short films.",
+                    "Beyond the stage lights, my greatest passion was helping children and spreading peace across the globe through music. Remember, if you wanna make the world a better place, take a look at yourself and make a change!"
+                ],
+                funFact: "I co-invented and patented special shoes with a slot in the heel that locked into stage pegs, allowing me to lean forward at an impossible 45-degree angle in 'Smooth Criminal'!",
+                quiz: {
+                    question: "Which iconic dance move did I famously introduce during my 1983 performance of 'Billie Jean'?",
+                    options: ["The Robot", "The Moonwalk", "The Twist", "The Breakdance Spin"],
+                    answer: 1,
+                    explanation: "Correct! The Moonwalk became my signature move recognized around the world."
+                }
+            },
+            {
+                id: 'dolly',
+                name: 'Dolly Parton',
+                title: 'Country Music Icon',
+                era: 'Country & Pop Legend (1960s - Present)',
+                color: 0xff44aa,
+                icon: 'fa-guitar',
+                position: { x: 10, z: -18 },
+                speechPitch: 1.25,
+                speechRate: 1.0,
+                bio: [
+                    "Well hello darlin'! I'm Dolly Parton. I grew up in a tiny one-room cabin in the Great Smoky Mountains of Tennessee as one of twelve children, making music on homemade instruments.",
+                    "I started writing songs as a young girl and went on to write over 3,000 songs, including hits like 'Jolene', '9 to 5', and 'I Will Always Love You'. Country music gave me a voice to share stories of resilience and love.",
+                    "One of my proudest achievements is my Imagination Library program, which has gifted over 200 million free books to young children worldwide because literacy opens doors to every dream."
+                ],
+                funFact: "I actually wrote two of my biggest hit songs, 'Jolene' AND 'I Will Always Love You', on the exact same night in 1973!",
+                quiz: {
+                    question: "What major literacy program created by me has gifted over 200 million free books to young children?",
+                    options: ["The Reading Rainbow", "Imagination Library", "Bookworms United", "Smoky Mountain Readers"],
+                    answer: 1,
+                    explanation: "Correct! My Imagination Library mails free books to children monthly."
+                }
+            },
+            {
+                id: 'napoleon',
+                name: 'Napoleon Bonaparte',
+                title: 'Emperor of the French',
+                era: 'European Empire Era (1769 - 1821)',
+                color: 0x114488,
+                icon: 'fa-crown',
+                position: { x: 10, z: -6 },
+                speechPitch: 0.85,
+                speechRate: 0.9,
+                bio: [
+                    "Bonjour! I am Napoleon Bonaparte, Emperor of the French. I was born on the island of Corsica and rose through military brilliance during the French Revolution to lead a great empire.",
+                    "I commanded armies in dozens of historic battles and reshaped European politics. Beyond military conquest, I established the 'Napoleonic Code', a unified legal system that reformed civil laws and equality before the law.",
+                    "History remembers me as a bold strategist who believed that impossible is a word found only in the dictionary of fools. Welcome to my exhibit!"
+                ],
+                funFact: "Despite rumors spread by my rivals that I was unusually short, I stood 5 feet 6 inches tall—which was actually average height for a French gentleman of my era!",
+                quiz: {
+                    question: "What major civil legal reform established by me influenced legal systems around the world?",
+                    options: ["The Magna Carta", "The Napoleonic Code", "The French Constitution", "The Roman Senate Edict"],
+                    answer: 1,
+                    explanation: "Spot on! The Napoleonic Code streamlined laws and remains foundational today."
+                }
+            }
+        ];
+
+        // Player Tracking State
+        const playerProgress = {
+            discovered: new Set(),
+            quizzesCompleted: new Set(),
+            certShown: false
+        };
+
+        /* =========================================================================
+           2. THREE.JS SCENE SETUP & ARCHITECTURE
+           ========================================================================= */
+        let scene, camera, renderer;
+        let pedestalMeshes = [];
+        let figureGroupList = [];
+
+        // Camera control state
+        const player = {
+            pos: new THREE.Vector3(0, 1.7, 10),
+            rotY: 0,
+            rotX: 0,
+            speed: 0.14
+        };
+
+        const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+        let isPointerLocked = false;
+        let isMouseDown = false;
+        let mousePrevious = { x: 0, y: 0 };
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            const canvas = document.getElementById('webgl-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0c14);
+            scene.fog = new THREE.FogExp2(0x0a0c14, 0.035);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.copy(player.pos);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: "high-performance" });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+            // Lighting Setup
+            setupMuseumLighting();
+
+            // Build Environment Architecture
+            buildGrandMuseumHall();
+
+            // Build Exhibits & Stylized 3D Figures
+            buildExhibitsAndFigures();
+
+            // Resize Event Listener
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        /* =========================================================================
+           3. LIGHTING & PROCEDURAL TEXTURES
+           ========================================================================= */
+        function setupMuseumLighting() {
+            // Ambient Light (Warm Museum Atmosphere)
+            const ambientLight = new THREE.AmbientLight(0xffeedd, 0.6);
+            scene.add(ambientLight);
+
+            // Hemisphere Ceiling Light
+            const hemiLight = new THREE.HemisphereLight(0xfff5e6, 0x1e1525, 0.5);
+            hemiLight.position.set(0, 8, 0);
+            scene.add(hemiLight);
+
+            // Overhead Central Track Lighting
+            const trackLight1 = new THREE.PointLight(0xffdfa9, 1.2, 25);
+            trackLight1.position.set(0, 7.5, 0);
+            scene.add(trackLight1);
+
+            const trackLight2 = new THREE.PointLight(0xffdfa9, 1.2, 25);
+            trackLight2.position.set(0, 7.5, -16);
+            scene.add(trackLight2);
+        }
+
+        // Procedural Wood Floor Texture
+        function createWoodFloorTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            // Base wood color
+            ctx.fillStyle = '#4a2e19';
+            ctx.fillRect(0, 0, 512, 512);
+
+            // Draw Planks
+            const plankHeight = 32;
+            for (let y = 0; y < 512; y += plankHeight) {
+                ctx.fillStyle = (Math.floor(y / plankHeight) % 2 === 0) ? '#5c3a21' : '#422815';
+                ctx.fillRect(0, y, 512, plankHeight - 2);
+
+                // Wood Grain Lines
+                ctx.fillStyle = 'rgba(20, 10, 5, 0.15)';
+                for (let i = 0; i < 12; i++) {
+                    const grainY = y + Math.random() * plankHeight;
+                    ctx.fillRect(0, grainY, 512, 1);
+                }
+
+                // Plank borders
+                ctx.fillStyle = '#1e1007';
+                ctx.fillRect(0, y + plankHeight - 2, 512, 2);
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(10, 14);
+            return texture;
+        }
+
+        // Procedural Marble Texture for Pedestals
+        function createMarblePedestalTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#f0ece9';
+            ctx.fillRect(0, 0, 256, 256);
+
+            // Marble Veins
+            ctx.strokeStyle = '#c4bbb3';
+            ctx.lineWidth = 3;
+            for (let i = 0; i < 6; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * 256, 0);
+                ctx.bezierCurveTo(
+                    Math.random() * 256, 80,
+                    Math.random() * 256, 170,
+                    Math.random() * 256, 256
+                );
+                ctx.stroke();
+            }
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        /* =========================================================================
+           4. MUSEUM HALL ENVIRONMENT & DECORATIONS
+           ========================================================================= */
+        function buildGrandMuseumHall() {
+            const hallWidth = 32;
+            const hallLength = 40;
+            const hallHeight = 8.5;
+
+            // Wood Floor Mesh
+            const floorGeo = new THREE.PlaneGeometry(hallWidth, hallLength);
+            const floorMat = new THREE.MeshStandardMaterial({
+                map: createWoodFloorTexture(),
+                roughness: 0.35,
+                metalness: 0.1
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.set(0, 0, -12);
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // Center Red Velvet Carpet Runner
+            const carpetGeo = new THREE.PlaneGeometry(5, hallLength - 4);
+            const carpetMat = new THREE.MeshStandardMaterial({
+                color: 0x880e14,
+                roughness: 0.8,
+                metalness: 0.05
+            });
+            const carpet = new THREE.Mesh(carpetGeo, carpetMat);
+            carpet.rotation.x = -Math.PI / 2;
+            carpet.position.set(0, 0.01, -12);
+            carpet.receiveShadow = true;
+            scene.add(carpet);
+
+            // Ceiling Mesh
+            const ceilingGeo = new THREE.PlaneGeometry(hallWidth, hallLength);
+            const ceilingMat = new THREE.MeshStandardMaterial({ color: 0x181c28, roughness: 0.8 });
+            const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.set(0, hallHeight, -12);
+            scene.add(ceiling);
+
+            // Wooden Ceiling Beams
+            const beamMat = new THREE.MeshStandardMaterial({ color: 0x3a2212, roughness: 0.6 });
+            for (let z = 6; z >= -30; z -= 8) {
+                const beamGeo = new THREE.BoxGeometry(hallWidth, 0.4, 0.6);
+                const beam = new THREE.Mesh(beamGeo, beamMat);
+                beam.position.set(0, hallHeight - 0.2, z);
+                scene.add(beam);
+            }
+
+            // Walls (Back, Front, Left, Right)
+            const wallMat = new THREE.MeshStandardMaterial({ color: 0x1e2433, roughness: 0.7 });
+
+            // Back Wall
+            const backWallGeo = new THREE.BoxGeometry(hallWidth, hallHeight, 0.5);
+            const backWall = new THREE.Mesh(backWallGeo, wallMat);
+            backWall.position.set(0, hallHeight / 2, -32);
+            scene.add(backWall);
+
+            // Front Entrance Wall
+            const frontWall = new THREE.Mesh(backWallGeo, wallMat);
+            frontWall.position.set(0, hallHeight / 2, 8);
+            scene.add(frontWall);
+
+            // Side Walls
+            const sideWallGeo = new THREE.BoxGeometry(0.5, hallHeight, hallLength);
+            const leftWall = new THREE.Mesh(sideWallGeo, wallMat);
+            leftWall.position.set(-hallWidth / 2, hallHeight / 2, -12);
+            scene.add(leftWall);
+
+            const rightWall = new THREE.Mesh(sideWallGeo, wallMat);
+            rightWall.position.set(hallWidth / 2, hallHeight / 2, -12);
+            scene.add(rightWall);
+
+            // Decorative Marble Pillars along sides
+            const pillarGeo = new THREE.CylinderGeometry(0.5, 0.55, hallHeight, 16);
+            const pillarMat = new THREE.MeshStandardMaterial({ color: 0xe8e4e0, roughness: 0.3 });
+            for (let z = 4; z >= -28; z -= 8) {
+                // Left Pillar
+                const pLeft = new THREE.Mesh(pillarGeo, pillarMat);
+                pLeft.position.set(-14, hallHeight / 2, z);
+                pLeft.castShadow = true;
+                scene.add(pLeft);
+
+                // Right Pillar
+                const pRight = new THREE.Mesh(pillarGeo, pillarMat);
+                pRight.position.set(14, hallHeight / 2, z);
+                pRight.castShadow = true;
+                scene.add(pRight);
+            }
+        }
+
+        /* =========================================================================
+           5. WAX FIGURES & EXHIBIT PEDESTALS CREATION
+           ========================================================================= */
+        function buildExhibitsAndFigures() {
+            const marbleTex = createMarblePedestalTexture();
+
+            figuresData.forEach((data) => {
+                const group = new THREE.Group();
+                group.position.set(data.position.x, 0, data.position.z);
+
+                // Pedestal Geometry (Two-tier Marble)
+                const baseGeo = new THREE.BoxGeometry(2.2, 0.3, 2.2);
+                const baseMat = new THREE.MeshStandardMaterial({ map: marbleTex, roughness: 0.3 });
+                const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+                baseMesh.position.y = 0.15;
+                baseMesh.castShadow = true;
+                baseMesh.receiveShadow = true;
+                group.add(baseMesh);
+
+                const columnGeo = new THREE.CylinderGeometry(0.85, 0.95, 1.1, 16);
+                const columnMesh = new THREE.Mesh(columnGeo, baseMat);
+                columnMesh.position.y = 0.85;
+                columnMesh.castShadow = true;
+                columnMesh.receiveShadow = true;
+                group.add(columnMesh);
+
+                // Brass Stanchions & Velvet Ropes around Pedestal
+                const stanchionGeo = new THREE.CylinderGeometry(0.04, 0.05, 1.0, 8);
+                const stanchionHeadGeo = new THREE.SphereGeometry(0.08, 12, 12);
+                const brassMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.2 });
+
+                const offsets = [
+                    { x: -1.3, z: -1.3 }, { x: 1.3, z: -1.3 },
+                    { x: 1.3, z: 1.3 }, { x: -1.3, z: 1.3 }
+                ];
+
+                offsets.forEach(off => {
+                    const post = new THREE.Mesh(stanchionGeo, brassMat);
+                    post.position.set(off.x, 0.5, off.y);
+                    const head = new THREE.Mesh(stanchionHeadGeo, brassMat);
+                    head.position.set(off.x, 1.0, off.y);
+                    group.add(post);
+                    group.add(head);
+                });
+
+                // Velvet Rope between front stanchions
+                const ropeGeo = new THREE.CylinderGeometry(0.025, 0.025, 2.6, 8);
+                const ropeMat = new THREE.MeshStandardMaterial({ color: 0xaa0022, roughness: 0.8 });
+                const rope = new THREE.Mesh(ropeGeo, ropeMat);
+                rope.rotation.z = Math.PI / 2;
+                rope.position.set(0, 0.85, 1.3);
+                group.add(rope);
+
+                // Brass Name Plaque
+                const plaqueGeo = new THREE.BoxGeometry(0.8, 0.2, 0.05);
+                const plaque = new THREE.Mesh(plaqueGeo, brassMat);
+                plaque.position.set(0, 0.6, 0.92);
+                group.add(plaque);
+
+                // Build Detailed Stylized Figure Model
+                const figureModel = createDetailedFigureModel(data.id);
+                figureModel.position.y = 1.4; // Stand on top of pedestal
+                group.add(figureModel);
+                figureGroupList.push(figureModel);
+
+                // Overhead Spotlight for each Exhibit
+                const spotLight = new THREE.SpotLight(0xfff2d4, 2.2);
+                spotLight.position.set(data.position.x, 7.5, data.position.z + 1.2);
+                spotLight.target = baseMesh;
+                spotLight.angle = Math.PI / 5;
+                spotLight.penumbra = 0.4;
+                spotLight.castShadow = true;
+                scene.add(spotLight);
+
+                // Wall Banner / Backdrop Plate
+                const bannerGeo = new THREE.PlaneGeometry(2.8, 4.2);
+                const bannerMat = new THREE.MeshStandardMaterial({
+                    color: data.color,
+                    roughness: 0.5,
+                    metalness: 0.2
+                });
+                const banner = new THREE.Mesh(bannerGeo, bannerMat);
+                
+                // Orient banner behind pedestal
+                if (data.position.x < 0) {
+                    banner.position.set(data.position.x - 3.5, 3.5, data.position.z);
+                    banner.rotation.y = Math.PI / 2;
+                } else if (data.position.x > 0) {
+                    banner.position.set(data.position.x + 3.5, 3.5, data.position.z);
+                    banner.rotation.y = -Math.PI / 2;
+                } else {
+                    banner.position.set(data.position.x, 3.5, data.position.z - 3.5);
+                }
+                scene.add(banner);
+
+                pedestalMeshes.push({
+                    id: data.id,
+                    data: data,
+                    mesh: group,
+                    position: new THREE.Vector3(data.position.x, 0, data.position.z)
+                });
+
+                scene.add(group);
+            });
+        }
+
+        /* =========================================================================
+           6. STYLIZED PROCEDURAL FIGURES GENERATOR (NO EXTERNAL ASSETS)
+           ========================================================================= */
+        function createDetailedFigureModel(figureId) {
+            const fig = new THREE.Group();
+
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xe0ac69, roughness: 0.6 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.5 });
+            const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
+
+            if (figureId === 'phelps') {
+                // Michael Phelps: Athletic Torso, Swim Trunks, Swim Cap, Goggles, Gold Medals
+                const torsoGeo = new THREE.CylinderGeometry(0.32, 0.22, 0.75, 12);
+                const torso = new THREE.Mesh(torsoGeo, skinMat);
+                torso.position.y = 0.38;
+                fig.add(torso);
+
+                const trunksGeo = new THREE.CylinderGeometry(0.23, 0.22, 0.3, 12);
+                const trunksMat = new THREE.MeshStandardMaterial({ color: 0x0055ff });
+                const trunks = new THREE.Mesh(trunksGeo, trunksMat);
+                trunks.position.y = 0.05;
+                fig.add(trunks);
+
+                // Legs
+                const legGeo = new THREE.CylinderGeometry(0.09, 0.07, 0.7, 8);
+                const legL = new THREE.Mesh(legGeo, skinMat);
+                legL.position.set(-0.12, -0.4, 0);
+                const legR = new THREE.Mesh(legGeo, skinMat);
+                legR.position.set(0.12, -0.4, 0);
+                fig.add(legL);
+                fig.add(legR);
+
+                // Head + Swim Cap
+                const headGeo = new THREE.SphereGeometry(0.2, 16, 16);
+                const head = new THREE.Mesh(headGeo, skinMat);
+                head.position.y = 0.88;
+                fig.add(head);
+
+                const capGeo = new THREE.SphereGeometry(0.205, 16, 16, 0, Math.PI * 2, 0, Math.PI / 1.7);
+                const capMat = new THREE.MeshStandardMaterial({ color: 0x002288, roughness: 0.3 });
+                const cap = new THREE.Mesh(capGeo, capMat);
+                cap.position.y = 0.89;
+                fig.add(cap);
+
+                // Goggles
+                const goggleGeo = new THREE.TorusGeometry(0.06, 0.02, 8, 16);
+                const goggleMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.9, roughness: 0.1 });
+                const gL = new THREE.Mesh(goggleGeo, goggleMat);
+                gL.position.set(-0.07, 0.9, 0.17);
+                const gR = new THREE.Mesh(goggleGeo, goggleMat);
+                gR.position.set(0.07, 0.9, 0.17);
+                fig.add(gL);
+                fig.add(gR);
+
+                // Gold Medals around neck
+                const medalGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.015, 16);
+                for (let i = 0; i < 3; i++) {
+                    const medal = new THREE.Mesh(medalGeo, goldMat);
+                    medal.rotation.x = Math.PI / 3;
+                    medal.position.set((i - 1) * 0.08, 0.45, 0.22);
+                    fig.add(medal);
+                }
+
+            } else if (figureId === 'eminem') {
+                // Eminem: Black Hoodie, Backwards Cap peeking out, Jeans, Gold Microphone
+                const hoodieMat = new THREE.MeshStandardMaterial({ color: 0x222226, roughness: 0.8 });
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.25, 0.75, 12), hoodieMat);
+                torso.position.y = 0.38;
+                fig.add(torso);
+
+                // Hood Dome behind head
+                const hoodBack = new THREE.Mesh(new THREE.SphereGeometry(0.24, 12, 12), hoodieMat);
+                headBackPosition = hoodBack.position.set(0, 0.85, -0.05);
+                fig.add(hoodBack);
+
+                // Head
+                const head = new THREE.Mesh(new THREE.SphereGeometry(0.19, 16, 16), skinMat);
+                head.position.y = 0.88;
+                fig.add(head);
+
+                // Backwards Cap Brim
+                const capBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.02, 12), darkMat);
+                capBrim.position.set(0, 0.98, -0.08);
+                capBrim.rotation.x = 0.2;
+                fig.add(capBrim);
+
+                // Jeans & Shoes
+                const jeansMat = new THREE.MeshStandardMaterial({ color: 0x2b3e55, roughness: 0.7 });
+                const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.7, 8), jeansMat);
+                legL.position.set(-0.12, -0.4, 0);
+                const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.08, 0.7, 8), jeansMat);
+                legR.position.set(0.12, -0.4, 0);
+                fig.add(legL);
+                fig.add(legR);
+
+                // Right arm holding Microphone
+                const micHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.015, 0.2, 8), darkMat);
+                const micTop = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 12), goldMat);
+                micTop.position.y = 0.1;
+                const micGroup = new THREE.Group();
+                micGroup.add(micHandle);
+                micGroup.add(micTop);
+                micGroup.position.set(0.28, 0.55, 0.25);
+                fig.add(micGroup);
+
+            } else if (figureId === 'mj') {
+                // Michael Jackson: Tilted Fedora, Red Jacket, White Sparkly Glove
+                const jacketMat = new THREE.MeshStandardMaterial({ color: 0xcc1111, roughness: 0.4 });
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.75, 12), jacketMat);
+                torso.position.y = 0.38;
+                fig.add(torso);
+
+                // Black Fedora Hat
+                const hatMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.3 });
+                const hatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.02, 16), hatMat);
+                const hatCrown = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.18, 16), hatMat);
+                hatCrown.position.y = 0.09;
+                const fedora = new THREE.Group();
+                fedora.add(hatBrim);
+                fedora.add(hatCrown);
+                fedora.position.set(0, 1.02, 0.04);
+                fedora.rotation.x = 0.2; // Iconic forward tilt
+                fig.add(fedora);
+
+                // Head
+                const head = new THREE.Mesh(new THREE.SphereGeometry(0.19, 16, 16), skinMat);
+                head.position.y = 0.88;
+                fig.add(head);
+
+                // White Sparkly Glove on Right Hand
+                const gloveMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.3 });
+                const glove = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), gloveMat);
+                glove.position.set(0.32, 0.48, 0.2);
+                fig.add(glove);
+
+                // Black Trousers
+                const pantsMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+                const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.7, 8), pantsMat);
+                legL.position.set(-0.12, -0.4, 0);
+                const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.7, 8), pantsMat);
+                legR.position.set(0.12, -0.4, 0);
+                fig.add(legL);
+                fig.add(legR);
+
+            } else if (figureId === 'dolly') {
+                // Dolly Parton: Pink Dress/Outfit, High Blonde Hair, Acoustic Guitar
+                const dressMat = new THREE.MeshStandardMaterial({ color: 0xff3399, roughness: 0.4 });
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.24, 0.72, 12), dressMat);
+                torso.position.y = 0.38;
+                fig.add(torso);
+
+                // High Voluminous Blonde Hair Mesh
+                const hairMat = new THREE.MeshStandardMaterial({ color: 0xffdd44, roughness: 0.5 });
+                const hairMain = new THREE.Mesh(new THREE.SphereGeometry(0.27, 16, 16), hairMat);
+                hairMain.position.set(0, 0.96, -0.02);
+                hairMain.scale.set(1.1, 1.2, 1.1);
+                fig.add(hairMain);
+
+                // Head
+                const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), skinMat);
+                head.position.y = 0.86;
+                fig.add(head);
+
+                // Acoustic Wooden Guitar
+                const woodGuitarMat = new THREE.MeshStandardMaterial({ color: 0xaa5511, roughness: 0.4 });
+                const body = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.45, 0.12), woodGuitarMat);
+                const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.4, 8), darkMat);
+                neck.position.y = 0.35;
+                const guitar = new THREE.Group();
+                guitar.add(body);
+                guitar.add(neck);
+                guitar.rotation.z = -Math.PI / 4;
+                guitar.position.set(0.05, 0.4, 0.22);
+                fig.add(guitar);
+
+                // Leg skirts
+                const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.7, 8), dressMat);
+                legL.position.set(-0.11, -0.4, 0);
+                const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.7, 8), dressMat);
+                legR.position.set(0.11, -0.4, 0);
+                fig.add(legL);
+                fig.add(legR);
+
+            } else if (figureId === 'napoleon') {
+                // Napoleon: Blue Military Coat, Bicorne Hat, Gold Epaulets
+                const coatMat = new THREE.MeshStandardMaterial({ color: 0x112255, roughness: 0.5 });
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.25, 0.75, 12), coatMat);
+                torso.position.y = 0.38;
+                fig.add(torso);
+
+                // Gold Epaulets on shoulders
+                const epL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.05, 0.12), goldMat);
+                epL.position.set(-0.25, 0.7, 0);
+                const epR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.05, 0.12), goldMat);
+                epR.position.set(0.25, 0.7, 0);
+                fig.add(epL);
+                fig.add(epR);
+
+                // Bicorne Hat (Sideways orientation)
+                const hatMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a });
+                const bicorne = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.18, 0.18), hatMat);
+                bicorne.position.set(0, 1.05, 0);
+                
+                // French Cockade Rosette (Red White Blue)
+                const cockade = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.01, 12), new THREE.MeshBasicMaterial({ color: 0xcc0000 }));
+                cockade.rotation.x = Math.PI / 2;
+                cockade.position.set(0.15, 1.05, 0.1);
+                fig.add(bicorne);
+                fig.add(cockade);
+
+                // Head
+                const head = new THREE.Mesh(new THREE.SphereGeometry(0.19, 16, 16), skinMat);
+                head.position.y = 0.88;
+                fig.add(head);
+
+                // White Trousers & Black Boots
+                const whiteMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee });
+                const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.7, 8), whiteMat);
+                legL.position.set(-0.12, -0.4, 0);
+                const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.7, 8), whiteMat);
+                legR.position.set(0.12, -0.4, 0);
+                fig.add(legL);
+                fig.add(legR);
+            }
+
+            return fig;
+        }
+
+        /* =========================================================================
+           7. CONTROLS, NAVIGATION & PROXIMITY DETECTION
+           ========================================================================= */
+        function setupInputListeners() {
+            // Keyboard Key Down / Up
+            window.addEventListener('keydown', (e) => {
+                if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+                if (e.key.toLowerCase() === 'e') triggerInteractionNear();
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
+            });
+
+            // Mouse Look Controls (Pointer Lock or Drag)
+            const canvas = document.getElementById('webgl-canvas');
+
+            canvas.addEventListener('mousedown', (e) => {
+                isMouseDown = true;
+                mousePrevious = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('mouseup', () => { isMouseDown = false; });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isMouseDown) return;
+                const deltaX = e.clientX - mousePrevious.x;
+                const deltaY = e.clientY - mousePrevious.y;
+
+                player.rotY -= deltaX * 0.003;
+                player.rotX -= deltaY * 0.003;
+                player.rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, player.rotX));
+
+                mousePrevious = { x: e.clientX, y: e.clientY };
+            });
+
+            // On-Screen Mobile Touch Button Controls
+            setupTouchControls();
+
+            // UI Buttons Listeners
+            document.getElementById('start-btn').addEventListener('click', startExperience);
+            document.getElementById('interact-btn').addEventListener('click', triggerInteractionNear);
+            document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+            document.getElementById('close-cert-btn').addEventListener('click', () => {
+                const certModal = document.getElementById('certificate-modal');
+                certModal.classList.add('opacity-0');
+                setTimeout(() => certModal.classList.add('hidden'), 500);
+            });
+            document.getElementById('help-btn').addEventListener('click', () => {
+                document.getElementById('welcome-modal').classList.remove('hidden');
+                document.getElementById('welcome-modal').classList.remove('opacity-0');
+            });
+
+            document.getElementById('audio-toggle-btn').addEventListener('click', toggleAmbientMusic);
+            document.getElementById('speak-btn').addEventListener('click', toggleSpeech);
+            document.getElementById('stop-speech-btn').addEventListener('click', stopSpeech);
+        }
+
+        function setupTouchControls() {
+            const bindTouch = (btnId, keyName) => {
+                const btn = document.getElementById(btnId);
+                if (!btn) return;
+                btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[keyName] = true; });
+                btn.addEventListener('touchend', (e) => { e.preventDefault(); keys[keyName] = false; });
+            };
+
+            bindTouch('btn-up', 'w');
+            bindTouch('btn-down', 's');
+            bindTouch('btn-left', 'a');
+            bindTouch('btn-right', 'd');
+
+            // Look Buttons for Mobile
+            const btnLookLeft = document.getElementById('btn-look-left');
+            const btnLookRight = document.getElementById('btn-look-right');
+            
+            let lookInterval = null;
+            const startLook = (dir) => {
+                lookInterval = setInterval(() => {
+                    player.rotY += dir * 0.04;
+                }, 30);
+            };
+            const stopLook = () => clearInterval(lookInterval);
+
+            if (btnLookLeft && btnLookRight) {
+                btnLookLeft.addEventListener('touchstart', (e) => { e.preventDefault(); startLook(1); });
+                btnLookLeft.addEventListener('touchend', stopLook);
+                btnLookRight.addEventListener('touchstart', (e) => { e.preventDefault(); startLook(-1); });
+                btnLookRight.addEventListener('touchend', stopLook);
+            }
+        }
+
+        function startExperience() {
+            const welcomeModal = document.getElementById('welcome-modal');
+            welcomeModal.classList.add('opacity-0');
+            setTimeout(() => welcomeModal.classList.add('hidden'), 300);
+
+            // Play ambient music
+            initAmbientAudioContext();
+        }
+
+        function updatePlayerMovement() {
+            const moveDir = new THREE.Vector3();
+
+            if (keys.w || keys.ArrowUp) moveDir.z -= 1;
+            if (keys.s || keys.ArrowDown) moveDir.z += 1;
+            if (keys.a || keys.ArrowLeft) moveDir.x -= 1;
+            if (keys.d || keys.ArrowRight) moveDir.x += 1;
+
+            if (moveDir.lengthSq() > 0) {
+                moveDir.normalize();
+                moveDir.applyAxisAngle(new THREE.Vector3(0, 1, 0), player.rotY);
+
+                player.pos.x += moveDir.x * player.speed;
+                player.pos.z += moveDir.z * player.speed;
+
+                // Collision Bounds (Keep inside Hall)
+                player.pos.x = Math.max(-14.5, Math.min(14.5, player.pos.x));
+                player.pos.z = Math.max(-30.0, Math.min(6.5, player.pos.z));
+            }
+
+            // Update Camera Position & Rotation
+            camera.position.copy(player.pos);
+            camera.rotation.set(0, 0, 0);
+            camera.rotation.y = player.rotY;
+            camera.rotation.x = player.rotX;
+        }
+
+        /* =========================================================================
+           8. PROXIMITY DETECTION & INTERACTION
+           ========================================================================= */
+        let activeNearbyFigure = null;
+
+        function checkProximity() {
+            let closest = null;
+            let minDistance = 3.5; // Interaction radius in meters
+
+            pedestalMeshes.forEach(item => {
+                const dist = player.pos.distanceTo(item.position);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closest = item;
+                }
+            });
+
+            const promptEl = document.getElementById('proximity-prompt');
+            const promptText = document.getElementById('prompt-text');
+
+            if (closest) {
+                activeNearbyFigure = closest.data;
+
+                // Mark discovered figure
+                if (!playerProgress.discovered.has(closest.id)) {
+                    playerProgress.discovered.add(closest.id);
+                    updateHUDProgress();
+                }
+
+                promptText.textContent = `Talk with ${closest.data.name}`;
+                promptEl.classList.remove('opacity-0', 'translate-y-4');
+                promptEl.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                activeNearbyFigure = null;
+                promptEl.classList.add('opacity-0', 'translate-y-4');
+                promptEl.classList.remove('opacity-100', 'translate-y-0');
+            }
+        }
+
+        function triggerInteractionNear() {
+            if (activeNearbyFigure) {
+                openExhibitModal(activeNearbyFigure);
+            }
+        }
+
+        /* =========================================================================
+           9. EXHIBIT MODAL, QUIZ ENGINE & FIRST-PERSON SPEECH SYNTHESIS
+           ========================================================================= */
+        let currentModalFigure = null;
+        let isSpeaking = false;
+        let speechUtterance = null;
+
+        function openExhibitModal(data) {
+            currentModalFigure = data;
+            stopSpeech();
+
+            document.getElementById('modal-title').textContent = data.name;
+            document.getElementById('modal-era-badge').textContent = `${data.title} • ${data.era}`;
+            document.getElementById('modal-icon').className = `fa-solid ${data.icon} text-slate-950`;
+
+            // Biography in 1st Person
+            const bioContainer = document.getElementById('modal-bio-content');
+            bioContainer.innerHTML = '';
+            data.bio.forEach(para => {
+                const p = document.createElement('p');
+                p.textContent = para;
+                bioContainer.appendChild(p);
+            });
+
+            // Fun Fact in 1st Person
+            document.getElementById('modal-fun-fact').textContent = `"${data.funFact}"`;
+
+            // Setup Mini Quiz
+            setupQuizUI(data);
+
+            // Display Modal
+            const modal = document.getElementById('exhibit-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeModal() {
+            stopSpeech();
+            const modal = document.getElementById('exhibit-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        /* Speech Synthesis (Web Speech API) in 1st Person */
+        function toggleSpeech() {
+            if (isSpeaking) {
+                stopSpeech();
+            } else if (currentModalFigure) {
+                const fullText = `${currentModalFigure.bio.join(' ')} Here is a fun fact: ${currentModalFigure.funFact}`;
+                speakText(fullText);
+            }
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                alert("Speech synthesis is not supported in your browser.");
+                return;
+            }
+
+            window.speechSynthesis.cancel(); // Clear queued speech
+
+            speechUtterance = new SpeechSynthesisUtterance(text);
+            
+            // Vocal personality tuning per figure
+            if (currentModalFigure) {
+                speechUtterance.pitch = currentModalFigure.speechPitch || 1.0;
+                speechUtterance.rate = currentModalFigure.speechRate || 1.0;
+            }
+
+            // Captions container setup
+            const transcriptContainer = document.getElementById('transcript-container');
+            const transcriptText = document.getElementById('transcript-text');
+            transcriptContainer.classList.remove('hidden');
+            transcriptText.textContent = text;
+
+            // Highlight word boundary in captions
+            speechUtterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    const charIndex = event.charIndex;
+                    const charLength = event.charLength || 6;
+                    const spoken = text.substring(0, charIndex);
+                    const current = text.substring(charIndex, charIndex + charLength);
+                    const remaining = text.substring(charIndex + charLength);
+
+                    transcriptText.innerHTML = `${spoken}<mark class="bg-amber-400 text-slate-950 font-bold px-1 rounded">${current}</mark>${remaining}`;
+                }
+            };
+
+            speechUtterance.onstart = () => {
+                isSpeaking = true;
+                document.getElementById('speech-wave').classList.remove('hidden');
+                document.getElementById('speak-btn-text').textContent = 'Pause Story';
+                document.getElementById('speak-icon').className = 'fa-solid fa-pause';
+                document.getElementById('stop-speech-btn').classList.remove('hidden');
+            };
+
+            speechUtterance.onend = () => {
+                resetSpeechUI();
+            };
+
+            speechUtterance.onerror = () => {
+                resetSpeechUI();
+            };
+
+            window.speechSynthesis.speak(speechUtterance);
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            resetSpeechUI();
+        }
+
+        function resetSpeechUI() {
+            isSpeaking = false;
+            document.getElementById('speech-wave').classList.add('hidden');
+            document.getElementById('transcript-container').classList.add('hidden');
+            document.getElementById('speak-btn-text').textContent = 'Hear My Story (1st Person)';
+            document.getElementById('speak-icon').className = 'fa-solid fa-volume-high';
+            document.getElementById('stop-speech-btn').classList.add('hidden');
+        }
+
+        /* Quiz Logic */
+        function setupQuizUI(data) {
+            const qData = data.quiz;
+            document.getElementById('quiz-question-text').textContent = qData.question;
+            const container = document.getElementById('quiz-options-container');
+            container.innerHTML = '';
+
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.add('hidden');
+
+            const statusBadge = document.getElementById('quiz-status-badge');
+
+            if (playerProgress.quizzesCompleted.has(data.id)) {
+                statusBadge.textContent = 'Completed ✓';
+                statusBadge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+            } else {
+                statusBadge.textContent = 'Unanswered';
+                statusBadge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400';
+            }
+
+            qData.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-3 rounded-xl border border-amber-500/20 bg-slate-800/60 hover:bg-amber-500/20 text-xs md:text-sm text-slate-200 font-medium transition-all flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${optText}</span> <i class="fa-solid fa-circle-check opacity-0 transition-opacity"></i>`;
+
+                btn.addEventListener('click', () => {
+                    checkAnswer(index, qData, btn, container, feedback, statusBadge);
+                });
+
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, qData, clickedBtn, container, feedback, statusBadge) {
+            const isCorrect = (selectedIndex === qData.answer);
+            const allBtns = container.querySelectorAll('button');
+
+            allBtns.forEach(b => b.classList.add('pointer-events-none', 'opacity-60'));
+
+            if (isCorrect) {
+                clickedBtn.classList.remove('opacity-60', 'border-amber-500/20', 'bg-slate-800/60');
+                clickedBtn.classList.add('border-emerald-500', 'bg-emerald-500/20', 'text-emerald-200', 'opacity-100');
+                clickedBtn.querySelector('i').classList.remove('opacity-0');
+
+                feedback.className = 'p-3 rounded-xl text-xs md:text-sm font-medium flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/40 text-emerald-200';
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check text-lg text-emerald-400"></i> <span>${qData.explanation}</span>`;
+
+                if (!playerProgress.quizzesCompleted.has(currentModalFigure.id)) {
+                    playerProgress.quizzesCompleted.add(currentModalFigure.id);
+                    updateHUDProgress();
+                }
+
+                statusBadge.textContent = 'Completed ✓';
+                statusBadge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+
+            } else {
+                clickedBtn.classList.remove('opacity-60', 'border-amber-500/20', 'bg-slate-800/60');
+                clickedBtn.classList.add('border-rose-500', 'bg-rose-500/20', 'text-rose-200', 'opacity-100');
+
+                feedback.className = 'p-3 rounded-xl text-xs md:text-sm font-medium flex items-center gap-2 bg-rose-500/20 border border-rose-500/40 text-rose-200';
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark text-lg text-rose-400"></i> <span>Not quite right. Try reading the biography and try again!</span>`;
+
+                // Re-enable options after short delay to retry
+                setTimeout(() => {
+                    allBtns.forEach(b => b.classList.remove('pointer-events-none', 'opacity-60'));
+                }, 1200);
+            }
+
+            feedback.classList.remove('hidden');
+        }
+
+        /* =========================================================================
+           10. HUD MINIMAP & PROGRESS TRACKING
+           ========================================================================= */
+        function updateHUDProgress() {
+            const discoveredCount = playerProgress.discovered.size;
+            const quizzesCount = playerProgress.quizzesCompleted.size;
+
+            document.getElementById('discovered-count').textContent = `${discoveredCount} / 5`;
+            document.getElementById('quizzes-count').textContent = `${quizzesCount} / 5`;
+
+            // Check if all 5 figures discovered AND all 5 quizzes completed
+            if (discoveredCount === 5 && quizzesCount === 5 && !playerProgress.certShown) {
+                playerProgress.certShown = true;
+                setTimeout(() => {
+                    showCertificateModal();
+                }, 800);
+            }
+        }
+
+        function drawMinimap() {
+            const canvas = document.getElementById('minimap');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Hall bounds on canvas
+            const mapX = (x) => ((x + 16) / 32) * w;
+            const mapZ = (z) => ((z + 32) / 40) * h;
+
+            // Draw Pedestals
+            pedestalMeshes.forEach(item => {
+                const px = mapX(item.position.x);
+                const pz = mapZ(item.position.z);
+
+                const isDiscovered = playerProgress.discovered.has(item.id);
+
+                ctx.fillStyle = isDiscovered ? '#10b981' : '#f59e0b';
+                ctx.beginPath();
+                ctx.arc(px, pz, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw Player Dot & Facing Cone
+            const playerX = mapX(player.pos.x);
+            const playerZ = mapZ(player.pos.z);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.arc(playerX, playerZ, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Player Direction Cone
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(playerX, playerZ);
+            ctx.lineTo(
+                playerX - Math.sin(player.rotY) * 12,
+                playerZ - Math.cos(player.rotY) * 12
+            );
+            ctx.stroke();
+        }
+
+        function showCertificateModal() {
+            const certModal = document.getElementById('certificate-modal');
+            certModal.classList.remove('hidden');
+            setTimeout(() => certModal.classList.remove('opacity-0'), 10);
+        }
+
+        /* =========================================================================
+           11. AMBIENT WEB AUDIO SYNTHESIZER
+           ========================================================================= */
+        let audioCtx = null;
+        let ambientGain = null;
+        let isAudioPlaying = false;
+
+        function initAmbientAudioContext() {
+            if (audioCtx) return;
+
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+
+            ambientGain = audioCtx.createGain();
+            ambientGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            ambientGain.connect(audioCtx.destination);
+
+            // Warm Museum Ambient Chords (Sine + Lowpass Filter)
+            const freqs = [130.81, 164.81, 196.00, 261.63]; // C chord pad
+            freqs.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(350, audioCtx.currentTime);
+
+                osc.connect(filter);
+                filter.connect(ambientGain);
+                osc.start();
+            });
+
+            isAudioPlaying = true;
+            updateAudioIcon();
+        }
+
+        function toggleAmbientMusic() {
+            if (!audioCtx) {
+                initAmbientAudioContext();
+                return;
+            }
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+                isAudioPlaying = true;
+            } else if (isAudioPlaying) {
+                ambientGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                isAudioPlaying = false;
+            } else {
+                ambientGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                isAudioPlaying = true;
+            }
+            updateAudioIcon();
+        }
+
+        function updateAudioIcon() {
+            const icon = document.getElementById('audio-icon');
+            if (isAudioPlaying) {
+                icon.className = 'fa-solid fa-volume-high text-amber-300';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-slate-400';
+            }
+        }
+
+        /* =========================================================================
+           12. RENDER LOOP & WINDOW RESIZE
+           ========================================================================= */
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update movement logic
+            updatePlayerMovement();
+
+            // Check distance to exhibit pedestals
+            checkProximity();
+
+            // Animate figures subtle head/posture movement
+            const time = Date.now() * 0.0015;
+            figureGroupList.forEach((fig, index) => {
+                fig.rotation.y = Math.sin(time + index) * 0.05;
+            });
+
+            // Draw Minimap HUD
+            drawMinimap();
+
+            // Render 3D Three.js Scene
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        /* Initialize application on load */
+        window.onload = () => {
+            initThreeJS();
+            setupInputListeners();
+            animate();
+        };
+    </script>
+</body>
+</html>
